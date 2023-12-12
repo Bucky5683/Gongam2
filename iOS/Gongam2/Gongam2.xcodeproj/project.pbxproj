@@ -43,6 +43,7 @@
 		B354CB222B2835AB00BB881A /* FirebaseRemoteConfigSwift in Frameworks */ = {isa = PBXBuildFile; productRef = B354CB212B2835AB00BB881A /* FirebaseRemoteConfigSwift */; };
 		B354CB242B2835AB00BB881A /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = B354CB232B2835AB00BB881A /* FirebaseStorage */; };
 		B354CB262B2835AB00BB881A /* FirebaseStorageCombine-Community in Frameworks */ = {isa = PBXBuildFile; productRef = B354CB252B2835AB00BB881A /* FirebaseStorageCombine-Community */; };
+		B354CB282B2843D000BB881A /* swiftUIExtention.swift in Sources */ = {isa = PBXBuildFile; fileRef = B354CB272B2843D000BB881A /* swiftUIExtention.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -75,6 +76,7 @@
 		B354CADB2B28248500BB881A /* Gongam2UITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Gongam2UITestsLaunchTests.swift; sourceTree = "<group>"; };
 		B354CAE82B28284500BB881A /* Color.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Color.xcassets; sourceTree = "<group>"; };
 		B354CAEA2B2831B800BB881A /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		B354CB272B2843D000BB881A /* swiftUIExtention.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = swiftUIExtention.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -158,6 +160,7 @@
 				B354CAE82B28284500BB881A /* Color.xcassets */,
 				B354CAEA2B2831B800BB881A /* GoogleService-Info.plist */,
 				B354CAC42B28248500BB881A /* Preview Content */,
+				B354CB272B2843D000BB881A /* swiftUIExtention.swift */,
 			);
 			path = Gongam2;
 			sourceTree = "<group>";
@@ -351,6 +354,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B354CB282B2843D000BB881A /* swiftUIExtention.swift in Sources */,
 				B354CAC12B28248400BB881A /* ContentView.swift in Sources */,
 				B354CABF2B28248400BB881A /* Gongam2App.swift in Sources */,
 			);
