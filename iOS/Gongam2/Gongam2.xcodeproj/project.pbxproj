@@ -7,6 +7,16 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B33366F72B2930CF000D3032 /* MainHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B33366F62B2930CF000D3032 /* MainHeaderView.swift */; };
+		B33366F92B29314F000D3032 /* MainTimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B33366F82B29314F000D3032 /* MainTimerView.swift */; };
+		B33366FC2B29324F000D3032 /* MainTimerButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B33366FB2B29324F000D3032 /* MainTimerButtonView.swift */; };
+		B33366FE2B293F69000D3032 /* MainRankView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B33366FD2B293F69000D3032 /* MainRankView.swift */; };
+		B33367002B293FBA000D3032 /* MainFuncTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B33366FF2B293FBA000D3032 /* MainFuncTitleView.swift */; };
+		B33367042B294902000D3032 /* MainRankBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = B33367032B294902000D3032 /* MainRankBar.swift */; };
+		B33367062B294B17000D3032 /* MainMyRank.swift in Sources */ = {isa = PBXBuildFile; fileRef = B33367052B294B17000D3032 /* MainMyRank.swift */; };
+		B33367082B29681E000D3032 /* MainAverageRank.swift in Sources */ = {isa = PBXBuildFile; fileRef = B33367072B29681E000D3032 /* MainAverageRank.swift */; };
+		B333670A2B296CAE000D3032 /* MainFuncTexts.swift in Sources */ = {isa = PBXBuildFile; fileRef = B33367092B296CAE000D3032 /* MainFuncTexts.swift */; };
+		B333670C2B297872000D3032 /* MyReportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B333670B2B297872000D3032 /* MyReportView.swift */; };
 		B354CABF2B28248400BB881A /* Gongam2App.swift in Sources */ = {isa = PBXBuildFile; fileRef = B354CABE2B28248400BB881A /* Gongam2App.swift */; };
 		B354CAC12B28248400BB881A /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B354CAC02B28248400BB881A /* ContentView.swift */; };
 		B354CAC32B28248500BB881A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B354CAC22B28248500BB881A /* Assets.xcassets */; };
@@ -64,6 +74,16 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		B33366F62B2930CF000D3032 /* MainHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainHeaderView.swift; sourceTree = "<group>"; };
+		B33366F82B29314F000D3032 /* MainTimerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTimerView.swift; sourceTree = "<group>"; };
+		B33366FB2B29324F000D3032 /* MainTimerButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTimerButtonView.swift; sourceTree = "<group>"; };
+		B33366FD2B293F69000D3032 /* MainRankView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainRankView.swift; sourceTree = "<group>"; };
+		B33366FF2B293FBA000D3032 /* MainFuncTitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainFuncTitleView.swift; sourceTree = "<group>"; };
+		B33367032B294902000D3032 /* MainRankBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainRankBar.swift; sourceTree = "<group>"; };
+		B33367052B294B17000D3032 /* MainMyRank.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainMyRank.swift; sourceTree = "<group>"; };
+		B33367072B29681E000D3032 /* MainAverageRank.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainAverageRank.swift; sourceTree = "<group>"; };
+		B33367092B296CAE000D3032 /* MainFuncTexts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainFuncTexts.swift; sourceTree = "<group>"; };
+		B333670B2B297872000D3032 /* MyReportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyReportView.swift; sourceTree = "<group>"; };
 		B354CABB2B28248400BB881A /* Gongam2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Gongam2.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B354CABE2B28248400BB881A /* Gongam2App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Gongam2App.swift; sourceTree = "<group>"; };
 		B354CAC02B28248400BB881A /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -131,6 +151,31 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		B33366F52B2930AA000D3032 /* Main */ = {
+			isa = PBXGroup;
+			children = (
+				B33366FA2B29322E000D3032 /* Asset */,
+				B33366F62B2930CF000D3032 /* MainHeaderView.swift */,
+				B33366F82B29314F000D3032 /* MainTimerView.swift */,
+				B33366FD2B293F69000D3032 /* MainRankView.swift */,
+				B333670B2B297872000D3032 /* MyReportView.swift */,
+			);
+			path = Main;
+			sourceTree = "<group>";
+		};
+		B33366FA2B29322E000D3032 /* Asset */ = {
+			isa = PBXGroup;
+			children = (
+				B33366FB2B29324F000D3032 /* MainTimerButtonView.swift */,
+				B33366FF2B293FBA000D3032 /* MainFuncTitleView.swift */,
+				B33367032B294902000D3032 /* MainRankBar.swift */,
+				B33367052B294B17000D3032 /* MainMyRank.swift */,
+				B33367072B29681E000D3032 /* MainAverageRank.swift */,
+				B33367092B296CAE000D3032 /* MainFuncTexts.swift */,
+			);
+			path = Asset;
+			sourceTree = "<group>";
+		};
 		B354CAB22B28248400BB881A = {
 			isa = PBXGroup;
 			children = (
@@ -156,6 +201,7 @@
 			children = (
 				B354CABE2B28248400BB881A /* Gongam2App.swift */,
 				B354CAC02B28248400BB881A /* ContentView.swift */,
+				B33366F52B2930AA000D3032 /* Main */,
 				B354CAC22B28248500BB881A /* Assets.xcassets */,
 				B354CAE82B28284500BB881A /* Color.xcassets */,
 				B354CAEA2B2831B800BB881A /* GoogleService-Info.plist */,
@@ -354,9 +400,19 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B333670C2B297872000D3032 /* MyReportView.swift in Sources */,
+				B33367062B294B17000D3032 /* MainMyRank.swift in Sources */,
+				B33367002B293FBA000D3032 /* MainFuncTitleView.swift in Sources */,
+				B33366F72B2930CF000D3032 /* MainHeaderView.swift in Sources */,
 				B354CB282B2843D000BB881A /* swiftUIExtention.swift in Sources */,
 				B354CAC12B28248400BB881A /* ContentView.swift in Sources */,
+				B33367042B294902000D3032 /* MainRankBar.swift in Sources */,
+				B33366F92B29314F000D3032 /* MainTimerView.swift in Sources */,
 				B354CABF2B28248400BB881A /* Gongam2App.swift in Sources */,
+				B33367082B29681E000D3032 /* MainAverageRank.swift in Sources */,
+				B33366FC2B29324F000D3032 /* MainTimerButtonView.swift in Sources */,
+				B33366FE2B293F69000D3032 /* MainRankView.swift in Sources */,
+				B333670A2B296CAE000D3032 /* MainFuncTexts.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
