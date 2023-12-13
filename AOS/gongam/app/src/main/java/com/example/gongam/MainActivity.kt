@@ -36,17 +36,22 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.view.WindowCompat
 import com.example.gongam.ui.theme.GongamTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+
         setContent {
             GongamTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = Color.White
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    color = colorResource(id = R.color.main_gray)
                 ) {
                     PreviewMain()
                 }
@@ -67,6 +72,7 @@ fun TopView() {
             verticalArrangement = Arrangement.Top, // 위로 정렬
             horizontalAlignment = Alignment.CenterHorizontally // 가운데 정렬
         ) {
+            Spacer(modifier = Modifier.height(45.dp)) // 상태바로 잘리는 부분을 위한 spacer
             Spacer(modifier = Modifier.height(13.7.dp))
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -464,6 +470,17 @@ fun RankingView() {
 
 }
 
+@Composable
+fun MyReportView() {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+    ) {
+        ContentsTitleView(title = "마이 리포트", showMoreButton = true)
+
+    }
+}
+
 @Preview
 @Composable
 fun PreivewTopView() {
@@ -508,5 +525,6 @@ fun PreviewMain() {
         ContentsTitleView("랭킹", true)
         RankingView()
         Spacer(modifier = Modifier.height(15.dp))
+        MyReportView()
     }
 }
