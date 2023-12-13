@@ -50,7 +50,7 @@ struct MainHeaderView: View {
                     .background(.grayA5ABBD)
                     .cornerRadius(20)
                 Spacer()
-            }.frame(width: geometry.size.width, height: 280).background(Color.darkBlue414756)
+            }.frame(width: geometry.size.width, height: 280).background(.darkBlue414756)
                 .alignmentGuide(.top) { _ in 0 }
         }
     }

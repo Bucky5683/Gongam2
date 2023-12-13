@@ -14,7 +14,7 @@ struct MainMyRank: View {
     var body: some View {
         if higherThanAverage{
             HStack(spacing: 11){
-                Rectangle().frame(width: 67, height: 11).foregroundColor(.pinkECB9C2).cornerRadius(10).shadow(color: .black.opacity(0.1), radius: 5, x: 0, y: 2)
+                Rectangle().frame(width: 67, height: 11).foregroundColor(.pinkECB9C2).cornerRadius(10).shadow(color: .black.opacity(0.1), radius: 2, x: 0, y: 4)
                 HStack(spacing: 13){
                     Text("\(nickName)님의 등수")
                         .font(.system(size: 12))
@@ -30,11 +30,11 @@ struct MainMyRank: View {
                         .foregroundColor(.darkBlue414756)
                 }.background(.pinkECB9C2)
                     .cornerRadius(10)
-                    .shadow(color: .black.opacity(0.1), radius: 5, x: 0, y: 2)
+                    .shadow(color: .black.opacity(0.1), radius: 2, x: 0, y: 4)
             }
         }else{
             HStack(spacing: 11){
-                Rectangle().frame(width: 67, height: 11).foregroundColor(.skyBlueCBD9FE).cornerRadius(10).shadow(color: .black.opacity(0.1), radius: 5, x: 0, y: 2)
+                Rectangle().frame(width: 67, height: 11).foregroundColor(.skyBlueCBD9FE).cornerRadius(10).shadow(color: .black.opacity(0.1), radius: 2, x: 0, y: 4)
                 HStack(spacing: 13){
                     Text("\(nickName)님의 등수")
                         .font(.system(size: 12))
@@ -50,7 +50,7 @@ struct MainMyRank: View {
                         .foregroundColor(.darkBlue414756)
                 }.background(.skyBlueCBD9FE)
                     .cornerRadius(10)
-                    .shadow(color: .black.opacity(0.1), radius: 5, x: 0, y: 2)
+                    .shadow(color: .black.opacity(0.1), radius: 2, x: 0, y: 4)
             }
         }
     }

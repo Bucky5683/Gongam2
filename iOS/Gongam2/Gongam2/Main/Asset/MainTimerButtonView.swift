@@ -52,7 +52,7 @@ struct MainTimerButtonView: View {
                 .frame(width: geometry.size.width-80, height: 48)
                 .background(.whiteFFFFFF)
                 .cornerRadius(10)
-                .shadow(color: .black.opacity(0.1), radius: 5, x: 0, y: 2)
+                .shadow(color: .black.opacity(0.1), radius: 2, x: 0, y: 4)
                 Spacer()
             }
         }.frame(height: 48)
