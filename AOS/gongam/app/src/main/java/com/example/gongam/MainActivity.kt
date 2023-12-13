@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.View
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.animation.expandHorizontally
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -74,10 +73,25 @@ fun TopView() {
             verticalArrangement = Arrangement.Top, // 위로 정렬
             horizontalAlignment = Alignment.CenterHorizontally // 가운데 정렬
         ) {
+            Spacer(modifier = Modifier.height(13.7.dp))
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.End
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.img_test_profile),
+                    contentDescription = "profile Img",
+                    contentScale = ContentScale.Fit,
+                    modifier = Modifier
+                        .width(30.dp)
+                        .height(30.dp),
+                )
+                Spacer(modifier = Modifier.width(15.dp))
+            }
             Text(
                 text = "오늘_공부한_시간",
                 color = Color.White,
-                modifier = Modifier.padding(top = 73.dp),
+                modifier = Modifier.padding(top = 28.dp),
                 textAlign = TextAlign.Center,
                 fontSize = 12.sp,
                 textDecoration = TextDecoration.Underline,
@@ -162,7 +176,7 @@ fun ContentsTitleView(title: String, showMoreButton: Boolean) {
                 color = textColor,
                 textDecoration = TextDecoration.Underline,
                 modifier = Modifier
-                    .padding(top = 30.dp, start = 40.dp, bottom = 0.dp)
+                    .padding(top = 30.dp, start = 40.dp, bottom = 2.dp)
             )
             Spacer(modifier = Modifier.weight(1f))
             if (showMoreButton) {
@@ -287,7 +301,7 @@ fun PreviewMain() {
     ) {
         TopView()
         ContentsTitleView("타이머", false)
-        Spacer(modifier = Modifier.height(15.5.dp))
+        Spacer(modifier = Modifier.height(13.5.dp))
         TimeButton(icon = "⏰", title = "타이머")
         TimeButton(icon = "⏱️", title = "스톱워치")
         Spacer(modifier = Modifier.height(42.5.dp))
