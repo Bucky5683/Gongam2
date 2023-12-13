@@ -9,5 +9,13 @@
     <color name="white">#FFFFFFFF</color>
 
     <color name="main_gray">#414756</color>
-    <color name="gray_scale1">#A6ABBB</color>
+    <color name="main_gray_70alpha">#B3414756</color>
+    <color name="gray_scale1">#FFA6ABBB</color>
+    <color name="gray_scale2">#FF424755</color>
+    <color name="shadow_gray">#4D000000</color>
+    <color name="shadow_gray2">#E6000000</color>
+    <color name="shadow_gray3">#99000000</color>
+
+    <color name="blue_scale1">#CBD9FE</color>
+    <color name="blue_scale2">#5C84FF</color>
 </resources>
