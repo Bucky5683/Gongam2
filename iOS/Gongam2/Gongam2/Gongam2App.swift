@@ -72,7 +72,7 @@ struct Gongam2App: App {
     var body: some Scene {
         WindowGroup {
             NavigationView {
-                ContentView()
+                MainContentView()
             }
         }
     }

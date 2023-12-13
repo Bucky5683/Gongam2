@@ -15,7 +15,7 @@ struct MainAverageRank: View {
                 .foregroundColor(.grayA5ABBD)
                 .frame(width: 67, height: 11)
                 .cornerRadius(10)
-                .shadow(color: .black.opacity(0.1), radius: 5, x: 0, y: 2)
+                .shadow(color: .black.opacity(0.1), radius: 2, x: 0, y: 4)
             HStack(spacing: 3){
                 Text("평균 공부시간 :")
                     .font(.system(size: 10))
@@ -32,7 +32,7 @@ struct MainAverageRank: View {
                     .minimumScaleFactor(0.5) // 텍스트 축소 비율 설정
             }.fixedSize(horizontal: false, vertical: true)
                 .background(.grayA5ABBD).cornerRadius(10)
-                .shadow(color: .black.opacity(0.1), radius: 5, x: 0, y: 2)
+                .shadow(color: .black.opacity(0.1), radius: 2, x: 0, y: 4)
         }
     }
 }
