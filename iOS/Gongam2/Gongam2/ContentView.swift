@@ -9,13 +9,17 @@ import SwiftUI
 
 struct ContentView: View {
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        GeometryReader{ geometry in
+            ScrollView{
+                VStack(spacing: 20.0){
+                    MainHeaderView().frame(height: 280)
+                    MainTimerView()
+                    MainRankView(nickname: "Rb", rank: "999+", higherThenAverage: false, averageTime: "100:32:57")
+                    Spacer()
+                }.background(.whiteFFFFFF)
+            }
         }
-        .padding()
+        
     }
 }
 
