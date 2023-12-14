@@ -1,4 +1,4 @@
-package com.example.gongam.ui.main.kit
+package com.example.gongam.ui.main.mainSubViews
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background

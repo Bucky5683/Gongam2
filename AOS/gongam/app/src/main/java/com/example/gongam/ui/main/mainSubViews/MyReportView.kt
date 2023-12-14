@@ -1,4 +1,4 @@
-package com.example.gongam.ui.main.kit
+package com.example.gongam.ui.main.mainSubViews
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -35,13 +35,13 @@ fun MyReportView(sunH: Int, monH: Int, tueH: Int, wedH: Int, thuH: Int, friH: In
         Spacer(modifier = Modifier.height(29.dp))
         WeekStudyHours(sunH, monH, tueH, wedH, thuH, friH, satH)
         Spacer(modifier = Modifier.height(20.dp))
-        SetAverageText()
+        SetMyReportAverageText()
         Spacer(modifier = Modifier.height(22.dp))
     }
 }
 
 @Composable
-private fun SetAverageText() {
+private fun SetMyReportAverageText() {
     Row(
         verticalAlignment = Alignment.CenterVertically
     ) {

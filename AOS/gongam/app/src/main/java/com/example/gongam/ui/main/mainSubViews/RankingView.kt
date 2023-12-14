@@ -1,4 +1,4 @@
-package com.example.gongam.ui.main.kit
+package com.example.gongam.ui.main.mainSubViews
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -32,10 +32,11 @@ fun RankingView() {
             .fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        ContentsTitleView("랭킹", true)
         Spacer(modifier = Modifier.height(37.dp))
         VerticalGraph()
         Spacer(modifier = Modifier.height(12.dp))
-        SetAverageText()
+        SetRankingAverageText()
         Spacer(modifier = Modifier.height(31.dp))
     }
 
@@ -221,7 +222,7 @@ private fun DrawUserStudyTimes() {
 }
 
 @Composable
-private fun SetAverageText() {
+private fun SetRankingAverageText() {
     Row(
         verticalAlignment = Alignment.CenterVertically
     ) {

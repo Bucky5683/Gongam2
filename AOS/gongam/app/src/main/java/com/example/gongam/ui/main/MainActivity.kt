@@ -19,11 +19,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
 import com.example.gongam.R
-import com.example.gongam.ui.main.kit.ContentsTitleView
-import com.example.gongam.ui.main.kit.MyReportView
-import com.example.gongam.ui.main.kit.RankingView
-import com.example.gongam.ui.main.kit.TimeButton
-import com.example.gongam.ui.main.kit.TopView
+import com.example.gongam.ui.main.mainSubViews.ContentsTitleView
+import com.example.gongam.ui.main.mainSubViews.MyReportView
+import com.example.gongam.ui.main.mainSubViews.RankingView
+import com.example.gongam.ui.main.mainSubViews.TimerView
+import com.example.gongam.ui.main.mainSubViews.TopView
 import com.example.gongam.ui.theme.GongamTheme
 
 class MainActivity : ComponentActivity() {
@@ -58,12 +58,8 @@ fun PreviewMain() {
     ) {
         TopView()
         Spacer(modifier = Modifier.height(15.dp))
-        ContentsTitleView("타이머", false)
-        Spacer(modifier = Modifier.height(13.5.dp))
-        TimeButton(icon = "⏰", title = "타이머")
-        TimeButton(icon = "⏱️", title = "스톱워치")
+        TimerView()
         Spacer(modifier = Modifier.height(42.5.dp))
-        ContentsTitleView("랭킹", true)
         RankingView()
         Spacer(modifier = Modifier.height(15.dp))
         MyReportView(-99, -99, -99, 99, 99, -99, -99)
@@ -77,12 +73,6 @@ fun PreviewMain() {
 @Composable
 fun PreivewTopView() {
     TopView()
-}
-
-@Preview
-@Composable
-fun PreviewTimerButton() {
-    TimeButton(icon = "⏰", title = "타이머")
 }
 
 @Preview

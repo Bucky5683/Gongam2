@@ -1,4 +1,4 @@
-package com.example.gongam.ui.main.kit
+package com.example.gongam.ui.main.mainSubViews
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -22,8 +22,17 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.gongam.R
+
+@Composable
+fun TimerView() {
+    ContentsTitleView("타이머", false)
+    Spacer(modifier = Modifier.height(13.5.dp))
+    TimeButton(icon = "⏰", title = "타이머")
+    TimeButton(icon = "⏱️", title = "스톱워치")
+}
 
 @Composable
 fun TimeButton(icon: String, title: String) {
@@ -42,33 +51,28 @@ fun TimeButton(icon: String, title: String) {
                 .fillMaxWidth()
                 .background(color = Color(0xFFFFFFFF), shape = RoundedCornerShape(size = 10.dp))
         ) {
-            Row() {
+            Row {
                 Column(
                     modifier = Modifier
                         .fillMaxHeight()
                 ) {
-                    Spacer(modifier = Modifier.height(15.dp))
-                    Row(
-                        modifier = Modifier
-                            .fillMaxHeight()
-                    ) {
-                        Row() {
-                            Text(
-                                text = icon,
-                                modifier = Modifier
-                                    .padding(start = 20.dp),
-                                fontWeight = FontWeight(400),
-                            )
-                            Text(
-                                text = title,
-                                modifier = Modifier
-                                    .padding(start = 10.dp),
-                                fontWeight = FontWeight(400),
-                                color = colorResource(id = R.color.main_gray)
-                            )
-                        }
+                    Spacer(modifier = Modifier.weight(1f))
+                    Row {
+                        Text(
+                            text = icon,
+                            modifier = Modifier
+                                .padding(start = 20.dp),
+                            fontWeight = FontWeight(400),
+                        )
+                        Text(
+                            text = title,
+                            modifier = Modifier
+                                .padding(start = 10.dp),
+                            fontWeight = FontWeight(400),
+                            color = colorResource(id = R.color.main_gray)
+                        )
                     }
-                    Spacer(modifier = Modifier.height(15.dp))
+                    Spacer(modifier = Modifier.weight(1f))
                 }
                 Spacer(modifier = Modifier.weight(1f))
                 Row(
@@ -97,4 +101,10 @@ fun TimeButton(icon: String, title: String) {
 
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun PreviewTimeButton() {
+    TimeButton(icon = "⏰", title = "타이머")
 }

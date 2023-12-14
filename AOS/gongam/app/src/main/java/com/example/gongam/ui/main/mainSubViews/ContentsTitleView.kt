@@ -1,4 +1,4 @@
-package com.example.gongam.ui.main.kit
+package com.example.gongam.ui.main.mainSubViews
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
