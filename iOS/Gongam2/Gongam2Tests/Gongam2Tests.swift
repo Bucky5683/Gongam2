@@ -2,7 +2,7 @@
 //  Gongam2Tests.swift
 //  Gongam2Tests
 //
-//  Created by 김서연 on 2023/12/12.
+//  Created by 김서연 on 12/14/23.
 //
 
 import XCTest
