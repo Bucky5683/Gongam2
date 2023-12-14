@@ -66,7 +66,8 @@ fun PreviewMain() {
         ContentsTitleView("랭킹", true)
         RankingView()
         Spacer(modifier = Modifier.height(15.dp))
-        MyReportView()
+        MyReportView(-99, -99, -99, 99, 99, -99, -99)
+        Spacer(modifier = Modifier.height(23.dp))
     }
 }
 
@@ -95,3 +96,9 @@ fun PreviewTimerView() {
 fun PreviewRankingView() {
     RankingView()
 }
+
+//@Preview
+//@Composable
+//fun PreviewMyReportView() {
+//    MyReportView()
+//}

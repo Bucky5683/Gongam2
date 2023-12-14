@@ -210,7 +210,7 @@ fun RankingView() {
                 text = "평균보다 ",
                 fontSize = 12.sp,
                 color = colorResource(id = R.color.main_gray),
-                fontWeight = FontWeight(700)
+                fontWeight = FontWeight(500)
             )
             Text(
                 text = "999:99:99",
@@ -222,7 +222,7 @@ fun RankingView() {
                 text = " 만큼 덜 공부했어요!",
                 fontSize = 12.sp,
                 color = colorResource(id = R.color.main_gray),
-                fontWeight = FontWeight(700)
+                fontWeight = FontWeight(500)
             )
         }
         Spacer(modifier = Modifier.height(31.dp))
