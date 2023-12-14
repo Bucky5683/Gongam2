@@ -41,7 +41,7 @@ fun MyReportView(sunH: Int, monH: Int, tueH: Int, wedH: Int, thuH: Int, friH: In
 }
 
 @Composable
-fun SetAverageText() {
+private fun SetAverageText() {
     Row(
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -52,6 +52,7 @@ fun SetAverageText() {
             fontWeight = FontWeight(500),
             color = colorResource(id = R.color.main_gray),
         )
+        // TODO :: 평균값 할당
         Text(
             text = "99:99:99",
             fontSize = 15.sp,
@@ -69,7 +70,7 @@ fun SetAverageText() {
 }
 
 @Composable
-fun WeekStudyHours(sunH: Int, monH: Int, tueH: Int, wedH: Int, thuH: Int, friH: Int, satH: Int) {
+private fun WeekStudyHours(sunH: Int, monH: Int, tueH: Int, wedH: Int, thuH: Int, friH: Int, satH: Int) {
     Column (
         modifier = Modifier
             .fillMaxWidth()
@@ -98,7 +99,7 @@ fun WeekStudyHours(sunH: Int, monH: Int, tueH: Int, wedH: Int, thuH: Int, friH: 
 }
 
 @Composable
-fun DayStudyHoursView(day: String, hours: Int) {
+private fun DayStudyHoursView(day: String, hours: Int) {
     Box(
         modifier = Modifier
             .width(58.dp)
@@ -148,12 +149,12 @@ fun DayStudyHoursView(day: String, hours: Int) {
 
 @Preview
 @Composable
-fun PreviewMyReportView() {
+private fun PreviewMyReportView() {
     MyReportView(-99, -99, -99, 99, 99, -99, -99)
 }
 
 @Preview(showBackground = true)
 @Composable
-fun PreviewDayStudyHoursView() {
+private fun PreviewDayStudyHoursView() {
     DayStudyHoursView("S", -99)
 }
