@@ -2,6 +2,7 @@ package com.example.gongam.ui.main.mainSubViews
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -25,17 +26,18 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.gongam.R
+import androidx.navigation.NavController
 
 @Composable
-fun TimerView() {
+fun TimerView(navController: NavController) {
     ContentsTitleView("타이머", false)
     Spacer(modifier = Modifier.height(13.5.dp))
-    TimeButton(icon = "⏰", title = "타이머")
-    TimeButton(icon = "⏱️", title = "스톱워치")
+    TimeButton(icon = "⏰", title = "타이머", navController)
+    TimeButton(icon = "⏱️", title = "스톱워치", navController)
 }
 
 @Composable
-fun TimeButton(icon: String, title: String) {
+fun TimeButton(icon: String, title: String, navController: NavController) {
     Row(
         modifier = Modifier.padding(top = 7.5.dp, bottom = 7.5.dp, start = 40.dp, end = 40.dp)
     ) {
@@ -50,6 +52,10 @@ fun TimeButton(icon: String, title: String) {
                 )
                 .fillMaxWidth()
                 .background(color = Color(0xFFFFFFFF), shape = RoundedCornerShape(size = 10.dp))
+                .clickable {
+                    // 클릭 시 다른 액티비티로 이동
+                    navController.navigate("timerActivity") // 목적지 루트 지정
+                }
         ) {
             Row {
                 Column(
@@ -103,8 +109,8 @@ fun TimeButton(icon: String, title: String) {
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-private fun PreviewTimeButton() {
-    TimeButton(icon = "⏰", title = "타이머")
-}
+//@Preview(showBackground = true)
+//@Composable
+//private fun PreviewTimeButton() {
+//    TimeButton(icon = "⏰", title = "타이머")
+//}

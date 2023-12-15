@@ -18,6 +18,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
+import androidx.navigation.compose.rememberNavController
 import com.example.gongam.R
 import com.example.gongam.ui.main.mainSubViews.ContentsTitleView
 import com.example.gongam.ui.main.mainSubViews.MyReportView
@@ -49,6 +50,8 @@ class MainActivity : ComponentActivity() {
 @Preview(showSystemUi = true, showBackground = true)
 @Composable
 fun PreviewMain() {
+    val navController = rememberNavController()
+
     Column(
         modifier = Modifier
             .background(
@@ -58,7 +61,7 @@ fun PreviewMain() {
     ) {
         TopView()
         Spacer(modifier = Modifier.height(15.dp))
-        TimerView()
+        TimerView(navController)
         Spacer(modifier = Modifier.height(42.5.dp))
         RankingView()
         Spacer(modifier = Modifier.height(15.dp))
