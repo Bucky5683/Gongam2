@@ -1,4 +1,4 @@
-package com.example.gongam.ui.main.mainSubViews
+package com.cono.gongam.ui.main.mainSubViews
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -23,9 +23,8 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.gongam.R
+import com.cono.gongam.R
 import androidx.navigation.NavController
 
 @Composable

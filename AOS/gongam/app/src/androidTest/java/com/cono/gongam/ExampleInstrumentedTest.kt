@@ -1,4 +1,4 @@
-package com.example.gongam
+package com.cono.gongam
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4

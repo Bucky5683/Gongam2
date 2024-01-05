@@ -1,4 +1,4 @@
-package com.example.gongam.ui.main
+package com.cono.gongam.ui.main
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -19,13 +19,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
 import androidx.navigation.compose.rememberNavController
-import com.example.gongam.R
-import com.example.gongam.ui.main.mainSubViews.ContentsTitleView
-import com.example.gongam.ui.main.mainSubViews.MyReportView
-import com.example.gongam.ui.main.mainSubViews.RankingView
-import com.example.gongam.ui.main.mainSubViews.TimerView
-import com.example.gongam.ui.main.mainSubViews.TopView
-import com.example.gongam.ui.theme.GongamTheme
+import com.cono.gongam.R
+import com.cono.gongam.ui.main.mainSubViews.ContentsTitleView
+import com.cono.gongam.ui.main.mainSubViews.MyReportView
+import com.cono.gongam.ui.main.mainSubViews.RankingView
+import com.cono.gongam.ui.main.mainSubViews.TimerView
+import com.cono.gongam.ui.main.mainSubViews.TopView
+import com.cono.gongam.ui.theme.GongamTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

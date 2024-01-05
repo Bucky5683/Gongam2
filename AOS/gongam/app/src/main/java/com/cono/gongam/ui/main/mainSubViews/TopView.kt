@@ -1,4 +1,4 @@
-package com.example.gongam.ui.main.mainSubViews
+package com.cono.gongam.ui.main.mainSubViews
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -26,7 +26,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.gongam.R
+import com.cono.gongam.R
 
 @Composable
 fun TopView() {

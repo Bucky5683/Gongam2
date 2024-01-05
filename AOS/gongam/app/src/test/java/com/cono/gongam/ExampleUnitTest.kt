@@ -1,4 +1,4 @@
-package com.example.gongam
+package com.cono.gongam
 
 import org.junit.Test
 

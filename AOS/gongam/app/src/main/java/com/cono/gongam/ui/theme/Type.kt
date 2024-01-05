@@ -1,4 +1,4 @@
-package com.example.gongam.ui.theme
+package com.cono.gongam.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
