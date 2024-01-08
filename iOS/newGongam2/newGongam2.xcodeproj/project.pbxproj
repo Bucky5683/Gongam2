@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		EB152A382B4B7549004A0679 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB152A372B4B7549004A0679 /* LoginView.swift */; };
+		EB152A3F2B4B88FD004A0679 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = EB152A3E2B4B88FD004A0679 /* FirebaseFirestore */; };
+		EB152A412B4B88FD004A0679 /* FirebaseFirestoreSwift in Frameworks */ = {isa = PBXBuildFile; productRef = EB152A402B4B88FD004A0679 /* FirebaseFirestoreSwift */; };
+		EB152A432B4B88FD004A0679 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = EB152A422B4B88FD004A0679 /* FirebaseStorage */; };
+		EB152A452B4B88FD004A0679 /* FirebaseStorageCombine-Community in Frameworks */ = {isa = PBXBuildFile; productRef = EB152A442B4B88FD004A0679 /* FirebaseStorageCombine-Community */; };
+		EB152A482B4BD087004A0679 /* SetProfileView().swift in Sources */ = {isa = PBXBuildFile; fileRef = EB152A472B4BD087004A0679 /* SetProfileView().swift */; };
 		EB86AF322B47B7F0005A15A5 /* newGongam2App.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB86AF312B47B7F0005A15A5 /* newGongam2App.swift */; };
 		EB86AF362B47B7F2005A15A5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EB86AF352B47B7F2005A15A5 /* Assets.xcassets */; };
 		EB86AF392B47B7F2005A15A5 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EB86AF382B47B7F2005A15A5 /* Preview Assets.xcassets */; };
@@ -49,6 +55,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		EB152A372B4B7549004A0679 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
+		EB152A462B4BCDB2004A0679 /* newGongam2.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = newGongam2.entitlements; sourceTree = "<group>"; };
+		EB152A472B4BD087004A0679 /* SetProfileView().swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SetProfileView().swift"; sourceTree = "<group>"; };
 		EB86AF2E2B47B7F0005A15A5 /* newGongam2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = newGongam2.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EB86AF312B47B7F0005A15A5 /* newGongam2App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = newGongam2App.swift; sourceTree = "<group>"; };
 		EB86AF352B47B7F2005A15A5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -76,7 +85,11 @@
 				EB86AF7E2B47F962005A15A5 /* KakaoSDKCommon in Frameworks */,
 				EB86AF7C2B47F962005A15A5 /* KakaoSDKAuth in Frameworks */,
 				EB86AF752B47E11A005A15A5 /* FirebaseDatabaseSwift in Frameworks */,
+				EB152A452B4B88FD004A0679 /* FirebaseStorageCombine-Community in Frameworks */,
+				EB152A3F2B4B88FD004A0679 /* FirebaseFirestore in Frameworks */,
 				EB86AF6D2B47E11A005A15A5 /* FirebaseAnalytics in Frameworks */,
+				EB152A432B4B88FD004A0679 /* FirebaseStorage in Frameworks */,
+				EB152A412B4B88FD004A0679 /* FirebaseFirestoreSwift in Frameworks */,
 				EB86AF712B47E11A005A15A5 /* FirebaseAuthCombine-Community in Frameworks */,
 				EB86AF732B47E11A005A15A5 /* FirebaseDatabase in Frameworks */,
 				EB86AF6F2B47E11A005A15A5 /* FirebaseAuth in Frameworks */,
@@ -125,6 +138,7 @@
 		EB86AF302B47B7F0005A15A5 /* newGongam2 */ = {
 			isa = PBXGroup;
 			children = (
+				EB152A462B4BCDB2004A0679 /* newGongam2.entitlements */,
 				EB86AF812B47F9C6005A15A5 /* Info.plist */,
 				EB86AF312B47B7F0005A15A5 /* newGongam2App.swift */,
 				EB86AF662B47DD1E005A15A5 /* Views */,
@@ -177,6 +191,8 @@
 				EB86AF5B2B47B8B3005A15A5 /* MainView.swift */,
 				EB86AF5D2B47B966005A15A5 /* MainHeaderView.swift */,
 				EB86AF672B47DD5E005A15A5 /* TimerView.swift */,
+				EB152A372B4B7549004A0679 /* LoginView.swift */,
+				EB152A472B4BD087004A0679 /* SetProfileView().swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -207,6 +223,10 @@
 				EB86AF7B2B47F962005A15A5 /* KakaoSDKAuth */,
 				EB86AF7D2B47F962005A15A5 /* KakaoSDKCommon */,
 				EB86AF7F2B47F962005A15A5 /* KakaoSDKUser */,
+				EB152A3E2B4B88FD004A0679 /* FirebaseFirestore */,
+				EB152A402B4B88FD004A0679 /* FirebaseFirestoreSwift */,
+				EB152A422B4B88FD004A0679 /* FirebaseStorage */,
+				EB152A442B4B88FD004A0679 /* FirebaseStorageCombine-Community */,
 			);
 			productName = newGongam2;
 			productReference = EB86AF2E2B47B7F0005A15A5 /* newGongam2.app */;
@@ -331,8 +351,10 @@
 				EB86AF622B47BB9F005A15A5 /* TimeTaskData.swift in Sources */,
 				EB86AF5C2B47B8B3005A15A5 /* MainView.swift in Sources */,
 				EB86AF5E2B47B966005A15A5 /* MainHeaderView.swift in Sources */,
+				EB152A482B4BD087004A0679 /* SetProfileView().swift in Sources */,
 				EB86AF642B47DC44005A15A5 /* UserTimeData.swift in Sources */,
 				EB86AF602B47BA72005A15A5 /* UserData.swift in Sources */,
+				EB152A382B4B7549004A0679 /* LoginView.swift in Sources */,
 				EB86AF322B47B7F0005A15A5 /* newGongam2App.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -494,6 +516,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = newGongam2/newGongam2.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"newGongam2/Preview Content\"";
@@ -514,6 +538,7 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.Cono.newGongam2;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -525,6 +550,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = newGongam2/newGongam2.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"newGongam2/Preview Content\"";
@@ -545,6 +572,7 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.Cono.newGongam2;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -688,6 +716,26 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		EB152A3E2B4B88FD004A0679 /* FirebaseFirestore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = EB86AF6B2B47E11A005A15A5 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFirestore;
+		};
+		EB152A402B4B88FD004A0679 /* FirebaseFirestoreSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = EB86AF6B2B47E11A005A15A5 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFirestoreSwift;
+		};
+		EB152A422B4B88FD004A0679 /* FirebaseStorage */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = EB86AF6B2B47E11A005A15A5 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseStorage;
+		};
+		EB152A442B4B88FD004A0679 /* FirebaseStorageCombine-Community */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = EB86AF6B2B47E11A005A15A5 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = "FirebaseStorageCombine-Community";
+		};
 		EB86AF6C2B47E11A005A15A5 /* FirebaseAnalytics */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = EB86AF6B2B47E11A005A15A5 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;

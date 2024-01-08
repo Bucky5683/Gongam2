@@ -22,19 +22,20 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 @main
 struct newGongam2App: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
-    
+    @StateObject var userData = UserData()
     init() {
         // Kakao SDK 초기화
-        KakaoSDK.initSDK(appKey:"a2f569d915117da38117a291b4af1657")
+        let KAKAO_APP_KEY: String = Bundle.main.infoDictionary?["KAKAO_APP_KEY"] as? String ?? "KAKAO_APP_KEY is nil"
+        KakaoSDK.initSDK(appKey: KAKAO_APP_KEY, loggingEnable: true)
     }
     
     var body: some Scene {
         WindowGroup {
-            MainView().onOpenURL { url in
+            LoginView().onOpenURL { url in
                 if (AuthApi.isKakaoTalkLoginUrl(url)) {
                     _ = AuthController.handleOpenUrl(url: url)
                 }
-            }
+            }.environmentObject(userData)
         }
     }
 }

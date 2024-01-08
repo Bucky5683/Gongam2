@@ -6,13 +6,17 @@
 //
 
 import Foundation
+import UIKit
 
-struct UserData: Identifiable, Hashable, Codable{
+class UserData: ObservableObject{
     var id = UUID()
-    var userProfile: String = ""
-    var userName: String = ""
+    var profileImageURL: String = ""
+    var name: String = ""
     var todayTotalStudyTime: Int = 0
-    var purposeTime: Int = 0
+    var goalStudyTime: Int = 0
+    var todayStopwatchStudyTime: Int = 0
+    var todayTimerStudyTime: Int = 0
+    var profileImage = UIImage()
 }
 
 extension Date {
