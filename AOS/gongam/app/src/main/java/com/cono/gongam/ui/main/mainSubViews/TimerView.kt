@@ -1,5 +1,7 @@
 package com.cono.gongam.ui.main.mainSubViews
 
+import android.content.Context
+import android.content.Intent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -25,18 +27,18 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.cono.gongam.R
-import androidx.navigation.NavController
+import com.cono.gongam.ui.timer.TimerActivity
 
 @Composable
-fun TimerView(navController: NavController) {
+fun TimerView(context: Context) {
     ContentsTitleView("타이머", false)
     Spacer(modifier = Modifier.height(13.5.dp))
-    TimeButton(icon = "⏰", title = "타이머", navController)
-    TimeButton(icon = "⏱️", title = "스톱워치", navController)
+    TimeButton(icon = "⏰", title = "타이머", context = context)
+    TimeButton(icon = "⏱️", title = "스톱워치", context = context)
 }
 
 @Composable
-fun TimeButton(icon: String, title: String, navController: NavController) {
+fun TimeButton(icon: String, title: String, context: Context) {
     Row(
         modifier = Modifier.padding(top = 7.5.dp, bottom = 7.5.dp, start = 40.dp, end = 40.dp)
     ) {
@@ -50,10 +52,10 @@ fun TimeButton(icon: String, title: String, navController: NavController) {
                     shape = RoundedCornerShape(size = 10.dp)
                 )
                 .fillMaxWidth()
-                .background(color = Color(0xFFFFFFFF), shape = RoundedCornerShape(size = 10.dp))
+                .background(color = Color.White, shape = RoundedCornerShape(size = 10.dp))
                 .clickable {
-                    // 클릭 시 다른 액티비티로 이동
-                    navController.navigate("timer") // 목적지 루트 지정
+                    val intent = Intent(context, TimerActivity::class.java)
+                    context.startActivity(intent)
                 }
         ) {
             Row {
