@@ -13,102 +13,61 @@ import CryptoKit
 import Firebase
 import FirebaseAuth
 import FirebaseFirestore
+import GoogleSignInSwift
+import GoogleSignIn
 
 struct LoginView: View {
     @EnvironmentObject var userData: UserData
-    @State var norce = ""
+    @StateObject var viewModel = LoginViewModel()
+    @State private var shouldNavigateToSetProfile = false
+    
     var body: some View {
-        Button {
-            kakaoLogin()
-        } label: {
-            Image("kakaoLogjnButton")
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .frame(width: UIScreen.main.bounds.width * 0.9)
-        }
-        SignInWithAppleButton { (request) in
-            self.norce = randomNonceString()
-            request.requestedScopes = [.email, .fullName]
-            request.nonce = sha256(norce)
-        } onCompletion: { (result) in
-            switch result {
-            case .success(let user):
-                print("success")
-                guard let credential = user.credential as? ASAuthorizationAppleIDCredential else{
-                    print("error with firebase")
-                    return
+        NavigationView{
+            VStack{
+                NavigationLink(
+                    destination: SetProfileView(),
+                    isActive: $shouldNavigateToSetProfile,
+                    label: {
+                        EmptyView()
+                    }
+                )
+                GoogleSignInButton(viewModel: GoogleSignInButtonViewModel(scheme: .dark, style: .wide, state: .normal)){
+                    Task{
+                        do{
+                            try await viewModel.googleLogin()
+                            userData.downloadUserData()
+                            shouldNavigateToSetProfile = true
+                        } catch {
+                            print(error)
+                        }
+                    }
                 }
-                appleLogin(credential: credential)
-            case .failure(let error):
-                print(error.localizedDescription)
+                SignInWithAppleButton { (request) in
+                    viewModel.norce = randomNonceString()
+                    request.requestedScopes = [.email, .fullName]
+                    request.nonce = sha256(viewModel.norce)
+                } onCompletion: { (result) in
+                    switch result {
+                    case .success(let user):
+                        print("success")
+                        guard let credential = user.credential as? ASAuthorizationAppleIDCredential else{
+                            print("error with firebase")
+                            return
+                        }
+                        viewModel.appleLogin(credential: credential)
+                        userData.downloadUserData()
+                        shouldNavigateToSetProfile = true
+                    case .failure(let error):
+                        print(error.localizedDescription)
+                    }
+                }
+                .frame(width: UIScreen.main.bounds.width * 0.9, height: 50)
             }
-        }
-        .frame(width: UIScreen.main.bounds.width * 0.9, height: 50)
+        }.navigationBarHidden(true)
     }
     
-    func kakaoLogin(){
-        if UserApi.isKakaoTalkLoginAvailable() {
-            UserApi.shared.loginWithKakaoTalk {(oauthToken, error) in
-                print("👇 oauthToken?.accessToken 👇")
-                print(oauthToken?.accessToken ?? "")
-                print("👇 oauthToken?.refreshToken 👇")
-                print(oauthToken?.refreshToken ?? "")
-                print("👇 error 👇")
-                print(error ?? "")
-            }
-        } else {
-            UserApi.shared.loginWithKakaoAccount{(oauthToken, error) in
-                print("👇 oauthToken?.accessToken 👇")
-                print(oauthToken?.accessToken ?? "")
-                print("👇 oauthToken?.refreshToken 👇")
-                print(oauthToken?.refreshToken ?? "")
-                print("👇 error 👇")
-                print(error ?? "")
-            }
-        }
-        
-        UserApi.shared.me() { (user,error) in
-            if let error = error{
-                print("saveUserData error : ", error)
-            } else {
-                let exampleImage = URL(string: "https://firebasestorage.googleapis.com/v0/b/gongam2-ff081.appspot.com/o/example2.jpeg?alt=media&token=2b4bbe1f-9ba2-49a7-bf54-87b5ca70eddd")!
-                let kakaoName = user?.kakaoAccount?.profile?.nickname ?? ""
-                let kakaoProfile = user?.kakaoAccount?.profile?.profileImageUrl?.absoluteString
-//
-//                do {
-//                    try self.userData.profileImageURL = String(contentsOf: kakaoProfile!)
-//                } catch{
-//                    print("Kakao Proifle Error")
-//                }
-                self.userData.name = kakaoName
-                self.userData.profileImageURL = kakaoProfile ?? ""
-                print(self.userData.name)
-                print(self.userData.profileImageURL)
-            }
-        }
-    }
     
-    func appleLogin(credential: ASAuthorizationAppleIDCredential) {
-        //getting token
-        guard let token = credential.identityToken else {
-            print("error with firebase")
-            return
-        }
-        
-        guard let tokenString = String(data: token, encoding: .utf8) else {
-            print("error with token")
-            return
-        }
-        
-        let firebaseCredential = OAuthProvider.credential(withProviderID: "apple.com", idToken: tokenString, rawNonce: norce)
-        Auth.auth().signIn(with: firebaseCredential) { result, err in
-            if let err = err {
-                print(err.localizedDescription)
-            }
-            
-            print("로그인 완료")
-        }
-    }
+    
 }
 
 // Helper for Apple Login with Firebase
