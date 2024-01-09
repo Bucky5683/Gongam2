@@ -13,7 +13,20 @@
           "package_name": "com.cono.gongam"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "480518054438-3gt3gah8ju2pbpdgsnl8ujag5v35kd3m.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.cono.gongam",
+            "certificate_hash": "edc2e9b733106b562032f514cccf2a45210d230c"
+          }
+        },
+        {
+          "client_id": "480518054438-fplfr0p8opuiqdsht9i39covim9v6iki.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyDlJ9TEm0RpeWtzOF_YO-IasN9eL3w79a8"
@@ -21,7 +34,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "480518054438-fplfr0p8opuiqdsht9i39covim9v6iki.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "480518054438-g5k6fuuod7p8258dfq182auesl42dg9i.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.Cono.newGongam2"
+              }
+            }
+          ]
         }
       }
     }
