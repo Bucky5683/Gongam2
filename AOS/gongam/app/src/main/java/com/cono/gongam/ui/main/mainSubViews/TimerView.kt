@@ -53,7 +53,7 @@ fun TimeButton(icon: String, title: String, navController: NavController) {
                 .background(color = Color(0xFFFFFFFF), shape = RoundedCornerShape(size = 10.dp))
                 .clickable {
                     // 클릭 시 다른 액티비티로 이동
-                    navController.navigate("timerActivity") // 목적지 루트 지정
+                    navController.navigate("timer") // 목적지 루트 지정
                 }
         ) {
             Row {
