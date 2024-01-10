@@ -56,7 +56,7 @@ fun TopView() {
                 Spacer(modifier = Modifier.width(15.dp))
             }
             Text(
-                text = "오늘_공부한_시간",
+                text = "오늘 공부한 시간",
                 color = Color.White,
                 modifier = Modifier.padding(top = 28.dp),
                 textAlign = TextAlign.Center,
