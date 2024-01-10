@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct TimerView: View {
+    @EnvironmentObject var userData: UserData
+    @EnvironmentObject var userTimeData: UserTimeData
     var isStarted: Bool = false
     let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     var body: some View {

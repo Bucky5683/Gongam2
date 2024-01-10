@@ -1,18 +1,18 @@
 //
-//  MainView.swift
+//  ReportView.swift
 //  newGongam2
 //
-//  Created by 김서연 on 1/5/24.
+//  Created by 김서연 on 1/10/24.
 //
 
 import SwiftUI
 
-struct MainView: View {
+struct ReportView: View {
     var body: some View {
         Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
     }
 }
 
 #Preview {
-    MainView()
+    ReportView()
 }
