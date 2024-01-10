@@ -74,8 +74,7 @@ fun RankingScreen() {
             .background(color = colorResource(id = R.color.white))
     ) {
         TopTitle(backgroundColor = colorResource(id = R.color.white), textColor = colorResource(id = R.color.black), centerText = "랭킹", dividerLineColor = colorResource(
-            id = R.color.gray_line2
-        ))
+            id = R.color.gray_line2), backPress = true)
         MyGradeView()
         TitleThisWeekTop5()
         Top5UserCards()

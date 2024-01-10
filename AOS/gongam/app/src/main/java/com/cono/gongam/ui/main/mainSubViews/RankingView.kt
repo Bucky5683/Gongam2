@@ -1,6 +1,9 @@
 package com.cono.gongam.ui.main.mainSubViews
 
+import android.content.Context
+import android.content.Intent
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -24,17 +27,18 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.cono.gongam.R
+import com.cono.gongam.ui.ranking.RankingActivity
 
 @Composable
-fun RankingView() {
+fun RankingView(context: Context) {
     Column(
         modifier = Modifier
             .fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        ContentsTitleView("랭킹", true)
+        ContentsTitleView("랭킹", true, context = context)
         Spacer(modifier = Modifier.height(37.dp))
-        VerticalGraph()
+        VerticalGraph(context)
         Spacer(modifier = Modifier.height(12.dp))
         SetRankingAverageText()
         Spacer(modifier = Modifier.height(31.dp))
@@ -43,8 +47,14 @@ fun RankingView() {
 }
 
 @Composable
-private fun VerticalGraph() {
-    Box{
+private fun VerticalGraph(context: Context) {
+    Box(
+        modifier = Modifier
+            .clickable {
+                val intent = Intent(context, RankingActivity::class.java)
+                context.startActivity(intent)
+            }
+    ){
         DrawGrayGraph()
         Box {
             // 평균 공부시간
@@ -249,8 +259,8 @@ private fun SetRankingAverageText() {
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-private fun PreivewRankingView() {
-    RankingView()
-}
+//@Preview(showBackground = true)
+//@Composable
+//private fun PreivewRankingView() {
+//    RankingView()
+//}

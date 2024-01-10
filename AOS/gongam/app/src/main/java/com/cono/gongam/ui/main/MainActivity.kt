@@ -65,7 +65,7 @@ fun PreviewMain() {
         Spacer(modifier = Modifier.height(15.dp))
         TimerView(context)
         Spacer(modifier = Modifier.height(42.5.dp))
-        RankingView()
+        RankingView(context)
         Spacer(modifier = Modifier.height(15.dp))
         MyReportView(-99, -99, -99, 99, 99, -99, -99)
         Spacer(modifier = Modifier.height(23.dp))
@@ -89,7 +89,8 @@ fun PreviewTimerView() {
 @Preview(showBackground = true)
 @Composable
 fun PreviewRankingView() {
-    RankingView()
+    val context = LocalContext.current
+    RankingView(context = context)
 }
 
 //@Preview
