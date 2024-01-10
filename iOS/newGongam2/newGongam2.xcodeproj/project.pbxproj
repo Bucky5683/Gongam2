@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		EB0CF68F2B4E87E100B4B627 /* PopupView in Frameworks */ = {isa = PBXBuildFile; productRef = EB0CF68E2B4E87E100B4B627 /* PopupView */; };
 		EB152A382B4B7549004A0679 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB152A372B4B7549004A0679 /* LoginView.swift */; };
 		EB152A3F2B4B88FD004A0679 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = EB152A3E2B4B88FD004A0679 /* FirebaseFirestore */; };
 		EB152A412B4B88FD004A0679 /* FirebaseFirestoreSwift in Frameworks */ = {isa = PBXBuildFile; productRef = EB152A402B4B88FD004A0679 /* FirebaseFirestoreSwift */; };
@@ -27,6 +28,7 @@
 		EB692A702B4E6A2A00901457 /* MainRankChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB692A6F2B4E6A2A00901457 /* MainRankChartView.swift */; };
 		EB692A722B4E6FA700901457 /* RankView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB692A712B4E6FA700901457 /* RankView.swift */; };
 		EB692A762B4E6FD600901457 /* ReportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB692A752B4E6FD600901457 /* ReportView.swift */; };
+		EB692A792B4E813200901457 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EB692A782B4E813200901457 /* Launch Screen.storyboard */; };
 		EB86AF322B47B7F0005A15A5 /* newGongam2App.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB86AF312B47B7F0005A15A5 /* newGongam2App.swift */; };
 		EB86AF362B47B7F2005A15A5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EB86AF352B47B7F2005A15A5 /* Assets.xcassets */; };
 		EB86AF392B47B7F2005A15A5 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EB86AF382B47B7F2005A15A5 /* Preview Assets.xcassets */; };
@@ -83,6 +85,7 @@
 		EB692A6F2B4E6A2A00901457 /* MainRankChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainRankChartView.swift; sourceTree = "<group>"; };
 		EB692A712B4E6FA700901457 /* RankView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RankView.swift; sourceTree = "<group>"; };
 		EB692A752B4E6FD600901457 /* ReportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportView.swift; sourceTree = "<group>"; };
+		EB692A782B4E813200901457 /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 		EB86AF2E2B47B7F0005A15A5 /* newGongam2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = newGongam2.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EB86AF312B47B7F0005A15A5 /* newGongam2App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = newGongam2App.swift; sourceTree = "<group>"; };
 		EB86AF352B47B7F2005A15A5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -114,6 +117,7 @@
 				EB152A3F2B4B88FD004A0679 /* FirebaseFirestore in Frameworks */,
 				EB86AF6D2B47E11A005A15A5 /* FirebaseAnalytics in Frameworks */,
 				EB152A432B4B88FD004A0679 /* FirebaseStorage in Frameworks */,
+				EB0CF68F2B4E87E100B4B627 /* PopupView in Frameworks */,
 				EB152A412B4B88FD004A0679 /* FirebaseFirestoreSwift in Frameworks */,
 				EB86AF712B47E11A005A15A5 /* FirebaseAuthCombine-Community in Frameworks */,
 				EB86AF732B47E11A005A15A5 /* FirebaseDatabase in Frameworks */,
@@ -208,6 +212,14 @@
 			path = Report;
 			sourceTree = "<group>";
 		};
+		EB692A772B4E811500901457 /* LaunchScreen */ = {
+			isa = PBXGroup;
+			children = (
+				EB692A782B4E813200901457 /* Launch Screen.storyboard */,
+			);
+			path = LaunchScreen;
+			sourceTree = "<group>";
+		};
 		EB86AF252B47B7F0005A15A5 = {
 			isa = PBXGroup;
 			children = (
@@ -288,6 +300,7 @@
 		EB86AF662B47DD1E005A15A5 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				EB692A772B4E811500901457 /* LaunchScreen */,
 				EB692A742B4E6FCB00901457 /* Report */,
 				EB692A5E2B4E5D0900901457 /* Login */,
 				EB692A602B4E5D2500901457 /* Profile */,
@@ -330,6 +343,7 @@
 				EB152A442B4B88FD004A0679 /* FirebaseStorageCombine-Community */,
 				EB54A0412B4BE8990074C13B /* GoogleSignIn */,
 				EB54A0432B4BE8990074C13B /* GoogleSignInSwift */,
+				EB0CF68E2B4E87E100B4B627 /* PopupView */,
 			);
 			productName = newGongam2;
 			productReference = EB86AF2E2B47B7F0005A15A5 /* newGongam2.app */;
@@ -407,6 +421,7 @@
 				EB86AF6B2B47E11A005A15A5 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				EB86AF782B47F962005A15A5 /* XCRemoteSwiftPackageReference "kakao-ios-sdk" */,
 				EB54A0402B4BE8990074C13B /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
+				EB0CF68D2B4E87E100B4B627 /* XCRemoteSwiftPackageReference "PopupView" */,
 			);
 			productRefGroup = EB86AF2F2B47B7F0005A15A5 /* Products */;
 			projectDirPath = "";
@@ -424,6 +439,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EB692A792B4E813200901457 /* Launch Screen.storyboard in Resources */,
 				EB86AF392B47B7F2005A15A5 /* Preview Assets.xcassets in Resources */,
 				EB54A0462B4BE9170074C13B /* credentials.plist in Resources */,
 				EB692A592B4E551C00901457 /* Color.xcassets in Resources */,
@@ -643,7 +659,7 @@
 				INFOPLIST_KEY_CFBundleDisplayName = "공감; 공부감시자";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = "Launch Screen.storyboard";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -677,7 +693,7 @@
 				INFOPLIST_KEY_CFBundleDisplayName = "공감; 공부감시자";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = "Launch Screen.storyboard";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -812,6 +828,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		EB0CF68D2B4E87E100B4B627 /* XCRemoteSwiftPackageReference "PopupView" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/exyte/PopupView.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.8.3;
+			};
+		};
 		EB54A0402B4BE8990074C13B /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/google/GoogleSignIn-iOS";
@@ -839,6 +863,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		EB0CF68E2B4E87E100B4B627 /* PopupView */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = EB0CF68D2B4E87E100B4B627 /* XCRemoteSwiftPackageReference "PopupView" */;
+			productName = PopupView;
+		};
 		EB152A3E2B4B88FD004A0679 /* FirebaseFirestore */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = EB86AF6B2B47E11A005A15A5 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;

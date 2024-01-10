@@ -34,5 +34,10 @@
 		<string>kakaokompassauth</string>
 		<string>kakaolink</string>
 	</array>
+	<key>UILaunchScreen</key>
+	<dict>
+		<key>UILauchScreen</key>
+		<dict/>
+	</dict>
 </dict>
 </plist>
