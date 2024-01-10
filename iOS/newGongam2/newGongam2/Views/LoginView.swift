@@ -18,6 +18,7 @@ import GoogleSignIn
 
 struct LoginView: View {
     @EnvironmentObject var userData: UserData
+    @EnvironmentObject var userTimeData: UserTimeData
     @StateObject var viewModel = LoginViewModel()
     @State private var shouldNavigateToSetProfile = false
     
@@ -36,6 +37,7 @@ struct LoginView: View {
                         do{
                             try await viewModel.googleLogin()
                             userData.downloadUserData()
+                            userTimeData.downloadData()
                             shouldNavigateToSetProfile = true
                         } catch {
                             print(error)
@@ -55,8 +57,15 @@ struct LoginView: View {
                             return
                         }
                         viewModel.appleLogin(credential: credential)
-                        userData.downloadUserData()
-                        shouldNavigateToSetProfile = true
+                        Task{
+                            do {
+                                userData.downloadUserData()
+                                userTimeData.downloadData()
+                                shouldNavigateToSetProfile = true
+                            } catch {
+                                print(error)
+                            }
+                        }
                     case .failure(let error):
                         print(error.localizedDescription)
                     }

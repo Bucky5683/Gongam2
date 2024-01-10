@@ -8,16 +8,27 @@
 import Foundation
 import UIKit
 
+enum userDataType{
+    case profileImageURL
+    case name
+    case todayStudyTime
+    case goalStudyTime
+    case stopwatchStudyTime
+    case timerStudyTime
+    case lastUpdateDate
+    case email
+}
+
 class UserData: ObservableObject, Codable{
-    var id = ""
+    @Published var id = ""
     @Published var profileImageURL: String = "https://firebasestorage.googleapis.com/v0/b/gongam2-ff081.appspot.com/o/example2.jpeg?alt=media&token=2b4bbe1f-9ba2-49a7-bf54-87b5ca70eddd"
     @Published var name: String = ""
+    @Published var email: String = ""
     @Published var todayStudyTime: Int = 0
     @Published var goalStudyTime: Int = 0
     @Published var stopwatchStudyTime: Int = 0
     @Published var timerStudyTime: Int = 0
     @Published var lastUpdateDate: String = ""
-    @Published var studyData: Dictionary<String, Any> = [:]
     
     enum CodingKeys: String, CodingKey {
         case profileImageURL
@@ -27,7 +38,7 @@ class UserData: ObservableObject, Codable{
         case stopwatchStudyTime
         case timerStudyTime
         case lastUpdateDate
-        case studyData
+        case email
     }
     init() {}
     required init(from decoder: Decoder) throws {
@@ -39,7 +50,7 @@ class UserData: ObservableObject, Codable{
         stopwatchStudyTime = try container.decode(Int.self, forKey: .stopwatchStudyTime)
         timerStudyTime = try container.decode(Int.self, forKey: .timerStudyTime)
         lastUpdateDate = try container.decode(String.self, forKey: .lastUpdateDate)
-        studyData = try container.decode(Dictionary<String, Any>.self, forKey: .studyData)
+        email = try container.decode(String.self, forKey: .email)
     }
 
     func encode(to encoder: Encoder) throws {
@@ -51,35 +62,44 @@ class UserData: ObservableObject, Codable{
         try container.encode(stopwatchStudyTime, forKey: .stopwatchStudyTime)
         try container.encode(timerStudyTime, forKey: .timerStudyTime)
         try container.encode(lastUpdateDate, forKey: .lastUpdateDate)
-        try container.encode(studyData, forKey: .studyData)
+        try container.encode(email, forKey: .email)
     }
     
 }
 
 extension UserData {
     func downloadUserData(){
-        FirebassDataManager.shared.readUserDataFromFirebase(uid: self.id) { [weak self] userData in
+        FirebassDataManager.shared.readUserDataFromFirebase { [weak self] userData in
             guard let userData = userData else {
                 self?.setnewUserData()
                 return
             }
-
-            DispatchQueue.main.async {
-                // 사용자 데이터 업데이트
-                self?.name = userData.name
+            self?.id = userData.id
+            self?.name = userData.name
+            self?.email = userData.email
+            if userData.profileImageURL == "" {
+                self?.profileImageURL = "https://firebasestorage.googleapis.com/v0/b/gongam2-ff081.appspot.com/o/example2.jpeg?alt=media&token=2b4bbe1f-9ba2-49a7-bf54-87b5ca70eddd"
+            } else{
                 self?.profileImageURL = userData.profileImageURL
-                self?.todayStudyTime = userData.todayStudyTime
-                self?.goalStudyTime = userData.goalStudyTime
-                self?.stopwatchStudyTime = userData.stopwatchStudyTime
-                self?.timerStudyTime = userData.timerStudyTime
-                self?.lastUpdateDate = userData.lastUpdateDate
-                self?.studyData = userData.studyData
-                // 기타 필요한 사용자 데이터 업데이트
             }
+            self?.todayStudyTime = userData.todayStudyTime
+            self?.goalStudyTime = userData.goalStudyTime
+            self?.stopwatchStudyTime = userData.stopwatchStudyTime
+            self?.timerStudyTime = userData.timerStudyTime
+            self?.lastUpdateDate = userData.lastUpdateDate
         }
+        
+        print("UserData Name : \(self.name)")
+        print("UserData Email : \(self.email)")
+        print("UserData profileImageURL : \(self.profileImageURL)")
+        print("UserData todayStudyTime : \(self.todayStudyTime)")
+        print("UserData goalStudyTime : \(self.goalStudyTime)")
+        print("UserData lastUpdateDate : \(self.lastUpdateDate)")
+        
     }
     
     func uploadUserData(){
+        self.lastUpdateDate = getCurrentDateAsString()
         let data = [
             "name" : self.name,
             "todayStudyTime" : self.todayStudyTime,
@@ -87,9 +107,11 @@ extension UserData {
             "stopwatchStudyTime" : self.stopwatchStudyTime,
             "timerStudyTime" : self.timerStudyTime,
             "lastUpdateDate" : self.lastUpdateDate,
-            "studyData" : self.studyData
+            "profileImageURL" : self.profileImageURL,
+            "email" : self.email
         ] as [String : Any]
         FirebassDataManager.shared.writeUserDataToFirebase(uid: self.id, data: data)
+        
     }
     
     func setnewUserData(){
@@ -99,15 +121,18 @@ extension UserData {
             self?.id = userData.id
             self?.name = userData.name
             self?.profileImageURL = userData.profileImageURL
+            self?.email = userData.email
             
+            self?.lastUpdateDate = userData.getCurrentDateAsString()
             let data = [
                 "name" : userData.name,
                 "todayStudyTime" : userData.todayStudyTime,
                 "goalStudyTime" : userData.goalStudyTime,
                 "stopwatchStudyTime" : userData.stopwatchStudyTime,
                 "timerStudyTime" : userData.timerStudyTime,
-                "lastUpdateDate" : userData.lastUpdateDate,
-                "studyData" : userData.studyData
+                "lastUpdateDate" : userData.getCurrentDateAsString(),
+                "profileImageURL" : userData.profileImageURL,
+                "email" : userData.email
             ]
             FirebassDataManager.shared.writeNewUserDataToFirebase(uid: userData.id, data: data)
             FirebassDataManager.shared.writeRankDataToFirebase(uid: userData.id, data: userData.todayStudyTime)
@@ -128,6 +153,16 @@ extension UserData {
         } catch {
             fatalError("Error encoding UserData to JSON: \(error.localizedDescription)")
         }
+    }
+    
+    func getCurrentDateAsString() -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        
+        let currentDate = Date()
+        let dateString = dateFormatter.string(from: currentDate)
+        
+        return dateString
     }
 }
 extension Date {

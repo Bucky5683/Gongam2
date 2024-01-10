@@ -150,18 +150,4 @@ extension AuthenticationManager {
         let credential = GoogleAuthProvider.credential(withIDToken: tokens.idToken, accessToken: tokens.accessToken)
         return try await signInWithCredential(credential: credential)
     }
-    
-    func getGoogleProfileData(viewController: UIViewController){
-        GIDSignIn.sharedInstance.signIn(withPresenting: viewController) { signInResult, error in
-            
-            guard error == nil else { return }
-            guard let signInResult = signInResult else { return }
-
-            let user = signInResult.user
-            let fullName = user.profile?.name
-            let profilePicUrl = user.profile?.imageURL(withDimension: 320)
-            
-            
-        }
-    }
 }

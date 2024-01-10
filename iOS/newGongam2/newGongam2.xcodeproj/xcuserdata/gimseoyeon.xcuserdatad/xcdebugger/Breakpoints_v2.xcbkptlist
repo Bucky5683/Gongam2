@@ -7,16 +7,16 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "4DAC6E51-C3DB-456B-89D9-79C6C35156E5"
+            uuid = "9E281273-EE7B-465A-A781-B10D90563274"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "newGongam2/FirebassDataManager.swift"
+            filePath = "newGongam2/Model/UserTimeData.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "41"
-            endingLineNumber = "41"
-            landmarkName = "readUserDataFromFirebase(uid:completion:)"
+            startingLineNumber = "68"
+            endingLineNumber = "68"
+            landmarkName = "setNewFetchTimeData()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

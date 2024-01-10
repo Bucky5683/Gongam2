@@ -40,6 +40,8 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 struct newGongam2App: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
     @StateObject var userData = UserData()
+    @StateObject var userTimeData = UserTimeData()
+    
     init() {
         // Kakao SDK 초기화
         let KAKAO_APP_KEY: String = Bundle.main.infoDictionary?["KAKAO_APP_KEY"] as? String ?? "KAKAO_APP_KEY is nil"
@@ -64,6 +66,7 @@ struct newGongam2App: App {
                         }
                     }
             }.environmentObject(userData)
+                .environmentObject(userTimeData)
         }
     }
 }
