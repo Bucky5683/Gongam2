@@ -16,7 +16,9 @@
     <color name="shadow_gray2">#E6000000</color>
     <color name="shadow_gray3">#99000000</color>
     <color name="shadow_gray4">#8A000000</color>
+
     <color name="gray_line">#2E323C</color>
+    <color name="gray_line2">#B2B2B2</color>
 
     <color name="red_scale1">#FF0000</color>
 

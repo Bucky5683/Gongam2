@@ -47,6 +47,7 @@ import androidx.core.content.ContextCompat
 import com.chargemap.compose.numberpicker.ListItemPicker
 import com.chargemap.compose.numberpicker.NumberPicker
 import com.cono.gongam.R
+import com.cono.gongam.ui.TopTitle
 import com.cono.gongam.ui.theme.GongamTheme
 
 class TimerActivity : ComponentActivity() {
@@ -77,52 +78,9 @@ fun PreviewTimer() {
             .fillMaxHeight()
             .background(color = colorResource(id = R.color.main_gray))
     ) {
-        TimerTitle()
-        GrayLine()
+        TopTitle(backgroundColor = colorResource(id = R.color.main_gray), textColor = colorResource(id = R.color.white), centerText = "타이머", dividerLineColor = colorResource(id = R.color.gray_line))
         TimerScreen()
     }
-}
-
-@Composable
-fun TimerTitle() {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(44.dp)
-            .background(color = colorResource(id = R.color.main_gray))
-    ) {
-        Row(
-            modifier = Modifier
-                .wrapContentWidth()
-                .align(Alignment.CenterStart)
-        ) {
-            Spacer(Modifier.width(16.dp))
-            Text(
-                text = "Main",
-                color = Color.White,
-                fontWeight = FontWeight(400),
-                fontSize = 17.sp,
-            )
-        }
-        Text(
-            text = "타이머",
-            color = Color.White,
-            fontWeight = FontWeight(600),
-            fontSize = 17.sp,
-            textAlign = TextAlign.Center,
-            modifier = Modifier.align(Alignment.Center)
-        )
-    }
-}
-
-@Composable
-fun GrayLine() {
-    Box(
-        modifier = Modifier
-            .height(0.25.dp)
-            .fillMaxWidth()
-            .background(color = colorResource(id = R.color.gray_line))
-    )
 }
 
 @RequiresApi(Build.VERSION_CODES.Q)
