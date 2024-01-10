@@ -68,6 +68,31 @@ class UserData: ObservableObject, Codable{
 }
 
 extension UserData {
+    func timeToText(studyTime: Int) -> String{
+        let seconds = studyTime % 60
+        let minute = (studyTime - seconds) % 60
+        let hours = (studyTime - seconds - (minute*60)) % 60
+        
+        let stringTime = String(format: "%02d", hours) + ":" + String(format: "%02d", minute) + ":" + String(format: "%02d", seconds)
+        
+        return stringTime
+    }
+    func remainToGoalText(goal: Int, time: Int) -> String{
+        if goal - time > 0{
+            let remainTime = goal - time
+            let remainTimeText = self.timeToText(studyTime: remainTime)
+            return remainTimeText
+        } else {
+            return "00:00:00"
+        }
+        
+    }
+}
+
+// MARK: Firebase Function
+extension UserData {
+    
+    // 유저데이터 전체 다운로드
     func downloadUserData(){
         FirebassDataManager.shared.readUserDataFromFirebase { [weak self] userData in
             guard let userData = userData else {
@@ -98,6 +123,7 @@ extension UserData {
         
     }
     
+    //유저 데이터 전체 업로드
     func uploadUserData(){
         self.lastUpdateDate = getCurrentDateAsString()
         let data = [
@@ -114,6 +140,7 @@ extension UserData {
         
     }
     
+    // 데이터베이스에 유저의 데이터가 없을 경우(신규 유저일 경우) 데이터 생성 후 업로드
     func setnewUserData(){
         FirebassDataManager.shared.newFetchUserData { [weak self] userData in
             guard let userData = userData else { return }
