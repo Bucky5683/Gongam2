@@ -10,6 +10,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -42,9 +43,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.cono.gongam.R
 import com.cono.gongam.data.User
+import com.cono.gongam.data.UserViewModel
 import com.cono.gongam.ui.login.ui.theme.GongamTheme
 import com.cono.gongam.ui.main.MainActivity
+import com.cono.gongam.ui.register.RegisterActivity
 import com.cono.gongam.ui.splash.SplashImage
+import com.cono.gongam.utils.DateUtils
+import com.cono.gongam.utils.SharedPreferencesUtil
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.IdpResponse
 import com.google.firebase.Firebase
@@ -53,7 +58,10 @@ import com.google.firebase.database.database
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
+// TODO :: 로그인 했던 계정 정보가 SharedPreferences에 있을 경우 MainActivity로 바로 이동
+
 class LoginActivity : ComponentActivity() {
+    private val viewModel: UserViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -70,11 +78,13 @@ class LoginActivity : ComponentActivity() {
                             startActivity(Intent(this@LoginActivity, MainActivity::class.java))
                             finish()
                         },
-                        onRegisterSuccess = {
+                        onRegisterSuccess = { user ->
                             Toast.makeText(applicationContext, "로그인 되었습니다.", Toast.LENGTH_SHORT).show()
                             Log.d("[LoginScreen]", "사용자 데이터를 데이터베이스에 저장했습니다. 회원가입 화면으로 이동")
-                            // TODO :: RegisterAcitivy 생성 후 연결
-//                            startActivity(Intent(this@LoginActivity, RegisterActivity::class.java))
+                            viewModel.setCurrentUser(user)
+                            val sharedPreferencesUtil = SharedPreferencesUtil(this)
+                            sharedPreferencesUtil.saveUser(user)
+                            startActivity(Intent(this@LoginActivity, RegisterActivity::class.java))
                             finish()
                         })
                 }
@@ -84,7 +94,7 @@ class LoginActivity : ComponentActivity() {
 }
 
 @Composable
-fun LoginScreen(onLoginSuccess: () -> Unit, onRegisterSuccess: () -> Unit) {
+fun LoginScreen(onLoginSuccess: () -> Unit, onRegisterSuccess: (user: User) -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxSize(),
@@ -107,7 +117,7 @@ fun LoginScreen(onLoginSuccess: () -> Unit, onRegisterSuccess: () -> Unit) {
 }
 
 @Composable
-fun GoogleLoginButton(onLoginSuccess: () -> Unit, onRegisterSuccess: () -> Unit) {
+fun GoogleLoginButton(onLoginSuccess: () -> Unit, onRegisterSuccess: (user: User) -> Unit) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
 
@@ -190,18 +200,20 @@ fun GoogleLoginButton(onLoginSuccess: () -> Unit, onRegisterSuccess: () -> Unit)
 
 }
 
-suspend fun checkAndAddUserToDatabase(context: Context, uid: String, email: String, name: String, profileImgURL: String, onLoginSuccess: () -> Unit, onRegisterSuccess: () -> Unit) {
+suspend fun checkAndAddUserToDatabase(context: Context, uid: String, email: String, name: String, profileImgURL: String, onLoginSuccess: () -> Unit, onRegisterSuccess: (user: User) -> Unit) {
     val usersRef = Firebase.database.getReference("Users")
 
     // 해당 UID의 사용자 데이터가 있는지 확인
     val dataSnapshot = usersRef.child(uid).get().await()
 
     if (!dataSnapshot.exists()) { // 새로운 사용자 추가 -> 회원가입 화면으로 이동
-        val newUser = User(email = email, name = name, profileImageURL = profileImgURL)
+        val todayDate = DateUtils.getCurrentDate()
+        Log.d("[LoginScreen]", "todayDate : $todayDate")
+        val newUser = User(email = email, name = name, profileImageURL = profileImgURL, lastUpdateDate = todayDate)
         usersRef.child(uid).setValue(newUser)
             .addOnSuccessListener {
                 Log.d("[LoginScreen]", "checkAndAddUserToDatabase :: $uid, $email 사용자 추가 완료")
-                onRegisterSuccess()
+                onRegisterSuccess(newUser)
             }
             .addOnFailureListener {
                 Log.d("[LoginScreen]", "checkAndAddUserToDatabase :: 새 사용자 추가 실패: ${it.message}")

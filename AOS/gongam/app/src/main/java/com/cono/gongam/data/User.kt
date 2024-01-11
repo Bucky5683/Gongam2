@@ -1,12 +1,12 @@
 package com.cono.gongam.data
 
 data class User(
-    val email: String? = null, // from google
-    val goalStudyTime: Int? = null,
-    val lastUpdateDate: String? = null,
-    val name: String? = null, // from google
-    val profileImageURL: String? = null, // from google
-    val stopwatchStudyTime: Int? = null,
-    val timerStudyTime: Int? = null,
-    val todayStudyTime: Int? = null,
+    var email: String? = "", // from google
+    var goalStudyTime: Int? = 0,
+    var lastUpdateDate: String? = "", // 회원가입 or 프로필 변경 시 업데이트
+    var name: String? = "", // from google
+    var profileImageURL: String? = "", // from google
+    var stopwatchStudyTime: Int? = 0,
+    var timerStudyTime: Int? = 0,
+    var todayStudyTime: Int? = 0,
 )
