@@ -1,6 +1,7 @@
 package com.cono.gongam.ui.login
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -13,14 +14,11 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -31,11 +29,11 @@ import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -43,13 +41,17 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.cono.gongam.R
+import com.cono.gongam.data.User
 import com.cono.gongam.ui.login.ui.theme.GongamTheme
 import com.cono.gongam.ui.main.MainActivity
 import com.cono.gongam.ui.splash.SplashImage
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.IdpResponse
+import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.database.database
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 
 class LoginActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -61,19 +63,28 @@ class LoginActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = Color.White,
                 ) {
-                    LoginScreen(onLoginSuccess = { user ->
-                        startActivity(Intent(this@LoginActivity, MainActivity::class.java))
-                        finish()
-                    })
+                    LoginScreen(
+                        onLoginSuccess = {
+                            Toast.makeText(applicationContext, "로그인 되었습니다.", Toast.LENGTH_SHORT).show()
+                            Log.d("[LoginScreen]", "사용자가 이미 데이터베이스에 존재합니다. 로그인 처리")
+                            startActivity(Intent(this@LoginActivity, MainActivity::class.java))
+                            finish()
+                        },
+                        onRegisterSuccess = {
+                            Toast.makeText(applicationContext, "로그인 되었습니다.", Toast.LENGTH_SHORT).show()
+                            Log.d("[LoginScreen]", "사용자 데이터를 데이터베이스에 저장했습니다. 회원가입 화면으로 이동")
+                            // TODO :: RegisterAcitivy 생성 후 연결
+//                            startActivity(Intent(this@LoginActivity, RegisterActivity::class.java))
+                            finish()
+                        })
                 }
             }
         }
     }
 }
 
-
 @Composable
-fun LoginScreen(onLoginSuccess: (FirebaseUser) -> Unit) {
+fun LoginScreen(onLoginSuccess: () -> Unit, onRegisterSuccess: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxSize(),
@@ -91,16 +102,14 @@ fun LoginScreen(onLoginSuccess: (FirebaseUser) -> Unit) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Spacer(modifier = Modifier.weight(1f))
-        GoogleLoginButton(onLoginSuccess = onLoginSuccess)
-//        Spacer(modifier = Modifier.height())
-//        GoogleSignIn
+        GoogleLoginButton(onLoginSuccess = onLoginSuccess, onRegisterSuccess = onRegisterSuccess)
     }
 }
 
 @Composable
-fun GoogleLoginButton(onLoginSuccess: (FirebaseUser) -> Unit) {
+fun GoogleLoginButton(onLoginSuccess: () -> Unit, onRegisterSuccess: () -> Unit) {
     val context = LocalContext.current
-    val lifecycleOwner = LocalLifecycleOwner.current
+    val scope = rememberCoroutineScope()
 
     val startForResult = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         val response = IdpResponse.fromResultIntent(result.data)
@@ -108,19 +117,21 @@ fun GoogleLoginButton(onLoginSuccess: (FirebaseUser) -> Unit) {
         if (result.resultCode == Activity.RESULT_OK) {
             val user = FirebaseAuth.getInstance().currentUser
             user?.let {
-                onLoginSuccess(it)
-                Toast.makeText(context, "로그인 되었습니다.", Toast.LENGTH_SHORT).show()
+                scope.launch {
+                    val currentUser = FirebaseAuth.getInstance().currentUser
+                    currentUser?.let {
+                        val uid = it.uid // used as a key
+                        val email = it.email
+                        val name = it.displayName
+                        val profileImageUrl = it.photoUrl
 
-                val currentUser = FirebaseAuth.getInstance().currentUser
-                currentUser?.let {
-                    val uid = it.uid
-                    val email = it.email
-                    val displayName = it.displayName
+                        Log.d("[LoginScreen]", "GoogleLoginButton :: firebase getInstance() :: uid: $uid")
+                        Log.d("[LoginScreen]", "GoogleLoginButton :: firebase getInstance() :: email: $email")
+                        Log.d("[LoginScreen]", "GoogleLoginButton :: firebase getInstance() :: name: $name")
+                        Log.d("[LoginScreen]", "GoogleLoginButton :: firebase getInstance() :: profileImageUrl: $profileImageUrl")
 
-                    Log.d("GoogleLoginTest", "UID: $uid")
-                    Log.d("GoogleLoginTest", "Email: $email")
-                    Log.d("GoogleLoginTest", "DisplayName: $displayName")
-
+                        checkAndAddUserToDatabase(context = context, uid = uid, email = email!!, name = name!!, profileImgURL = profileImageUrl.toString(), onLoginSuccess, onRegisterSuccess)
+                    }
                 }
             }
         } else {
@@ -179,9 +190,33 @@ fun GoogleLoginButton(onLoginSuccess: (FirebaseUser) -> Unit) {
 
 }
 
+suspend fun checkAndAddUserToDatabase(context: Context, uid: String, email: String, name: String, profileImgURL: String, onLoginSuccess: () -> Unit, onRegisterSuccess: () -> Unit) {
+    val usersRef = Firebase.database.getReference("Users")
+
+    // 해당 UID의 사용자 데이터가 있는지 확인
+    val dataSnapshot = usersRef.child(uid).get().await()
+
+    if (!dataSnapshot.exists()) { // 새로운 사용자 추가 -> 회원가입 화면으로 이동
+        val newUser = User(email = email, name = name, profileImageURL = profileImgURL)
+        usersRef.child(uid).setValue(newUser)
+            .addOnSuccessListener {
+                Log.d("[LoginScreen]", "checkAndAddUserToDatabase :: $uid, $email 사용자 추가 완료")
+                onRegisterSuccess()
+            }
+            .addOnFailureListener {
+                Log.d("[LoginScreen]", "checkAndAddUserToDatabase :: 새 사용자 추가 실패: ${it.message}")
+                Toast.makeText(context, "오류가 발생했습니다. 다시 시도해 주세요.", Toast.LENGTH_SHORT).show()
+            }
+    }
+    else { // 메인 화면으로 이동
+        Log.d("[LoginScreen]", "checkAndAddUserToDatabase :: 이미 존재하는 사용자 :: $uid")
+        onLoginSuccess()
+    }
+}
+
 // ------------------------------------ Previews ------------------------------------
 @Preview(showSystemUi = true, showBackground = true)
 @Composable
 fun PreviewLoginScreen() {
-    LoginScreen(onLoginSuccess = {})
+    LoginScreen(onLoginSuccess = {}, onRegisterSuccess = {})
 }
