@@ -15,6 +15,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -116,6 +118,24 @@ fun SpacedEdgeTextsWithCenterVertically(leftText: String, leftTextSize: TextUnit
             fontWeight = rightTextWeight,
             textDecoration = if (setRightUnderLine) TextDecoration.Underline else null
         )
+    }
+}
+
+@Composable
+fun CircleTextButton(buttonText: String, nextBtnOnClick: () -> Unit) {
+    // TODO :: 버튼 shadow 적용
+    Button(
+        onClick = {
+            nextBtnOnClick()
+        },
+        modifier = Modifier
+            .width(100.dp)
+            .height(100.dp),
+        colors = ButtonDefaults.buttonColors(
+            containerColor = colorResource(id = R.color.main_gray)
+        ),
+    ) {
+        Text(text = buttonText, fontSize = 18.sp, fontWeight = FontWeight(700), color = colorResource(id = R.color.white))
     }
 }
 

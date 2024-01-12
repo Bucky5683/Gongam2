@@ -1,7 +1,6 @@
 package com.cono.gongam.ui.login
 
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -10,7 +9,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.activity.viewModels
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -43,7 +41,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.cono.gongam.R
 import com.cono.gongam.data.User
-import com.cono.gongam.data.UserViewModel
 import com.cono.gongam.ui.login.ui.theme.GongamTheme
 import com.cono.gongam.ui.main.MainActivity
 import com.cono.gongam.ui.register.RegisterActivity
@@ -55,15 +52,22 @@ import com.firebase.ui.auth.IdpResponse
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.database
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
-// TODO :: 로그인 했던 계정 정보가 SharedPreferences에 있을 경우 MainActivity로 바로 이동
+// TODO :: 로그인 했던 계정 정보가 SharedPreferences에 있을 경우 MainActivity로 바로 이동(자동 로그인)
 
+@AndroidEntryPoint
 class LoginActivity : ComponentActivity() {
-    private val viewModel: UserViewModel by viewModels()
+//    private val userViewModel: UserViewModel by viewModels()
+//    @Inject
+//    lateinit var userViewModel: UserViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+//        val userViewModel = ViewModelProvider(this)[UserViewModel::class.java]
         setContent {
             GongamTheme {
                 // A surface container using the 'background' color from the theme
@@ -72,21 +76,30 @@ class LoginActivity : ComponentActivity() {
                     color = Color.White,
                 ) {
                     LoginScreen(
-                        onLoginSuccess = {
+                        onLoginSuccess =
+                        { user ->
                             Toast.makeText(applicationContext, "로그인 되었습니다.", Toast.LENGTH_SHORT).show()
-                            Log.d("[LoginScreen]", "사용자가 이미 데이터베이스에 존재합니다. 로그인 처리")
+
+                            val sharedPreferencesUtil = SharedPreferencesUtil(this)
+                            sharedPreferencesUtil.saveUser(user)
+                            Log.d("[LoginScreen]", "getUserInSP : ${sharedPreferencesUtil.getUser()}")
+
                             startActivity(Intent(this@LoginActivity, MainActivity::class.java))
                             finish()
                         },
-                        onRegisterSuccess = { user ->
+                        onRegisterSuccess =
+                        { newUser ->
+                            Log.d("[LoginScreen]", "newUser 정보 : ${newUser}")
                             Toast.makeText(applicationContext, "로그인 되었습니다.", Toast.LENGTH_SHORT).show()
-                            Log.d("[LoginScreen]", "사용자 데이터를 데이터베이스에 저장했습니다. 회원가입 화면으로 이동")
-                            viewModel.setCurrentUser(user)
+//                            userViewModel.setCurrentUser(newUser)
+//                            Log.d("[LoginScreen]", "getCurrentUser : ${userViewModel.getCurrentUser()}")
                             val sharedPreferencesUtil = SharedPreferencesUtil(this)
-                            sharedPreferencesUtil.saveUser(user)
+                            sharedPreferencesUtil.saveUser(newUser)
+                            Log.d("[LoginScreen]", "getUserInSP : ${sharedPreferencesUtil.getUser()}")
                             startActivity(Intent(this@LoginActivity, RegisterActivity::class.java))
                             finish()
-                        })
+                        }
+                    )
                 }
             }
         }
@@ -94,7 +107,7 @@ class LoginActivity : ComponentActivity() {
 }
 
 @Composable
-fun LoginScreen(onLoginSuccess: () -> Unit, onRegisterSuccess: (user: User) -> Unit) {
+fun LoginScreen(onLoginSuccess: (lUser: User) -> Unit, onRegisterSuccess: (newUser: User) -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxSize(),
@@ -117,7 +130,7 @@ fun LoginScreen(onLoginSuccess: () -> Unit, onRegisterSuccess: (user: User) -> U
 }
 
 @Composable
-fun GoogleLoginButton(onLoginSuccess: () -> Unit, onRegisterSuccess: (user: User) -> Unit) {
+fun GoogleLoginButton(onLoginSuccess: (lUser: User) -> Unit, onRegisterSuccess: (newUser: User) -> Unit) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
 
@@ -125,22 +138,37 @@ fun GoogleLoginButton(onLoginSuccess: () -> Unit, onRegisterSuccess: (user: User
         val response = IdpResponse.fromResultIntent(result.data)
 
         if (result.resultCode == Activity.RESULT_OK) {
-            val user = FirebaseAuth.getInstance().currentUser
-            user?.let {
+            val currentUser = FirebaseAuth.getInstance().currentUser
+            currentUser?.let {
                 scope.launch {
                     val currentUser = FirebaseAuth.getInstance().currentUser
-                    currentUser?.let {
+                    currentUser?.let { it ->
                         val uid = it.uid // used as a key
                         val email = it.email
                         val name = it.displayName
                         val profileImageUrl = it.photoUrl
+                        val todayDate = DateUtils.getCurrentDate()
+                        val user = User(email = email, lastUpdateDate = todayDate, name = name, profileImageURL = profileImageUrl.toString())
 
                         Log.d("[LoginScreen]", "GoogleLoginButton :: firebase getInstance() :: uid: $uid")
                         Log.d("[LoginScreen]", "GoogleLoginButton :: firebase getInstance() :: email: $email")
                         Log.d("[LoginScreen]", "GoogleLoginButton :: firebase getInstance() :: name: $name")
                         Log.d("[LoginScreen]", "GoogleLoginButton :: firebase getInstance() :: profileImageUrl: $profileImageUrl")
 
-                        checkAndAddUserToDatabase(context = context, uid = uid, email = email!!, name = name!!, profileImgURL = profileImageUrl.toString(), onLoginSuccess, onRegisterSuccess)
+                        if (isNewUser(uid = uid)) { // 새로운 유저 -> DB에 삽입
+                            Firebase.database.getReference("Users").child(uid).setValue(user)
+                                .addOnSuccessListener {
+                                    Log.d("[LoginScreen]", "RealtimeDB :: $uid, $email 사용자 추가 완료")
+                                }
+                                .addOnFailureListener {
+                                    Log.d("[LoginScreen]", "새 사용자 추가 실패: ${it.message}")
+//                                    Toast.makeText(context, "오류가 발생했습니다. 다시 시도해 주세요.", Toast.LENGTH_SHORT).show()
+                                }
+
+                            onRegisterSuccess(user)
+                        } else { // 이미 존재하는 유저
+                            onLoginSuccess(user)
+                        }
                     }
                 }
             }
@@ -173,7 +201,7 @@ fun GoogleLoginButton(onLoginSuccess: () -> Unit, onRegisterSuccess: (user: User
         elevation = CardDefaults.cardElevation(
             defaultElevation = 3.dp
         ), // Add shadow here
-        shape = RoundedCornerShape(10.dp), // You can adjust corner shape as needed
+        shape = RoundedCornerShape(10.dp), // Adjust corner shape as needed
         colors = CardDefaults.cardColors(
             containerColor = Color.White
         )
@@ -187,7 +215,7 @@ fun GoogleLoginButton(onLoginSuccess: () -> Unit, onRegisterSuccess: (user: User
                 contentDescription = "Google Logo",
                 modifier = Modifier.size(24.dp)
             )
-            Spacer(modifier = Modifier.width(15.dp)) // Add space between image and text
+            Spacer(modifier = Modifier.width(15.dp))
             Text(
                 text = "Google 로그인",
                 fontSize = 17.sp,
@@ -200,33 +228,25 @@ fun GoogleLoginButton(onLoginSuccess: () -> Unit, onRegisterSuccess: (user: User
 
 }
 
-suspend fun checkAndAddUserToDatabase(context: Context, uid: String, email: String, name: String, profileImgURL: String, onLoginSuccess: () -> Unit, onRegisterSuccess: (user: User) -> Unit) {
+suspend fun isNewUser(uid: String): Boolean {
     val usersRef = Firebase.database.getReference("Users")
+    var isNewUser = false
 
     // 해당 UID의 사용자 데이터가 있는지 확인
     val dataSnapshot = usersRef.child(uid).get().await()
 
-    if (!dataSnapshot.exists()) { // 새로운 사용자 추가 -> 회원가입 화면으로 이동
-        val todayDate = DateUtils.getCurrentDate()
-        Log.d("[LoginScreen]", "todayDate : $todayDate")
-        val newUser = User(email = email, name = name, profileImageURL = profileImgURL, lastUpdateDate = todayDate)
-        usersRef.child(uid).setValue(newUser)
-            .addOnSuccessListener {
-                Log.d("[LoginScreen]", "checkAndAddUserToDatabase :: $uid, $email 사용자 추가 완료")
-                onRegisterSuccess(newUser)
-            }
-            .addOnFailureListener {
-                Log.d("[LoginScreen]", "checkAndAddUserToDatabase :: 새 사용자 추가 실패: ${it.message}")
-                Toast.makeText(context, "오류가 발생했습니다. 다시 시도해 주세요.", Toast.LENGTH_SHORT).show()
-            }
+    if (!dataSnapshot.exists()) {
+        Log.d("[databasetest]", "데이터 존재하지 않음")
+        isNewUser = true
+    } else {
+        Log.d("[databasetest]", "데이터 존재")
     }
-    else { // 메인 화면으로 이동
-        Log.d("[LoginScreen]", "checkAndAddUserToDatabase :: 이미 존재하는 사용자 :: $uid")
-        onLoginSuccess()
-    }
+
+    return isNewUser
 }
 
 // ------------------------------------ Previews ------------------------------------
+
 @Preview(showSystemUi = true, showBackground = true)
 @Composable
 fun PreviewLoginScreen() {
