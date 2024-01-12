@@ -14,12 +14,30 @@
 				<string>kakaoa2f569d915117da38117a291b4af1657</string>
 			</array>
 		</dict>
-		<dict/>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>Google Sign In</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.480518054438-g5k6fuuod7p8258dfq182auesl42dg9i</string>
+			</array>
+		</dict>
 	</array>
+	<key>GIDClientID</key>
+	<string>480518054438-g5k6fuuod7p8258dfq182auesl42dg9i.apps.googleusercontent.com</string>
+	<key>KAKAO_APP_KEY</key>
+	<string>a2f569d915117da38117a291b4af1657</string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>kakaokompassauth</string>
 		<string>kakaolink</string>
 	</array>
+	<key>UILaunchScreen</key>
+	<dict>
+		<key>UILauchScreen</key>
+		<dict/>
+	</dict>
 </dict>
 </plist>
