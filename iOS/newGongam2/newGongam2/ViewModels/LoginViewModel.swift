@@ -66,6 +66,11 @@ final class LoginViewModel: ObservableObject {
             print("로그인 완료")
         }
     }
+    
+    func setUserDataes(userData: UserData, userTimeData: UserTimeData){
+        userData.downloadUserData()
+        userTimeData.downloadUserTimeData()
+    }
     //    func kakaoAuthSignIn() {
     //        if AuthApi.hasToken() { // 발급된 토큰이 있는지
     //            UserApi.shared.accessTokenInfo { _, error in // 해당 토큰이 유효한지

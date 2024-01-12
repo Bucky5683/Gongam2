@@ -19,26 +19,22 @@ import GoogleSignIn
 struct LoginView: View {
     @EnvironmentObject var userData: UserData
     @EnvironmentObject var userTimeData: UserTimeData
+    @Environment(NavigationCoordinator.self) var coordinator: NavigationCoordinator
     @StateObject var viewModel = LoginViewModel()
     @State private var shouldNavigateToSetProfile = false
     
     var body: some View {
         NavigationView{
             VStack{
-                NavigationLink(
-                    destination: SetProfileView(),
-                    isActive: $shouldNavigateToSetProfile,
-                    label: {
-                        EmptyView()
-                    }
-                )
+                Image("LaunchImage")
+                    .frame(width: 118)
                 GoogleSignInButton(viewModel: GoogleSignInButtonViewModel(scheme: .dark, style: .wide, state: .normal)){
                     Task{
                         do{
                             try await viewModel.googleLogin()
-                            userData.downloadUserData()
-                            userTimeData.downloadData()
-                            shouldNavigateToSetProfile = true
+                            viewModel.setUserDataes(userData: userData, userTimeData: userTimeData)
+                            coordinator.isProfileEdit = false
+                            coordinator.push(.setProfile)
                         } catch {
                             print(error)
                         }
@@ -57,22 +53,18 @@ struct LoginView: View {
                             return
                         }
                         viewModel.appleLogin(credential: credential)
-                        Task{
-                            do {
-                                userData.downloadUserData()
-                                userTimeData.downloadData()
-                                shouldNavigateToSetProfile = true
-                            } catch {
-                                print(error)
-                            }
-                        }
+                        viewModel.setUserDataes(userData: userData, userTimeData: userTimeData)
+                        coordinator.isProfileEdit = false
+                        coordinator.push(.setProfile)
                     case .failure(let error):
                         print(error.localizedDescription)
                     }
                 }
                 .frame(width: UIScreen.main.bounds.width * 0.9, height: 50)
             }
-        }.navigationBarHidden(true)
+        }
+        .background(.whiteFFFFFF, ignoresSafeAreaEdges: .all)
+        .navigationBarHidden(true)
     }
     
     

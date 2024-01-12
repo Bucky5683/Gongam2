@@ -21,7 +21,7 @@ struct MainMyReportGridView: View {
                 MyReportGridItem(weeklys: "F")
                 MyReportGridItem(weeklys: "S")
             }
-        }
+        }.background(.whiteFFFFFF, ignoresSafeAreaEdges: .all)
     }
 }
 

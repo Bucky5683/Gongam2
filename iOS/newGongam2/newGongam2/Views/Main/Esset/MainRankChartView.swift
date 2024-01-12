@@ -18,6 +18,17 @@ struct MainRankChartView: View {
             VStack{
                 HStack{
                     Rectangle().frame(width: 67, height: 11).padding(.leading, 72)
+                        .foregroundColor(.lightBlueCBD9FE)
+                        .shadow(radius: 10)
+                    HStack{
+                        Text("OOO님의 등수")
+                        Text("999+")
+                    }.background(.pinkECB9C2)
+                        .shadow(radius: 10)
+                    Spacer()
+                }
+                HStack{
+                    Rectangle().frame(width: 67, height: 11).padding(.leading, 72)
                         .foregroundColor(.lightGrayA5ABBD)
                         .shadow(radius: 10)
                     HStack{
@@ -40,7 +51,7 @@ struct MainRankChartView: View {
                     Spacer()
                 }
             }
-        }
+        }.background(.whiteFFFFFF, ignoresSafeAreaEdges: .all)
     }
 }
 

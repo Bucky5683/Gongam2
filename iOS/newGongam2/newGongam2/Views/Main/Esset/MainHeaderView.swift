@@ -9,17 +9,19 @@ import SwiftUI
 
 struct MainHeaderView: View {
     @EnvironmentObject var userData: UserData
-    @State var purposeTimeRemains = true
+    @Environment(NavigationCoordinator.self) var coordinator: NavigationCoordinator
+    @Binding var viewModel: MainViewModel
     
     var body: some View {
         VStack(content: {
             Text("오늘 공부한 시간")
-            Text(userData.timeToText(studyTime: userData.todayStudyTime))
+            Text(userData.todayStudyTime.timeToText())
             HStack(){
-                if purposeTimeRemains{
+                if viewModel.calculateReMainTime(goalTime: userData.goalStudyTime, todayStudyTime: userData.todayStudyTime) > 0{
+                    let remaintime = viewModel.calculateReMainTime(goalTime: userData.goalStudyTime, todayStudyTime: userData.todayStudyTime)
                     Text("🔥")
                     Text("목표까지")
-                    Text(userData.remainToGoalText(goal: userData.goalStudyTime, time: userData.todayStudyTime))
+                    Text(remaintime.timeToText())
                     Text("🔥")
                 } else {
                     Text("🔥")
@@ -27,10 +29,6 @@ struct MainHeaderView: View {
                     Text("🔥")
                 }
             }.background(Color.lightGrayA5ABBD)
-        })
+        }).background(.darkBlue414756, ignoresSafeAreaEdges: .all)
     }
-}
-
-#Preview {
-    MainHeaderView()
 }

@@ -67,28 +67,6 @@ class UserData: ObservableObject, Codable{
     
 }
 
-extension UserData {
-    func timeToText(studyTime: Int) -> String{
-        let seconds = studyTime % 60
-        let minute = (studyTime - seconds) % 60
-        let hours = (studyTime - seconds - (minute*60)) % 60
-        
-        let stringTime = String(format: "%02d", hours) + ":" + String(format: "%02d", minute) + ":" + String(format: "%02d", seconds)
-        
-        return stringTime
-    }
-    func remainToGoalText(goal: Int, time: Int) -> String{
-        if goal - time > 0{
-            let remainTime = goal - time
-            let remainTimeText = self.timeToText(studyTime: remainTime)
-            return remainTimeText
-        } else {
-            return "00:00:00"
-        }
-        
-    }
-}
-
 // MARK: Firebase Function
 extension UserData {
     
@@ -141,7 +119,7 @@ extension UserData {
     }
     
     // 데이터베이스에 유저의 데이터가 없을 경우(신규 유저일 경우) 데이터 생성 후 업로드
-    func setnewUserData(){
+    private func setnewUserData(){
         FirebassDataManager.shared.newFetchUserData { [weak self] userData in
             guard let userData = userData else { return }
 
@@ -162,8 +140,11 @@ extension UserData {
                 "email" : userData.email
             ]
             FirebassDataManager.shared.writeNewUserDataToFirebase(uid: userData.id, data: data)
-            FirebassDataManager.shared.writeRankDataToFirebase(uid: userData.id, data: userData.todayStudyTime)
         }
+    }
+    
+    func setUserDataPartly(type: userDataType, data: Any){
+        FirebassDataManager.shared.writeUserDataPartlyToFirebase(uid: self.id, type: type, data: data)
     }
 }
 extension UserData {

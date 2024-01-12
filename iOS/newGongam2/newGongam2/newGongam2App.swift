@@ -12,9 +12,11 @@ import KakaoSDKAuth
 import GoogleSignIn
 
 class AppDelegate: NSObject, UIApplicationDelegate {
+    var notifDelegate = NotificationDelegate()
+    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
         FirebaseApp.configure()
-
+        UNUserNotificationCenter.current().delegate = notifDelegate
         return true
     }
     
@@ -41,6 +43,7 @@ struct newGongam2App: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
     @StateObject var userData = UserData()
     @StateObject var userTimeData = UserTimeData()
+    @State private var coordinator = NavigationCoordinator()
     
     init() {
         // Kakao SDK 초기화
@@ -50,8 +53,11 @@ struct newGongam2App: App {
     
     var body: some Scene {
         WindowGroup {
-            NavigationStack{
-                LoginView()
+            NavigationStack(path: $coordinator.paths.animation(.linear(duration: 0))){
+                coordinator.navigate(to: .login)
+                    .navigationDestination(for: Screens.self){ screen in
+                        coordinator.navigate(to: screen)
+                    }
                     .onOpenURL { url in
                         GIDSignIn.sharedInstance.handle(url)
                         //                if (AuthApi.isKakaoTalkLoginUrl(url)) {
@@ -60,13 +66,14 @@ struct newGongam2App: App {
                         //                    _ = AuthController.handleOpenUrl(url: url)
                         //                }
                     }
-                    .onAppear {
-                        GIDSignIn.sharedInstance.restorePreviousSignIn { user, error in
-                            // Check if `user` exists; otherwise, do something with `error`
-                        }
-                    }
+//                    .onAppear {
+//                        GIDSignIn.sharedInstance.restorePreviousSignIn { user, error in
+//                            // Check if `user` exists; otherwise, do something with `error`
+//                        }
+//                    }
             }.environmentObject(userData)
                 .environmentObject(userTimeData)
+                .environment(coordinator)
         }
     }
 }
