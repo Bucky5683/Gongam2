@@ -32,7 +32,7 @@ struct LoginView: View {
                     Task{
                         do{
                             try await viewModel.googleLogin()
-                            viewModel.setUserDataes(userData: userData, userTimeData: userTimeData)
+                            await viewModel.setUserDataes(userData: userData, userTimeData: userTimeData)
                             coordinator.isProfileEdit = false
                             coordinator.push(.setProfile)
                         } catch {
@@ -45,19 +45,21 @@ struct LoginView: View {
                     request.requestedScopes = [.email, .fullName]
                     request.nonce = sha256(viewModel.norce)
                 } onCompletion: { (result) in
-                    switch result {
-                    case .success(let user):
-                        print("success")
-                        guard let credential = user.credential as? ASAuthorizationAppleIDCredential else{
-                            print("error with firebase")
-                            return
+                    Task {
+                        switch result {
+                        case .success(let user):
+                            print("success")
+                            guard let credential = user.credential as? ASAuthorizationAppleIDCredential else{
+                                print("error with firebase")
+                                return
+                            }
+                            viewModel.appleLogin(credential: credential)
+                            await viewModel.setUserDataes(userData: userData, userTimeData: userTimeData)
+                            coordinator.isProfileEdit = false
+                            coordinator.push(.setProfile)
+                        case .failure(let error):
+                            print(error.localizedDescription)
                         }
-                        viewModel.appleLogin(credential: credential)
-                        viewModel.setUserDataes(userData: userData, userTimeData: userTimeData)
-                        coordinator.isProfileEdit = false
-                        coordinator.push(.setProfile)
-                    case .failure(let error):
-                        print(error.localizedDescription)
                     }
                 }
                 .frame(width: UIScreen.main.bounds.width * 0.9, height: 50)

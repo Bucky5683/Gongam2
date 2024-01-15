@@ -22,8 +22,8 @@ extension String {
 extension Int {
     func timeToText() -> String{ // 시간(Int)을 "00:00:00"형식으로 변환
         let seconds = self % 60
-        let minute = (self - seconds) % 60
-        let hours = (self - seconds - (minute*60)) % 60
+        let minute = ((self - seconds) % 3600) / 60
+        let hours = (self - seconds - (minute*60)) / 3600
         
         let time = String(format: "%02d", hours) + ":" + String(format: "%02d", minute) + ":" + String(format: "%02d", seconds)
         return time

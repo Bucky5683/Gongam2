@@ -54,7 +54,7 @@ class UserTimeData: ObservableObject{
     
 }
 extension UserTimeData {
-    func downloadUserTimeData() {
+    func downloadUserTimeData() async {
         self.downloadData()
         self.downloadRankData()
     }

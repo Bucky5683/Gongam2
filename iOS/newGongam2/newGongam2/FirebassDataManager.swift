@@ -151,7 +151,6 @@ extension FirebassDataManager {
                     userStudyData.profileURL = value["profileURL"] as? String ?? "https://firebasestorage.googleapis.com/v0/b/gongam2-ff081.appspot.com/o/example2.jpeg?alt=media&token=2b4bbe1f-9ba2-49a7-bf54-87b5ca70eddd"
                     userStudyData.totalStudyTime = value["totalStudyTime"] as! Int
                     findMyData = true
-                    continue
                 }
                 if findMyData == false {
                     myRank += 1
@@ -169,6 +168,7 @@ extension FirebassDataManager {
             completion(userStudyData)
         }
     }
+
 }
 
 extension FirebassDataManager {
