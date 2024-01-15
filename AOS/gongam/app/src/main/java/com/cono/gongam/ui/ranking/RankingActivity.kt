@@ -1,9 +1,10 @@
 package com.cono.gongam.ui.ranking
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.Image
+import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -15,42 +16,41 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
-import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CardElevation
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import coil.compose.AsyncImage
 import com.cono.gongam.R
+import com.cono.gongam.data.RankingViewModel
 import com.cono.gongam.ui.SpacedEdgeTextsWithCenterVertically
 import com.cono.gongam.ui.TopTitle
 import com.cono.gongam.ui.ranking.ui.theme.GongamTheme
+import com.cono.gongam.ui.register.debugPlaceHolder
 
 class RankingActivity : ComponentActivity() {
+    private val rankingViewModel by viewModels<RankingViewModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
+        rankingViewModel.updateRankUserList()
         super.onCreate(savedInstanceState)
+
         setContent {
             GongamTheme {
                 // A surface container using the 'background' color from the theme
@@ -58,7 +58,7 @@ class RankingActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    PreviewRankingScreen()
+                    RankingScreen(rankingViewModel)
                 }
             }
         }
@@ -66,7 +66,31 @@ class RankingActivity : ComponentActivity() {
 }
 
 @Composable
-fun RankingScreen() {
+fun RankingCards(rankingViewModel: RankingViewModel = viewModel()) {
+    rankingViewModel.updateRankUserList()
+    val rankUserList by rankingViewModel.rankUserList.observeAsState(initial = emptyList())
+    Log.d("TestRankingViewModel", "rankingactivity :: ${rankUserList} ")
+
+    if (rankUserList.isNotEmpty()) {
+        Log.d("TestRankingViewModel", "rankingactivity :: not empty -> $rankUserList")
+
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentHeight()
+        ) {
+            rankUserList.forEachIndexed { index, user ->
+                if (index < 5) {
+                    RankingUserCard(grade = index + 1, profileImgUrl = user.profileImageURL ?: "", name = user.name ?: "", studyTime = user.totalStudyTime ?: 0)
+                    Spacer(modifier = Modifier.height(8.dp))
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun RankingScreen(viewModel: RankingViewModel = viewModel()) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -77,7 +101,7 @@ fun RankingScreen() {
             id = R.color.gray_line2), backPress = true)
         MyGradeView()
         TitleThisWeekTop5()
-        Top5UserCards()
+        RankingCards(viewModel)
     }
 }
 
@@ -137,26 +161,7 @@ fun TitleThisWeekTop5() {
 }
 
 @Composable
-fun Top5UserCards() {
-    Column (
-        modifier = Modifier
-            .fillMaxWidth()
-            .wrapContentHeight()
-    ) {
-        RankingUserCard(1)
-        Spacer(modifier = Modifier.height(8.dp))
-        RankingUserCard(2)
-        Spacer(modifier = Modifier.height(8.dp))
-        RankingUserCard(3)
-        Spacer(modifier = Modifier.height(8.dp))
-        RankingUserCard(4)
-        Spacer(modifier = Modifier.height(8.dp))
-        RankingUserCard(5)
-    }
-}
-
-@Composable
-fun RankingUserCard(grade : Int) {
+fun RankingUserCard(grade: Int, profileImgUrl: String, name: String, studyTime: Int) {
     val heightVal: Int = when (grade) {
         1 -> 88
         2, 3 -> 66
@@ -183,13 +188,13 @@ fun RankingUserCard(grade : Int) {
             colors = CardDefaults.cardColors(containerColor = colorResource(id = R.color.white)),
             elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
         ) {
-            RankingCardContent(grade)
+            RankingCardContent(grade = grade, profileImgUrl = profileImgUrl, name = name, studyTime = studyTime)
         }
     }
 }
 
 @Composable
-fun RankingCardContent(grade : Int) {
+fun RankingCardContent(grade: Int, profileImgUrl: String, name: String, studyTime: Int) {
     val startImgPaddingVal: Int = when (grade) {
         1, 2, 3 -> 22
         else -> 18
@@ -229,17 +234,18 @@ fun RankingCardContent(grade : Int) {
             .padding(start = startImgPaddingVal.dp, end = endGradePaddingVal.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Image(
-            painter = painterResource(id = R.drawable.img_test_profile),
+        AsyncImage(
+            model = profileImgUrl,
+            placeholder = debugPlaceHolder(debugPreview = R.drawable.img_test_profile),
             contentDescription = "profile Img",
+            contentScale = ContentScale.Fit,
             modifier = Modifier
                 .width(profileImgSize.dp)
                 .height(profileImgSize.dp)
                 .clip(shape = CircleShape),
-            contentScale = ContentScale.Fit,
         )
         Spacer(Modifier.width(startTextPaddingVal.dp))
-        CardText(grade)
+        CardText(grade = grade, name = name, studyTime = studyTime)
         Spacer(Modifier.weight(1f))
         Text(text = gradeText, fontSize = gradeTextSize.sp, fontWeight = FontWeight(700), color = colorResource(
             id = R.color.main_gray
@@ -248,24 +254,24 @@ fun RankingCardContent(grade : Int) {
 }
 
 @Composable
-fun CardText(grade: Int) {
+fun CardText(grade: Int, name: String, studyTime: Int) {
     when (grade) {
         1, 2, 3 -> {
             // 2줄
             Column {
-                Text(text = "닉네임", fontSize = 15.sp, fontWeight = FontWeight(400), color = colorResource(
+                Text(text = name, fontSize = 15.sp, fontWeight = FontWeight(400), color = colorResource(
                     id = R.color.main_gray))
-                Text(text = "999:99:99", fontSize = 15.sp, fontWeight = FontWeight(400), color = colorResource(
+                Text(text = studyTime.toString(), fontSize = 15.sp, fontWeight = FontWeight(400), color = colorResource(
                     id = R.color.main_gray))
             }
         }
         else -> {
             // 1줄
             Row {
-                Text(text = "닉네임", fontSize = 15.sp, fontWeight = FontWeight(400), color = colorResource(
+                Text(text = name, fontSize = 15.sp, fontWeight = FontWeight(400), color = colorResource(
                     id = R.color.main_gray))
                 Spacer(modifier = Modifier.width(10.dp))
-                Text(text = "999:99:99", fontSize = 15.sp, fontWeight = FontWeight(400), color = colorResource(
+                Text(text = studyTime.toString(), fontSize = 15.sp, fontWeight = FontWeight(400), color = colorResource(
                     id = R.color.main_gray))
             }
         }
@@ -281,8 +287,8 @@ fun PreviewRankingScreen() {
     RankingScreen()
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
-fun PreviewTop5UserCards() {
-    Top5UserCards()
+fun PreviewRankingUserCard() {
+    RankingUserCard(grade = 1, profileImgUrl = "", name = "가영", studyTime = 60)
 }
