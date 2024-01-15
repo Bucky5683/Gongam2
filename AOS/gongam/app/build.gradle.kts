@@ -1,5 +1,3 @@
-import org.jetbrains.kotlin.com.intellij.lang.java.JavaLanguage
-
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")

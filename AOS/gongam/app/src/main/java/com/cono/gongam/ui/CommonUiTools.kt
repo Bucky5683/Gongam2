@@ -1,8 +1,6 @@
 package com.cono.gongam.ui
 
-import androidx.activity.OnBackPressedCallback
 import androidx.activity.OnBackPressedDispatcherOwner
-import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
