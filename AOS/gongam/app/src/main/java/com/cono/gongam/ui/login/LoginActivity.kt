@@ -40,6 +40,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.cono.gongam.R
+import com.cono.gongam.data.RankUser
 import com.cono.gongam.data.User
 import com.cono.gongam.ui.login.ui.theme.GongamTheme
 import com.cono.gongam.ui.main.MainActivity
@@ -95,7 +96,6 @@ class LoginActivity : ComponentActivity() {
 //                            Log.d("[LoginScreen]", "getCurrentUser : ${userViewModel.getCurrentUser()}")
                             val sharedPreferencesUtil = SharedPreferencesUtil(this)
                             sharedPreferencesUtil.saveUser(newUser)
-                            Log.d("[LoginScreen]", "getUserInSP : ${sharedPreferencesUtil.getUser()}")
                             startActivity(Intent(this@LoginActivity, RegisterActivity::class.java))
                             finish()
                         }
@@ -158,11 +158,20 @@ fun GoogleLoginButton(onLoginSuccess: (lUser: User) -> Unit, onRegisterSuccess: 
                         if (isNewUser(uid = uid)) { // 새로운 유저 -> DB에 삽입
                             Firebase.database.getReference("Users").child(uid).setValue(user)
                                 .addOnSuccessListener {
-                                    Log.d("[LoginScreen]", "RealtimeDB :: $uid, $email 사용자 추가 완료")
+                                    Log.d("[LoginScreen]", "RealtimeDB : $uid, $email 사용자 추가 완료")
                                 }
                                 .addOnFailureListener {
                                     Log.d("[LoginScreen]", "새 사용자 추가 실패: ${it.message}")
 //                                    Toast.makeText(context, "오류가 발생했습니다. 다시 시도해 주세요.", Toast.LENGTH_SHORT).show()
+                                }
+
+                            val userInRank = RankUser(email = email, name = name, profileImageURL = profileImageUrl.toString())
+                            Firebase.database.getReference("Rank").child(uid).setValue(userInRank)
+                                .addOnSuccessListener {
+                                    Log.d("[LoginScreen]", "RealtimeDB : Rank 사용자 추가 완료")
+                                }
+                                .addOnFailureListener {
+                                    Log.d("[LoginScreen]", "Rank 추가 실패: ${it.message}")
                                 }
 
                             onRegisterSuccess(user)
