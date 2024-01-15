@@ -2,6 +2,7 @@ package com.cono.gongam.ui.main.mainSubViews
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -11,12 +12,14 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
@@ -24,12 +27,15 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
 import com.cono.gongam.R
+import com.cono.gongam.ui.register.debugPlaceHolder
 
 @Composable
-fun TopView() {
+fun TopView(profileImgUrl: String) {
     Surface(
         modifier = Modifier
             .fillMaxWidth(),
@@ -45,14 +51,15 @@ fun TopView() {
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.End
             ) {
-                Image(
-                    painter = painterResource(id = R.drawable.img_test_profile),
-                    contentDescription = "profile Img",
-                    contentScale = ContentScale.Fit,
-                    modifier = Modifier
-                        .width(30.dp)
-                        .height(30.dp),
-                )
+//                Image(
+//                    painter = painterResource(id = R.drawable.img_test_profile),
+//                    contentDescription = "profile Img",
+//                    contentScale = ContentScale.Fit,
+//                    modifier = Modifier
+//                        .width(30.dp)
+//                        .height(30.dp),
+//                )
+                ProfileImage(profileImgUrl = profileImgUrl)
                 Spacer(modifier = Modifier.width(15.dp))
             }
             Text(
@@ -71,54 +78,90 @@ fun TopView() {
                 textAlign = TextAlign.Center,
                 fontWeight = FontWeight(700),
             )
-            Box(
-                modifier = Modifier
-                    .width(200.dp)
-                    .padding(bottom = 52.dp)
-                    .background(
-                        color = colorResource(R.color.gray_scale1),
-                        shape = RoundedCornerShape(20.dp)
-                    ),
-                contentAlignment = Alignment.Center
-            ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    Text(
-                        text = "\uD83D\uDD25",
-                        modifier = Modifier
-                            .padding(start = 6.dp),
-                        fontSize = 12.sp,
-                        textAlign = TextAlign.Center,
-                    )
-                    Text(
-                        text = "목표까지",
-                        color = colorResource(id = R.color.main_gray),
-                        modifier = Modifier
-                            .padding(start = 5.dp, top = 6.dp, bottom = 6.dp),
-                        fontSize = 12.sp,
-                        textAlign = TextAlign.Center,
-                        fontWeight = FontWeight(400),
-                    )
-                    Text(
-                        text = "99:99:99",
-                        color = colorResource(id = R.color.main_gray),
-                        modifier = Modifier
-                            .padding(start = 5.dp, top = 6.dp, bottom = 6.dp, end = 5.dp),
-                        fontSize = 12.sp,
-                        textAlign = TextAlign.Center,
-                        fontWeight = FontWeight(700),
-                    )
-                    Text(
-                        text = "\uD83D\uDD25",
-                        modifier = Modifier
-                            .padding(end = 6.dp),
-                        fontSize = 12.sp,
-                        textAlign = TextAlign.Center,
-                    )
-                }
-            }
+            GoalText()
         }
     }
+}
+
+@Composable
+fun GoalText() {
+    Box(
+        modifier = Modifier
+            .width(200.dp)
+            .padding(bottom = 52.dp)
+            .background(
+                color = colorResource(R.color.gray_scale1),
+                shape = RoundedCornerShape(20.dp)
+            ),
+        contentAlignment = Alignment.Center
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center
+        ) {
+            Text(
+                text = "\uD83D\uDD25",
+                modifier = Modifier
+                    .padding(start = 6.dp),
+                fontSize = 12.sp,
+                textAlign = TextAlign.Center,
+            )
+            Text(
+                text = "목표까지",
+                color = colorResource(id = R.color.main_gray),
+                modifier = Modifier
+                    .padding(start = 5.dp, top = 6.dp, bottom = 6.dp),
+                fontSize = 12.sp,
+                textAlign = TextAlign.Center,
+                fontWeight = FontWeight(400),
+            )
+            Text(
+                text = "99:99:99",
+                color = colorResource(id = R.color.main_gray),
+                modifier = Modifier
+                    .padding(start = 5.dp, top = 6.dp, bottom = 6.dp, end = 5.dp),
+                fontSize = 12.sp,
+                textAlign = TextAlign.Center,
+                fontWeight = FontWeight(700),
+            )
+            Text(
+                text = "\uD83D\uDD25",
+                modifier = Modifier
+                    .padding(end = 6.dp),
+                fontSize = 12.sp,
+                textAlign = TextAlign.Center,
+            )
+        }
+    }
+}
+
+@Composable
+fun ProfileImage(profileImgUrl: String) {
+    AsyncImage(
+        model = profileImgUrl,
+        placeholder = debugPlaceHolder(R.drawable.img_test_profile),
+        contentDescription = "profileImage",
+        contentScale = ContentScale.Crop,
+        modifier = Modifier
+            .clip(CircleShape)
+            .width(30.dp)
+            .height(30.dp)
+            .clickable {
+                // TODO :: clickable setting(popup)
+            }
+    )
+}
+
+// ------------------------------------ Previews ------------------------------------
+
+@Preview
+@Composable
+fun PreviewTopView() {
+    TopView(profileImgUrl = "")
+}
+
+@Preview
+@Composable
+fun PreviewProfileImage() {
+    ProfileImage(profileImgUrl = "")
 }

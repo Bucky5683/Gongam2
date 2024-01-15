@@ -26,10 +26,14 @@ import com.cono.gongam.ui.main.mainSubViews.RankingView
 import com.cono.gongam.ui.main.mainSubViews.TimerView
 import com.cono.gongam.ui.main.mainSubViews.TopView
 import com.cono.gongam.ui.theme.GongamTheme
+import com.cono.gongam.utils.SharedPreferencesUtil
 
 class MainActivity : ComponentActivity() {
+    private lateinit var sharedPreferencesUtil : SharedPreferencesUtil
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        sharedPreferencesUtil = SharedPreferencesUtil(this)
 
         WindowCompat.setDecorFitsSystemWindows(window, false)
         setContent {
@@ -40,7 +44,7 @@ class MainActivity : ComponentActivity() {
                         .fillMaxSize(),
                     color = colorResource(id = R.color.main_gray)
                 ) {
-                    PreviewMain()
+                    MainScreen(profileImageUrl = sharedPreferencesUtil.getUser().profileImageURL ?: "")
                 }
             }
         }
@@ -49,9 +53,8 @@ class MainActivity : ComponentActivity() {
 }
 
 // Compose main at here
-@Preview(showSystemUi = true, showBackground = true)
 @Composable
-fun PreviewMain() {
+fun MainScreen(profileImageUrl: String) {
     val context = LocalContext.current
 
     Column(
@@ -61,7 +64,7 @@ fun PreviewMain() {
             )
             .verticalScroll(rememberScrollState())
     ) {
-        TopView()
+        TopView(profileImgUrl = profileImageUrl)
         Spacer(modifier = Modifier.height(15.dp))
         TimerView(context)
         Spacer(modifier = Modifier.height(42.5.dp))
@@ -74,10 +77,16 @@ fun PreviewMain() {
 
 // ------------------------------------ Previews ------------------------------------
 
+@Preview(showSystemUi = true, showBackground = true)
+@Composable
+fun PreviewMain() {
+    MainScreen(profileImageUrl = "")
+}
+
 @Preview
 @Composable
 fun PreivewTopView() {
-    TopView()
+    TopView(profileImgUrl = "")
 }
 
 @Preview
