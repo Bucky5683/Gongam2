@@ -52,6 +52,65 @@ class UserTimeData: ObservableObject{
         return dateString
     }
     
+    func divideDataByWeeks(startDate: String, endDate: String, data: [String: dailyTimerData]) -> [String:[String: dailyTimerData]] {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        
+        var currentDate = dateFormatter.date(from: startDate)!
+        let endDate = dateFormatter.date(from: endDate)!
+        
+        var weeklyData: [String:[String: dailyTimerData]] = [:]
+        
+        while currentDate <= endDate {
+            let weekStartDate = Calendar.current.date(byAdding: .day, value: -6, to: currentDate)!
+            let weekEndDate = currentDate
+            
+            let weekKey = "\(dateFormatter.string(from: weekStartDate)) ~ \(dateFormatter.string(from: weekEndDate))"
+            var weeklyEntry = [String: dailyTimerData]()
+            // 해당 주의 데이터를 합산
+            for day in 0...6 {
+                let currentDay = Calendar.current.date(byAdding: .day, value: day, to: weekStartDate)!
+                let currentDayKey = dateFormatter.string(from: currentDay)
+                
+                if let dailyData = data[currentDayKey] {
+                    weeklyEntry[currentDayKey] = dailyData
+                } else {
+                    weeklyEntry[currentDayKey] = dailyTimerData()
+                }
+            }
+            weeklyData[weekKey]?.merge(weeklyEntry)
+            
+            // 다음 주로 이동
+            currentDate = Calendar.current.date(byAdding: .day, value: 1, to: currentDate)!
+        }
+        
+        return weeklyData
+        /*
+         "한 주 0000.00.00 ~ 0000.00.00" :
+            "하루 0000.00.00" :
+                "기록 "  : Int
+         */
+    }
+    
+    func getFirstDayOfCurrentWeek(for date: Date) -> Date? {
+        let calendar = Calendar.current
+        
+        // 현재 날짜가 속한 주의 첫 번째 날을 찾음
+        let currentDateComponents = calendar.dateComponents([.yearForWeekOfYear, .weekOfYear, .weekday], from: date)
+        let firstDayOfWeek = calendar.date(from: currentDateComponents)
+        
+        return firstDayOfWeek
+    }
+
+    func getWeeksAgo(from date: Date, week: Int) -> Date? {
+        let calendar = Calendar.current
+        
+        if let oneWeekAgo = calendar.date(byAdding: .weekOfYear, value: week * -1, to: date) {
+            return oneWeekAgo
+        } else {
+            return nil
+        }
+    }
 }
 extension UserTimeData {
     func downloadUserTimeData() async {
@@ -186,4 +245,29 @@ struct dailyTimerData: Codable{
         self.stopwatchStudyTime = stopwatchStudyTime
         self.totalStudyTime = timerStudyTima + stopwatchStudyTime
     }
+}
+
+extension Date {
+    var sevenDaysOut: Date {
+        Calendar.autoupdatingCurrent.date(byAdding: .day, value: 7, to: self) ?? self
+    }
+    
+    var thirtyDaysOut: Date {
+        Calendar.autoupdatingCurrent.date(byAdding: .day, value: 30, to: self) ?? self
+    }
+}
+
+public enum TimerType{
+    case timer
+    case stopWatch
+}
+
+public enum weeklyDay{
+    case Mon
+    case Tue
+    case Wen
+    case Thu
+    case Fri
+    case Sat
+    case Sun
 }

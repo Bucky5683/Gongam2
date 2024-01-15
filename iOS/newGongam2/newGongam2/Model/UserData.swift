@@ -173,27 +173,4 @@ extension UserData {
         return dateString
     }
 }
-extension Date {
-    var sevenDaysOut: Date {
-        Calendar.autoupdatingCurrent.date(byAdding: .day, value: 7, to: self) ?? self
-    }
-    
-    var thirtyDaysOut: Date {
-        Calendar.autoupdatingCurrent.date(byAdding: .day, value: 30, to: self) ?? self
-    }
-}
 
-public enum TimerType{
-    case timer
-    case stopWatch
-}
-
-public enum weeklyDay{
-    case Mon
-    case Tue
-    case Wen
-    case Thu
-    case Fri
-    case Sat
-    case Sun
-}

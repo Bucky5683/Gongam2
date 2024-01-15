@@ -30,4 +30,14 @@ extension Int {
     }
 }
 
-
+extension Date {
+    func getCurrentDateAsString() -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        
+        let currentDate = self
+        let dateString = dateFormatter.string(from: currentDate)
+        
+        return dateString
+    }
+}

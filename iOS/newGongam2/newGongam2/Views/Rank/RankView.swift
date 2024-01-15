@@ -36,7 +36,10 @@ struct RankView: View {
             }.onAppear(){
                 self.loadData()
             }
-        }.navigationBarHidden(true)
+        }
+        .navigationBarTitle("랭킹",displayMode: .inline)
+        .navigationBarBackButtonHidden(true)
+        .navigationBarItems(leading: Button("Main"){self.coordinator.pop()})
     }
     
     private func loadData(){

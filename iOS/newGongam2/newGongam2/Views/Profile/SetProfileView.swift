@@ -82,6 +82,11 @@ struct SetProfileView: View {
                             .padding()
                             .background(Color(uiColor: .secondarySystemBackground))
                     }
+                    Button {
+                        print("회원탈퇴")
+                    } label: {
+                        Text("회원탈퇴")
+                    }
                 }
                 Button{
                     userData.uploadUserData()

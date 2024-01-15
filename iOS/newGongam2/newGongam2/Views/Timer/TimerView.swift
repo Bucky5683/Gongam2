@@ -13,6 +13,7 @@ enum timeType {
     case second
 }
 
+//MARK: ViewModel
 class TimeViewModel: ObservableObject {
     @Published var hours: Int = 0
     @Published var minutes: Int = 0
@@ -118,7 +119,7 @@ class TimeViewModel: ObservableObject {
     }
 }
 
-
+//MARK: View
 struct TimerView: View {
     @EnvironmentObject var userData: UserData
     @EnvironmentObject var userTimeData: UserTimeData
@@ -237,7 +238,10 @@ struct TimerView: View {
             }
         }
         .background(.darkBlue414756, ignoresSafeAreaEdges: .all)
-        .navigationBarHidden(true)
+        .navigationBarHidden(!self.viewModel.isStarted)
+        .navigationBarTitle("타이머",displayMode: .inline)
+        .navigationBarBackButtonHidden(true)
+        .navigationBarItems(leading: Button("Main"){self.coordinator.pop()})
     }
 }
 

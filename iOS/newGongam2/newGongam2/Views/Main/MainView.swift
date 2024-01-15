@@ -14,7 +14,7 @@ import PopupView
  1. 메인 헤더
     - 목표시간에 현재 공부한 시간을 빼, 남은 시간이 있는지 확인하고 있다면, 그 시간을 출력하기 ✅
  2. 랭킹
-    - 유저의 평균시간 데이터베이스에서 받아오기
+    - 유저의 평균시간 데이터베이스에서 받아오기 ✅
     - 평균시간에서 현재 공부한 시간을 뺴, 남은 시간을 출력
     - 평균시간보다 유저가 공부한 시간이 적으면 평균공부시간보다 낮게, 공부한 시간이 많으면 평균 공부시간보다 높게 View 설정
     - 유저의 등수가 어느정도인지, 데이터베이스에서 받아오기(만약 1000등 이상이면 999+로 출력)
@@ -55,16 +55,6 @@ struct MainView: View {
         NavigationView{
             ZStack{
                 VStack{
-                    Button{
-                        print("MainHeader Profile Image Clicked!")
-                        showingPopup = true
-                    }label: {
-                        AsyncImage(url: URL(string: userData.profileImageURL)){ image in
-                            image.resizable()
-                        } placeholder: {
-                            ProgressView()
-                        }.frame(width: 30, height: 30)
-                    }
                     MainHeaderView(viewModel: $viewModel)
                     //MARK: 타이머
                     VStack {
@@ -95,6 +85,7 @@ struct MainView: View {
                         Text("이번 주에 평균 만큼 공부했어요!")
                     }
                 }
+                
             }.popup(isPresented: $showingPopup){
                 VStack{
                     HStack{
@@ -132,10 +123,22 @@ struct MainView: View {
                     .animation(.snappy)
                     .closeOnTapOutside(true)
                     .backgroundColor(.black.opacity(0.5))
+                    .isOpaque(true)
             }
         }
         .background(.whiteFFFFFF, ignoresSafeAreaEdges: .all)
-        .navigationBarHidden(true)
+        .navigationBarTitle("",displayMode: .inline)
+        .navigationBarBackButtonHidden(true)
+        .navigationBarItems(leading: Text(""), trailing: Button{
+            print("MainHeader Profile Image Clicked!")
+            showingPopup = true
+        }label: {
+            AsyncImage(url: URL(string: userData.profileImageURL)){ image in
+                image.resizable()
+            } placeholder: {
+                ProgressView()
+            }.frame(width: 30, height: 30)
+        })
     }
 }
 

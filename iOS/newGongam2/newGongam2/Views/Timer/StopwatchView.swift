@@ -126,6 +126,9 @@ struct StopwatchView: View {
             }
         }
         .background(.darkBlue414756, ignoresSafeAreaEdges: .all)
-        .navigationBarHidden(true)
+        .navigationBarHidden(!self.viewModel.isStarted)
+        .navigationBarTitle("스톱워치",displayMode: .inline)
+        .navigationBarBackButtonHidden(true)
+        .navigationBarItems(leading: Button("Main"){self.coordinator.pop()})
     }
 }
