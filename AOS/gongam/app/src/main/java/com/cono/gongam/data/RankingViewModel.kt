@@ -28,6 +28,14 @@ class RankingViewModel @Inject constructor() : ViewModel() {
             Log.d("TestRankingViewModel", "updated : ${rankUserList.value}")
         }
     }
+
+    fun getUserRank(email: String): String {
+        val rankIndex = rankUserList.value?.indexOfFirst { it.email == email }
+        if (rankIndex != null) {
+            return (rankIndex + 1).toString()
+        } else return ""
+    }
+
     private suspend fun getRankingDataFromFirebaseDB(): List<RankUser> {
         return suspendCoroutine { continuation ->
             val rankRef = Firebase.database.getReference("Rank")
@@ -53,7 +61,6 @@ class RankingViewModel @Inject constructor() : ViewModel() {
             })
         }
     }
-
 
     private fun sortRankUserListByTotalStudyTime(list: List<RankUser>): List<RankUser> {
         return list.sortedByDescending { it.totalStudyTime ?: 0 }

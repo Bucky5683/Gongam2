@@ -31,6 +31,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -44,11 +45,14 @@ import com.cono.gongam.ui.SpacedEdgeTextsWithCenterVertically
 import com.cono.gongam.ui.TopTitle
 import com.cono.gongam.ui.ranking.ui.theme.GongamTheme
 import com.cono.gongam.ui.register.debugPlaceHolder
+import com.cono.gongam.utils.SharedPreferencesUtil
 import com.cono.gongam.utils.TimeUtils
 
 class RankingActivity : ComponentActivity() {
+    private lateinit var sharedPreferencesUtil: SharedPreferencesUtil
     private val rankingViewModel by viewModels<RankingViewModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
+        sharedPreferencesUtil = SharedPreferencesUtil(this)
         rankingViewModel.updateRankUserList()
         super.onCreate(savedInstanceState)
 
@@ -59,7 +63,7 @@ class RankingActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    RankingScreen(rankingViewModel)
+                    RankingScreen(rankingViewModel, sharedPreferencesUtil)
                 }
             }
         }
@@ -68,7 +72,6 @@ class RankingActivity : ComponentActivity() {
 
 @Composable
 fun RankingCards(rankingViewModel: RankingViewModel = viewModel()) {
-    rankingViewModel.updateRankUserList()
     val rankUserList by rankingViewModel.rankUserList.observeAsState(initial = emptyList())
     Log.d("TestRankingViewModel", "rankingactivity :: ${rankUserList} ")
 
@@ -94,7 +97,7 @@ fun RankingCards(rankingViewModel: RankingViewModel = viewModel()) {
 }
 
 @Composable
-fun RankingScreen(viewModel: RankingViewModel = viewModel()) {
+fun RankingScreen(rankingViewModel: RankingViewModel = viewModel(), sharedPreferencesUtil: SharedPreferencesUtil) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -103,44 +106,55 @@ fun RankingScreen(viewModel: RankingViewModel = viewModel()) {
     ) {
         TopTitle(backgroundColor = colorResource(id = R.color.white), textColor = colorResource(id = R.color.black), centerText = "랭킹", dividerLineColor = colorResource(
             id = R.color.gray_line2), backPress = true)
-        MyGradeView()
+        MyGradeView(rankingViewModel = rankingViewModel, sharedPreferencesUtil = sharedPreferencesUtil)
         TitleThisWeekTop5()
-        RankingCards(viewModel)
+        RankingCards(rankingViewModel)
     }
 }
 
 @Composable
-fun MyGradeView() {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(193.dp)
-    ) {
-        Card(modifier = Modifier
-            .fillMaxWidth()
-            .fillMaxHeight()
-            .padding(horizontal = 22.dp, vertical = 30.dp)
-            .background(colorResource(id = R.color.white)),
-            colors = CardDefaults.cardColors(
-                containerColor = colorResource(id = R.color.main_gray)
-            ),
-            elevation = CardDefaults.cardElevation(defaultElevation = 10.dp)
+fun MyGradeView(rankingViewModel: RankingViewModel = viewModel(), sharedPreferencesUtil: SharedPreferencesUtil) {
+    val user = sharedPreferencesUtil.getUser()
+    val rankUserList by rankingViewModel.rankUserList.observeAsState(initial = emptyList())
+
+    if (rankUserList.isNotEmpty()) {
+        val userRank = rankingViewModel.getUserRank(user.email ?: "")
+        Log.d("MyGradeView", "userRank : $userRank")
+        Log.d("MyGradeView", "user.timerStudyTime : ${user.timerStudyTime}")
+        Log.d("MyGradeView", "user.stopwatchStudyTime : ${user.stopwatchStudyTime}")
+        val totalStudyTime = (user.timerStudyTime!! + user.stopwatchStudyTime!!).toString()
+
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(193.dp)
         ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .fillMaxWidth(),
-                verticalArrangement = Arrangement.Center
+            Card(modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight()
+                .padding(horizontal = 22.dp, vertical = 30.dp)
+                .background(colorResource(id = R.color.white)),
+                colors = CardDefaults.cardColors(
+                    containerColor = colorResource(id = R.color.main_gray)
+                ),
+                elevation = CardDefaults.cardElevation(defaultElevation = 10.dp)
             ) {
-                SpacedEdgeTextsWithCenterVertically(
-                    leftText = "나의 등수", leftTextSize = 17.sp, leftTextColor = colorResource(id = R.color.white), leftTextWeight = FontWeight(400),
-                    rightText = "999+", rightTextSize = 32.sp, rightTextColor = colorResource(id = R.color.white), rightTextWeight = FontWeight(600)
-                )
-                Spacer(modifier = Modifier.height(9.dp))
-                SpacedEdgeTextsWithCenterVertically(
-                    leftText = "이번 주 공부 시간", leftTextSize = 14.sp, leftTextColor = colorResource(id = R.color.white), leftTextWeight = FontWeight(400),
-                    rightText = "999+", rightTextSize = 14.sp, rightTextColor = colorResource(id = R.color.white), rightTextWeight = FontWeight(400)
-                )
+                Column(
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .fillMaxWidth(),
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    SpacedEdgeTextsWithCenterVertically(
+                        leftText = "나의 등수", leftTextSize = 17.sp, leftTextColor = colorResource(id = R.color.white), leftTextWeight = FontWeight(400),
+                        rightText = userRank, rightTextSize = 32.sp, rightTextColor = colorResource(id = R.color.white), rightTextWeight = FontWeight(600)
+                    )
+                    Spacer(modifier = Modifier.height(9.dp))
+                    SpacedEdgeTextsWithCenterVertically(
+                        leftText = "이번 주 공부 시간", leftTextSize = 14.sp, leftTextColor = colorResource(id = R.color.white), leftTextWeight = FontWeight(400),
+                        rightText = totalStudyTime, rightTextSize = 14.sp, rightTextColor = colorResource(id = R.color.white), rightTextWeight = FontWeight(400)
+                    )
+                }
             }
         }
     }
@@ -285,14 +299,26 @@ fun CardText(grade: Int, name: String, studyTime: Int) {
 
 // ------------------------------------ Previews ------------------------------------
 
-@Preview(showBackground = true, showSystemUi = true)
+//@Preview(showBackground = true, showSystemUi = true)
+//@Composable
+//fun PreviewRankingScreen() {
+//    RankingScreen(RankingViewModel(), SharedPreferencesUtil(context = LocalContext.current))
+//}
+
+@Preview
 @Composable
-fun PreviewRankingScreen() {
-    RankingScreen()
+fun PreviewMyGradeView() {
+    MyGradeView(sharedPreferencesUtil = SharedPreferencesUtil(context = LocalContext.current))
 }
 
 @Preview(showBackground = true)
 @Composable
 fun PreviewRankingUserCard() {
-    RankingUserCard(grade = 1, profileImgUrl = "", name = "가영", studyTime = 60)
+    Column {
+        RankingUserCard(grade = 1, profileImgUrl = "", name = "가영", studyTime = 12341234)
+        RankingUserCard(grade = 2, profileImgUrl = "", name = "가영", studyTime = 6000)
+        RankingUserCard(grade = 3, profileImgUrl = "", name = "가영", studyTime = 1234)
+        RankingUserCard(grade = 4, profileImgUrl = "", name = "가영", studyTime = 120)
+        RankingUserCard(grade = 5, profileImgUrl = "", name = "가영", studyTime = 60)
+    }
 }
