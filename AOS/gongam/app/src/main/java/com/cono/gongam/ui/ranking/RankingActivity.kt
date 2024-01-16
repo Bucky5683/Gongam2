@@ -44,6 +44,7 @@ import com.cono.gongam.ui.SpacedEdgeTextsWithCenterVertically
 import com.cono.gongam.ui.TopTitle
 import com.cono.gongam.ui.ranking.ui.theme.GongamTheme
 import com.cono.gongam.ui.register.debugPlaceHolder
+import com.cono.gongam.utils.TimeUtils
 
 class RankingActivity : ComponentActivity() {
     private val rankingViewModel by viewModels<RankingViewModel>()
@@ -80,6 +81,9 @@ fun RankingCards(rankingViewModel: RankingViewModel = viewModel()) {
                 .wrapContentHeight()
         ) {
             rankUserList.forEachIndexed { index, user ->
+//                Log.d("TimeUtilsTest", "time -> ${TimeUtils.convertSecondsToTime(user.totalStudyTime ?: 0)}")
+                Log.d("TimeUtilsTest", "time -> ${TimeUtils.convertSecondsToTime(216012)}")
+                Log.d("TimeUtilsTest", "time -> ${TimeUtils.convertSecondsToTime(198)}")
                 if (index < 5) {
                     RankingUserCard(grade = index + 1, profileImgUrl = user.profileImageURL ?: "", name = user.name ?: "", studyTime = user.totalStudyTime ?: 0)
                     Spacer(modifier = Modifier.height(8.dp))
@@ -261,7 +265,7 @@ fun CardText(grade: Int, name: String, studyTime: Int) {
             Column {
                 Text(text = name, fontSize = 15.sp, fontWeight = FontWeight(400), color = colorResource(
                     id = R.color.main_gray))
-                Text(text = studyTime.toString(), fontSize = 15.sp, fontWeight = FontWeight(400), color = colorResource(
+                Text(text = TimeUtils.convertSecondsToTime(studyTime), fontSize = 15.sp, fontWeight = FontWeight(400), color = colorResource(
                     id = R.color.main_gray))
             }
         }
@@ -271,7 +275,7 @@ fun CardText(grade: Int, name: String, studyTime: Int) {
                 Text(text = name, fontSize = 15.sp, fontWeight = FontWeight(400), color = colorResource(
                     id = R.color.main_gray))
                 Spacer(modifier = Modifier.width(10.dp))
-                Text(text = studyTime.toString(), fontSize = 15.sp, fontWeight = FontWeight(400), color = colorResource(
+                Text(text = TimeUtils.convertSecondsToTime(studyTime), fontSize = 15.sp, fontWeight = FontWeight(400), color = colorResource(
                     id = R.color.main_gray))
             }
         }
