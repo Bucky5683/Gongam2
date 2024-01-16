@@ -46,25 +46,21 @@ class NavigationCoordinator {
     func push(_ screen: Screens) {
         print("coordinator: View append!")
         paths.append(screen)
-        print("coordinator: View path = \(paths)")
     }
     
     func pop() {
         print("coordinator: View pop!")
         paths.removeLast()
-        print("coordinator: View path = \(paths)")
     }
     
     func popToRoot(){
         print("coordinator: View pop to root!")
         paths.removeLast(paths.count)
-        print("coordinator: View path = \(paths)")
     }
     
     func changeRoot(_ screen: Screens){
         print("coordinator: Changed root View!")
         self.popToRoot()
         paths.append(screen)
-        print("coordinator: View path = \(paths)")
     }
 }

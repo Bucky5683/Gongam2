@@ -19,8 +19,8 @@ import PopupView
     - 평균시간보다 유저가 공부한 시간이 적으면 평균공부시간보다 낮게, 공부한 시간이 많으면 평균 공부시간보다 높게 View 설정
     - 유저의 등수가 어느정도인지, 데이터베이스에서 받아오기(만약 1000등 이상이면 999+로 출력)
  3. 마이 리포트
-    - 유저의 한주 데이터를 받아옴
-        - 만약 수요일(1/11)이라고 해도, 그 주의 일요일(1/7)부터 토요일(1/13)까지의 데이터 불러옴
+    - 유저의 한주 데이터를 받아옴✅
+        - 만약 수요일(1/11)이라고 해도, 그 주의 일요일(1/7)부터 토요일(1/13)까지의 데이터 불러옴✅
         - 목요일,금요일, 토요일 데이터가 없으면 회색으로 "-" 처리
  4. 프로필
     - 유저의 프로필 사진 출력 ✅
@@ -41,16 +41,16 @@ class MainViewModel: ObservableObject {
         }
     }
     
-    
 }
 
 // MARK: 메인화면 뷰
 struct MainView: View {
     @EnvironmentObject var userData: UserData
+    @EnvironmentObject var userTimeData: UserTimeData
     @Environment(NavigationCoordinator.self) var coordinator: NavigationCoordinator
     @State var viewModel: MainViewModel = MainViewModel()
     @State var showingPopup = false
-    
+
     var body: some View {
         NavigationView{
             ZStack{
@@ -71,7 +71,13 @@ struct MainView: View {
                         } label: {
                             MainRankChartView()
                         }
-                        Text("평균보다 만큼 덜 공부했어요")
+                        if (userTimeData.averageTime - userTimeData.totalStudyTime) < 0 {
+                            Text("평균보다 \((userTimeData.totalStudyTime - userTimeData.averageTime).timeToText())만큼 덜 공부했어요")
+                        } else if (userTimeData.averageTime - userTimeData.totalStudyTime) > 0 {
+                            Text("평균보다 \((userTimeData.averageTime - userTimeData.totalStudyTime).timeToText())만큼 더 공부했어요")
+                        } else {
+                            Text("평균만큼 공부했어요")
+                        }
                     }
                     
                     //MARK: 마이리포트
@@ -82,7 +88,6 @@ struct MainView: View {
                         } label: {
                             MainMyReportGridView()
                         }
-                        Text("이번 주에 평균 만큼 공부했어요!")
                     }
                 }
                 

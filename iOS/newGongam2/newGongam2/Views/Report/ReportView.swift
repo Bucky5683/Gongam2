@@ -15,7 +15,6 @@ class ReportViewModel: ObservableObject {
 
 struct ReportView: View {
     @Environment(NavigationCoordinator.self) var coordinator: NavigationCoordinator
-    @EnvironmentObject var userData: UserData
     @EnvironmentObject var userTimeData: UserTimeData
     @State var weeklyChartReport: [String : [dailyChartReport]] = [:]
     @State var weeklyKeys: [String] = []
@@ -36,8 +35,9 @@ struct ReportView: View {
                     }.disabled(idx == 0)
                     Chart {
                         ForEach(weeklyChartReport[weeklyKeys[self.idx]] ?? [dailyChartReport(date: Date().getCurrentDateAsString(), totalStudyTime: 0)]) { weekly in
+                            let date = weekly.date.mmdd()
                             BarMark(
-                                x: .value("date", weekly.date),
+                                x: .value("date", date),
                                 y: .value("time", weekly.totalStudyTime)
                             )
                         }
@@ -52,6 +52,11 @@ struct ReportView: View {
                         Image("reportRightButton")
                     }.disabled(idx == 3)
                 }
+                Spacer()
+                ForEach(weeklyChartReport[weeklyKeys[self.idx]] ?? [dailyChartReport(date: Date().getCurrentDateAsString(), totalStudyTime: 0)]) { weekly in
+                    let dailyReport = self.userTimeData.studyDataes[weekly.date]
+                    dailyReportView(day: weekly.date.getDaysFromString(), totalStudyTime: dailyReport?.totalStudyTime ?? 0, timerStudyTime: dailyReport?.timerStudyTime ?? 0, stopwatchStudyTime: dailyReport?.timerStudyTime ?? 0, backgroundColor: .lightBlueCBD9FE)
+                }
             } else {
                 ProgressView()
             }
@@ -60,19 +65,53 @@ struct ReportView: View {
         .navigationBarBackButtonHidden(true)
         .navigationBarItems(leading: Button("Main"){self.coordinator.pop()})
         .onAppear(){
-            self.makeWeeklyChartReport()
+            self.loadData()
         }
     }
     
-    func makeWeeklyChartReport(){
-        for (key, value) in self.userTimeData.divideDataByWeeks(startDate: userTimeData.getFirstDayOfCurrentWeek(for: userTimeData.getWeeksAgo(from: Date(), week: 3) ?? Date())?.getCurrentDateAsString() ?? Date().getCurrentDateAsString(), endDate: userTimeData.getCurrentDateAsString(), data: self.userTimeData.studyDataes){
+    private func loadData() {
+        self.userTimeData.downloadData()
+        self.makeWeeklyChartReport()
+    }
+    
+    private func makeWeeklyChartReport(){
+        let data = self.userTimeData.studyDataes
+        let todayDate = Date().getCurrentDateAsString()
+        let threeWeeksAgoDate = Date().getWeeksAgoSunday(week: 4)
+        for (key, value) in self.userTimeData.divideDataByWeeks(startDate: threeWeeksAgoDate?[0].getCurrentDateAsString() ?? Date().getCurrentDateAsString(), endDate: todayDate, data: data){
             var listDailyChartReport: [dailyChartReport] = []
             for (dKey, dValue) in value {
                 listDailyChartReport.append(dailyChartReport(date: dKey, totalStudyTime: dValue.totalStudyTime))
             }
-            weeklyChartReport[key] = listDailyChartReport
-            weeklyKeys.append(key)
+            listDailyChartReport.sort(by: {$0.date < $1.date})
+            self.weeklyChartReport[key] = listDailyChartReport
+            self.weeklyKeys.append(key)
+            self.weeklyKeys.sort()
         }
+    }
+}
+
+struct dailyReportView: View {
+    var day: String
+    var totalStudyTime: Int
+    var timerStudyTime: Int
+    var stopwatchStudyTime: Int
+    var backgroundColor: Color = .lightBlueCBD9FE
+    var body: some View {
+        HStack{
+            Text(day)
+            Text(totalStudyTime.timeToText())
+            VStack {
+                HStack{
+                    Text("타이머")
+                    Text(timerStudyTime.timeToText())
+                }
+                HStack{
+                    Text("스탑워치")
+                    Text(stopwatchStudyTime.timeToText())
+                }
+            }
+        }.background(backgroundColor)
     }
 }
 

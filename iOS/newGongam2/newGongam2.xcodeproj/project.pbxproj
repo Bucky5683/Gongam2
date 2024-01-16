@@ -13,7 +13,6 @@
 		EB152A412B4B88FD004A0679 /* FirebaseFirestoreSwift in Frameworks */ = {isa = PBXBuildFile; productRef = EB152A402B4B88FD004A0679 /* FirebaseFirestoreSwift */; };
 		EB152A432B4B88FD004A0679 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = EB152A422B4B88FD004A0679 /* FirebaseStorage */; };
 		EB152A452B4B88FD004A0679 /* FirebaseStorageCombine-Community in Frameworks */ = {isa = PBXBuildFile; productRef = EB152A442B4B88FD004A0679 /* FirebaseStorageCombine-Community */; };
-		EB41CDA22B4CC1A70007E938 /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB41CDA12B4CC1A70007E938 /* LoginViewModel.swift */; };
 		EB41CDA52B4CC3600007E938 /* LoginModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB41CDA42B4CC3600007E938 /* LoginModel.swift */; };
 		EB41CDA72B4CC7280007E938 /* AuthenticationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB41CDA62B4CC7280007E938 /* AuthenticationManager.swift */; };
 		EB41CDA92B4CD3F40007E938 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = EB41CDA82B4CD3F40007E938 /* GoogleService-Info.plist */; };
@@ -44,7 +43,6 @@
 		EB86AF5C2B47B8B3005A15A5 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB86AF5B2B47B8B3005A15A5 /* MainView.swift */; };
 		EB86AF5E2B47B966005A15A5 /* MainHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB86AF5D2B47B966005A15A5 /* MainHeaderView.swift */; };
 		EB86AF602B47BA72005A15A5 /* UserData.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB86AF5F2B47BA72005A15A5 /* UserData.swift */; };
-		EB86AF622B47BB9F005A15A5 /* TimeTaskData.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB86AF612B47BB9F005A15A5 /* TimeTaskData.swift */; };
 		EB86AF642B47DC44005A15A5 /* UserTimeData.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB86AF632B47DC44005A15A5 /* UserTimeData.swift */; };
 		EB86AF682B47DD5E005A15A5 /* TimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB86AF672B47DD5E005A15A5 /* TimerView.swift */; };
 		EB86AF6D2B47E11A005A15A5 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = EB86AF6C2B47E11A005A15A5 /* FirebaseAnalytics */; };
@@ -78,7 +76,6 @@
 /* Begin PBXFileReference section */
 		EB152A372B4B7549004A0679 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		EB152A462B4BCDB2004A0679 /* newGongam2.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = newGongam2.entitlements; sourceTree = "<group>"; };
-		EB41CDA12B4CC1A70007E938 /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
 		EB41CDA42B4CC3600007E938 /* LoginModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginModel.swift; sourceTree = "<group>"; };
 		EB41CDA62B4CC7280007E938 /* AuthenticationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationManager.swift; sourceTree = "<group>"; };
 		EB41CDA82B4CD3F40007E938 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
@@ -110,7 +107,6 @@
 		EB86AF5B2B47B8B3005A15A5 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
 		EB86AF5D2B47B966005A15A5 /* MainHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainHeaderView.swift; sourceTree = "<group>"; };
 		EB86AF5F2B47BA72005A15A5 /* UserData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserData.swift; sourceTree = "<group>"; };
-		EB86AF612B47BB9F005A15A5 /* TimeTaskData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeTaskData.swift; sourceTree = "<group>"; };
 		EB86AF632B47DC44005A15A5 /* UserTimeData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserTimeData.swift; sourceTree = "<group>"; };
 		EB86AF672B47DD5E005A15A5 /* TimerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerView.swift; sourceTree = "<group>"; };
 		EB86AF812B47F9C6005A15A5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
@@ -157,14 +153,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		EB41CDA02B4CC18D0007E938 /* ViewModels */ = {
-			isa = PBXGroup;
-			children = (
-				EB41CDA12B4CC1A70007E938 /* LoginViewModel.swift */,
-			);
-			path = ViewModels;
-			sourceTree = "<group>";
-		};
 		EB692A5C2B4E5CD300901457 /* Main */ = {
 			isa = PBXGroup;
 			children = (
@@ -265,7 +253,6 @@
 				EB5DCAE82B50C470003E23AB /* NotificationService.swift */,
 				EB41CDA62B4CC7280007E938 /* AuthenticationManager.swift */,
 				EB41CDAA2B4CDD700007E938 /* FirebassDataManager.swift */,
-				EB41CDA02B4CC18D0007E938 /* ViewModels */,
 				EB86AF662B47DD1E005A15A5 /* Views */,
 				EB86AF652B47DD05005A15A5 /* Model */,
 				EB86AF352B47B7F2005A15A5 /* Assets.xcassets */,
@@ -306,7 +293,6 @@
 			isa = PBXGroup;
 			children = (
 				EB86AF5F2B47BA72005A15A5 /* UserData.swift */,
-				EB86AF612B47BB9F005A15A5 /* TimeTaskData.swift */,
 				EB86AF632B47DC44005A15A5 /* UserTimeData.swift */,
 				EB41CDA42B4CC3600007E938 /* LoginModel.swift */,
 				EB697FEE2B4FB54B0011EA58 /* MainModel.swift */,
@@ -491,8 +477,6 @@
 				EB692A702B4E6A2A00901457 /* MainRankChartView.swift in Sources */,
 				EB86AF682B47DD5E005A15A5 /* TimerView.swift in Sources */,
 				EB41CDA52B4CC3600007E938 /* LoginModel.swift in Sources */,
-				EB86AF622B47BB9F005A15A5 /* TimeTaskData.swift in Sources */,
-				EB41CDA22B4CC1A70007E938 /* LoginViewModel.swift in Sources */,
 				EB697FF12B4FD9100011EA58 /* StopwatchView.swift in Sources */,
 				EB41CDAB2B4CDD700007E938 /* FirebassDataManager.swift in Sources */,
 				EB692A722B4E6FA700901457 /* RankView.swift in Sources */,

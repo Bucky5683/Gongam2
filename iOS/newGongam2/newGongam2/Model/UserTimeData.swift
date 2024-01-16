@@ -27,43 +27,41 @@ class UserTimeData: ObservableObject{
     
     init(id: String){
         self.id = id
-        self.studyDataes = [getCurrentDateAsString():dailyTimerData()]
+        let today = Date().getCurrentDateAsString()
+        self.studyDataes = [today:dailyTimerData()]
     }
     
     init(){
         self.id = ""
-        self.studyDataes = [getCurrentDateAsString():dailyTimerData()]
+        let today = Date().getCurrentDateAsString()
+        self.studyDataes = [today:dailyTimerData()]
     }
     
     func updateTimeData(stopwatch: Int, timer: Int){
-        let today = getCurrentDateAsString()
+        let today = Date().getCurrentDateAsString()
         self.studyDataes[today]?.stopwatchStudyTime += stopwatch
         self.studyDataes[today]?.timerStudyTime += timer
         self.studyDataes[today]?.totalStudyTime += stopwatch + timer
     }
     
-    func getCurrentDateAsString() -> String {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd"
-        
-        let currentDate = Date()
-        let dateString = dateFormatter.string(from: currentDate)
-        
-        return dateString
-    }
-    
     func divideDataByWeeks(startDate: String, endDate: String, data: [String: dailyTimerData]) -> [String:[String: dailyTimerData]] {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd"
-        
         var currentDate = dateFormatter.date(from: startDate)!
-        let endDate = dateFormatter.date(from: endDate)!
+        var fixedDate:Date = dateFormatter.date(from: endDate)!
+        if let endDay = dateFormatter.date(from: endDate){
+            fixedDate = endDay.findSaturday() ?? Date()
+        } else {
+            print("Error: Unable to parse date from endDate")
+        }
+        
+        print("fixedDate : \(fixedDate)")
         
         var weeklyData: [String:[String: dailyTimerData]] = [:]
         
-        while currentDate <= endDate {
-            let weekStartDate = Calendar.current.date(byAdding: .day, value: -6, to: currentDate)!
-            let weekEndDate = currentDate
+        while currentDate < fixedDate {
+            let weekStartDate = currentDate
+            let weekEndDate = Calendar.current.date(byAdding: .day, value: 6, to: currentDate)!
             
             let weekKey = "\(dateFormatter.string(from: weekStartDate)) ~ \(dateFormatter.string(from: weekEndDate))"
             var weeklyEntry = [String: dailyTimerData]()
@@ -78,10 +76,10 @@ class UserTimeData: ObservableObject{
                     weeklyEntry[currentDayKey] = dailyTimerData()
                 }
             }
-            weeklyData[weekKey]?.merge(weeklyEntry)
+            weeklyData[weekKey] = weeklyEntry
             
             // 다음 주로 이동
-            currentDate = Calendar.current.date(byAdding: .day, value: 1, to: currentDate)!
+            currentDate = Calendar.current.date(byAdding: .weekOfYear, value: 1, to: currentDate)!
         }
         
         return weeklyData
@@ -92,25 +90,6 @@ class UserTimeData: ObservableObject{
          */
     }
     
-    func getFirstDayOfCurrentWeek(for date: Date) -> Date? {
-        let calendar = Calendar.current
-        
-        // 현재 날짜가 속한 주의 첫 번째 날을 찾음
-        let currentDateComponents = calendar.dateComponents([.yearForWeekOfYear, .weekOfYear, .weekday], from: date)
-        let firstDayOfWeek = calendar.date(from: currentDateComponents)
-        
-        return firstDayOfWeek
-    }
-
-    func getWeeksAgo(from date: Date, week: Int) -> Date? {
-        let calendar = Calendar.current
-        
-        if let oneWeekAgo = calendar.date(byAdding: .weekOfYear, value: week * -1, to: date) {
-            return oneWeekAgo
-        } else {
-            return nil
-        }
-    }
 }
 extension UserTimeData {
     func downloadUserTimeData() async {
@@ -150,7 +129,7 @@ extension UserTimeData {
     }
     
     func uploadTimeData(stopwatch: Int, timer: Int){
-        let formattedDate = getCurrentDateAsString()
+        let formattedDate = Date().getCurrentDateAsString()
         let timeData = [
             "totalStudyTime" : stopwatch + timer,
             "stopwatchStudyTime" : stopwatch,
@@ -260,14 +239,4 @@ extension Date {
 public enum TimerType{
     case timer
     case stopWatch
-}
-
-public enum weeklyDay{
-    case Mon
-    case Tue
-    case Wen
-    case Thu
-    case Fri
-    case Sat
-    case Sun
 }

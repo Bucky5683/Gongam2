@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct MainRankChartView: View {
+    @EnvironmentObject var userTimeData: UserTimeData
+    @EnvironmentObject var userData: UserData
     var body: some View {
         ZStack{
             HStack{
@@ -18,15 +20,15 @@ struct MainRankChartView: View {
             VStack{
                 HStack{
                     Rectangle().frame(width: 67, height: 11).padding(.leading, 72)
-                        .foregroundColor(.lightBlueCBD9FE)
+                        .foregroundColor(.pinkECB9C2)
                         .shadow(radius: 10)
                     HStack{
-                        Text("OOO님의 등수")
-                        Text("999+")
+                        Text("\(self.userTimeData.name)님의 등수")
+                        Text("\(self.userTimeData.myRank)")
                     }.background(.pinkECB9C2)
                         .shadow(radius: 10)
                     Spacer()
-                }
+                }.disabled((self.userTimeData.totalStudyTime - self.userTimeData.averageTime)>0)
                 HStack{
                     Rectangle().frame(width: 67, height: 11).padding(.leading, 72)
                         .foregroundColor(.lightGrayA5ABBD)
@@ -34,7 +36,7 @@ struct MainRankChartView: View {
                     HStack{
                         Text("평균 공부시간")
                         Text(":")
-                        Text("9999:99:99")
+                        Text("\(self.userTimeData.averageTime.timeToTextForWeekly())")
                     }.background(.lightGrayA5ABBD)
                         .shadow(radius: 10)
                     Spacer()
@@ -44,12 +46,12 @@ struct MainRankChartView: View {
                         .foregroundColor(.lightBlueCBD9FE)
                         .shadow(radius: 10)
                     HStack{
-                        Text("OOO님의 등수")
-                        Text("999+")
+                        Text("\(self.userTimeData.name)님의 등수")
+                        Text("\(self.userTimeData.myRank)")
                     }.background(.lightBlueCBD9FE)
                         .shadow(radius: 10)
                     Spacer()
-                }
+                }.disabled((self.userTimeData.totalStudyTime - self.userTimeData.averageTime)<=0)
             }
         }.background(.whiteFFFFFF, ignoresSafeAreaEdges: .all)
     }

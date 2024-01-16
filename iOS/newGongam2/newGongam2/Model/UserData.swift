@@ -85,10 +85,17 @@ extension UserData {
             } else{
                 self?.profileImageURL = userData.profileImageURL
             }
-            self?.todayStudyTime = userData.todayStudyTime
+            if userData.lastUpdateDate == self?.getCurrentDateAsString() {
+                self?.todayStudyTime = userData.todayStudyTime
+                self?.stopwatchStudyTime = userData.stopwatchStudyTime
+                self?.timerStudyTime = userData.timerStudyTime
+            } else {
+                self?.todayStudyTime = 0
+                self?.stopwatchStudyTime = 0
+                self?.timerStudyTime = 0
+            }
+            
             self?.goalStudyTime = userData.goalStudyTime
-            self?.stopwatchStudyTime = userData.stopwatchStudyTime
-            self?.timerStudyTime = userData.timerStudyTime
             self?.lastUpdateDate = userData.lastUpdateDate
         }
         

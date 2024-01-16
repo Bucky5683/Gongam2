@@ -23,9 +23,11 @@ class StopwatchViewModel: ObservableObject {
             userData.todayStudyTime += self.timerTime
             userData.stopwatchStudyTime += self.timerTime
             userTimeData.totalStudyTime += self.timerTime
+            userData.lastUpdateDate = Date().getCurrentDateAsString()
             userTimeData.updateTimeData(stopwatch: userData.stopwatchStudyTime, timer: userData.timerStudyTime)
             userData.setUserDataPartly(type: .stopwatchStudyTime, data: userData.stopwatchStudyTime)
             userData.setUserDataPartly(type: .todayStudyTime, data: userData.todayStudyTime)
+            userData.setUserDataPartly(type: .lastUpdateDate, data: userData.lastUpdateDate)
             userTimeData.uploadTimeData(stopwatch: userData.stopwatchStudyTime, timer: userData.timerStudyTime)
             userTimeData.uploadRankData()
             self.isStarted = true
