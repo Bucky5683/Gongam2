@@ -92,7 +92,8 @@ fun MyGradeView(sharedPreferencesUtil: SharedPreferencesUtil) {
     val rankUserList by rankingViewModel.rankUserList.observeAsState(initial = emptyList())
 
     if (rankUserList.isNotEmpty()) {
-        val userRank = rankingViewModel.getUserRank(user.email ?: "")
+        rankingViewModel.setUserRank(user.email ?: "")
+        val userRank = rankingViewModel.getUserRank()
         val totalStudyTime = (user.timerStudyTime!! + user.stopwatchStudyTime!!).toString()
 
         Box(
@@ -123,7 +124,7 @@ fun MyGradeView(sharedPreferencesUtil: SharedPreferencesUtil) {
                     Spacer(modifier = Modifier.height(9.dp))
                     SpacedEdgeTextsWithCenterVertically(
                         leftText = "이번 주 공부 시간", leftTextSize = 14.sp, leftTextColor = colorResource(id = R.color.white), leftTextWeight = FontWeight(400),
-                        rightText = totalStudyTime, rightTextSize = 14.sp, rightTextColor = colorResource(id = R.color.white), rightTextWeight = FontWeight(400)
+                        rightText = TimeUtils.convertSecondsToTime(totalStudyTime.toInt()), rightTextSize = 14.sp, rightTextColor = colorResource(id = R.color.white), rightTextWeight = FontWeight(400)
                     )
                 }
             }

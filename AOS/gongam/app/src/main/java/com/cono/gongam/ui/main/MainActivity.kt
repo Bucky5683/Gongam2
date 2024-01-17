@@ -25,6 +25,8 @@ import androidx.core.view.WindowCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.cono.gongam.R
 import com.cono.gongam.data.RankingViewModel
+import com.cono.gongam.data.User
+import com.cono.gongam.data.UserViewModel
 import com.cono.gongam.ui.main.mainSubViews.ContentsTitleView
 import com.cono.gongam.ui.main.mainSubViews.MyReportView
 import com.cono.gongam.ui.main.mainSubViews.RankingView
@@ -61,8 +63,14 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun MainScreen(profileImageUrl: String) {
     val context: Context = LocalContext.current
+    val sharedPreferences = SharedPreferencesUtil(context)
+    val user: User = sharedPreferences.getUser()
+
     val rankingViewModel: RankingViewModel = viewModel()
+    val userViewModel: UserViewModel = viewModel()
     rankingViewModel.updateRankUserList()
+    userViewModel.setCurrentUser(user)
+
     val rankUserList by rankingViewModel.rankUserList.observeAsState(initial = emptyList())
 
     Column(
@@ -77,6 +85,7 @@ fun MainScreen(profileImageUrl: String) {
         TimerView(context)
         Spacer(modifier = Modifier.height(42.5.dp))
         if (rankUserList.isNotEmpty()) {
+            rankingViewModel.setUserRank(user.email ?: "")
             RankingView(context = context, isBelowAverage = true)
         }
         Spacer(modifier = Modifier.height(15.dp))

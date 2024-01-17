@@ -2,10 +2,7 @@ package com.cono.gongam.data
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
-import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
-
-class UserViewModel @Inject constructor() : ViewModel() {
+class UserViewModel : ViewModel() {
     private var currentUser: User? = null
 
     fun setCurrentUser(user: User) {

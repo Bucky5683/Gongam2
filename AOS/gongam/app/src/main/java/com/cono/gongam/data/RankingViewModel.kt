@@ -17,6 +17,7 @@ import kotlin.coroutines.suspendCoroutine
 
 class RankingViewModel : ViewModel() {
     private val _rankUserList = MutableLiveData<List<RankUser>>()
+    private var userRank: String = ""
     val rankUserList: LiveData<List<RankUser>> get() = _rankUserList
 
     fun updateRankUserList() {
@@ -28,11 +29,15 @@ class RankingViewModel : ViewModel() {
         }
     }
 
-    fun getUserRank(email: String): String {
+    fun setUserRank(email: String) {
         val rankIndex = rankUserList.value?.indexOfFirst { it.email == email }
-        if (rankIndex != null) {
-            return (rankIndex + 1).toString()
-        } else return ""
+        userRank = if (rankIndex != null) {
+            (rankIndex + 1).toString()
+        } else ""
+    }
+
+    fun getUserRank(): String {
+        return userRank
     }
 
     private suspend fun getRankingDataFromFirebaseDB(): List<RankUser> {

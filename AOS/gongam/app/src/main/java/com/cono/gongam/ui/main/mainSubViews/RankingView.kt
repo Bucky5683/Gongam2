@@ -35,6 +35,8 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.cono.gongam.R
 import com.cono.gongam.data.RankingViewModel
+import com.cono.gongam.data.User
+import com.cono.gongam.data.UserViewModel
 import com.cono.gongam.ui.ranking.RankingActivity
 
 @Composable
@@ -192,6 +194,11 @@ private fun DrawAverageStudyTimes() {
 
 @Composable
 private fun DrawUserStudyTimes(isBelowAverage: Boolean) {
+    val userViewModel: UserViewModel = viewModel()
+    val rankingViewModel: RankingViewModel = viewModel()
+    val user: User? = userViewModel.getCurrentUser()
+    val userRank = rankingViewModel.getUserRank()
+
     val boxColor = if (isBelowAverage) colorResource(id = R.color.blue_scale1) else colorResource(id = R.color.red_scale1)
 
     Row(
@@ -237,18 +244,16 @@ private fun DrawUserStudyTimes(isBelowAverage: Boolean) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    // TODO :: 유저 이름 할당
                     Text(
-                        text = "OOO님의 등수",
+                        text = "${user?.name}님의 등수",
                         color = colorResource(id = R.color.main_gray),
                         fontWeight = FontWeight(400),
                         fontSize = 12.sp,
                         textAlign = TextAlign.Center,
                     )
                     Spacer(modifier = Modifier.width(13.dp))
-                    // TODO :: 유저 등수 할당
                     Text(
-                        text = "999+",
+                        text = if (userRank.toInt() <= 999) userRank else "999+",
                         color = colorResource(id = R.color.main_gray),
                         fontWeight = FontWeight(700),
                         fontSize = 20.sp,
