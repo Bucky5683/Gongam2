@@ -92,7 +92,7 @@ class UserTimeData: ObservableObject{
     
 }
 extension UserTimeData {
-    func downloadUserTimeData() async {
+    func downloadUserTimeData() {
         self.downloadData()
         self.downloadRankData()
     }
@@ -192,6 +192,18 @@ extension UserTimeData {
         
         print("UserTImeData id : \(self.id)")
         print("UserTimeData studyDataes : \(self.studyDataes)")
+    }
+    
+    func deleteUserTimeData() {
+        self.id = ""
+        self.name = ""
+        self.profileURL = ""
+        self.email = ""
+        self.totalStudyTime = 0
+        self.studyDataes = [:]
+        self.myRank = 0
+        self.averageTime = 0
+        self.top10User = [:]
     }
 }
 

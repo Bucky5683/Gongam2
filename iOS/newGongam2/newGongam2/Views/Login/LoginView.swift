@@ -33,8 +33,9 @@ struct LoginView: View {
                         do{
                             try await viewModel.googleLogin()
                             await viewModel.setUserDataes(userData: userData, userTimeData: userTimeData)
-                            coordinator.isProfileEdit = false
-                            coordinator.push(.setProfile)
+                            await MainActor.run {
+                                self.nextView(self.userData.isNewUser)
+                            }
                         } catch {
                             print(error)
                         }
@@ -55,8 +56,9 @@ struct LoginView: View {
                             }
                             viewModel.appleLogin(credential: credential)
                             await viewModel.setUserDataes(userData: userData, userTimeData: userTimeData)
-                            coordinator.isProfileEdit = false
-                            coordinator.push(.setProfile)
+                            await MainActor.run {
+                                self.nextView(self.userData.isNewUser)
+                            }
                         case .failure(let error):
                             print(error.localizedDescription)
                         }
@@ -70,7 +72,14 @@ struct LoginView: View {
     }
     
     
-    
+    func nextView(_ isNewUser: Bool) {
+        if isNewUser == true {
+            coordinator.isProfileEdit = false
+            coordinator.push(.setProfile)
+        } else {
+            coordinator.changeRoot(.main)
+        }
+    }
 }
 
 // Helper for Apple Login with Firebase
@@ -169,9 +178,10 @@ final class LoginViewModel: ObservableObject {
         }
     }
     
+    @MainActor
     func setUserDataes(userData: UserData, userTimeData: UserTimeData) async{
         userData.downloadUserData()
-        await userTimeData.downloadUserTimeData()
+        userTimeData.downloadUserTimeData()
     }
     //    func kakaoAuthSignIn() {
     //        if AuthApi.hasToken() { // 발급된 토큰이 있는지

@@ -55,7 +55,7 @@ struct ReportView: View {
                 Spacer()
                 ForEach(weeklyChartReport[weeklyKeys[self.idx]] ?? [dailyChartReport(date: Date().getCurrentDateAsString(), totalStudyTime: 0)]) { weekly in
                     let dailyReport = self.userTimeData.studyDataes[weekly.date]
-                    dailyReportView(day: weekly.date.getDaysFromString(), totalStudyTime: dailyReport?.totalStudyTime ?? 0, timerStudyTime: dailyReport?.timerStudyTime ?? 0, stopwatchStudyTime: dailyReport?.timerStudyTime ?? 0, backgroundColor: .lightBlueCBD9FE)
+                    dailyReportView(day: weekly.date.getDaysFromString(), totalStudyTime: dailyReport?.totalStudyTime ?? 0, timerStudyTime: dailyReport?.timerStudyTime ?? 0, stopwatchStudyTime: dailyReport?.stopwatchStudyTime ?? 0, backgroundColor: .lightBlueCBD9FE)
                 }
             } else {
                 ProgressView()

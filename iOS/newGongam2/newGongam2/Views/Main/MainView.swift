@@ -15,13 +15,13 @@ import PopupView
     - 목표시간에 현재 공부한 시간을 빼, 남은 시간이 있는지 확인하고 있다면, 그 시간을 출력하기 ✅
  2. 랭킹
     - 유저의 평균시간 데이터베이스에서 받아오기 ✅
-    - 평균시간에서 현재 공부한 시간을 뺴, 남은 시간을 출력
-    - 평균시간보다 유저가 공부한 시간이 적으면 평균공부시간보다 낮게, 공부한 시간이 많으면 평균 공부시간보다 높게 View 설정
-    - 유저의 등수가 어느정도인지, 데이터베이스에서 받아오기(만약 1000등 이상이면 999+로 출력)
+    - 평균시간에서 현재 공부한 시간을 뺴, 남은 시간을 출력 ✅
+    - 평균시간보다 유저가 공부한 시간이 적으면 평균공부시간보다 낮게, 공부한 시간이 많으면 평균 공부시간보다 높게 View 설정 ✅
+    - 유저의 등수가 어느정도인지, 데이터베이스에서 받아오기(만약 1000등 이상이면 999+로 출력)✅
  3. 마이 리포트
     - 유저의 한주 데이터를 받아옴✅
         - 만약 수요일(1/11)이라고 해도, 그 주의 일요일(1/7)부터 토요일(1/13)까지의 데이터 불러옴✅
-        - 목요일,금요일, 토요일 데이터가 없으면 회색으로 "-" 처리
+        - 목요일,금요일, 토요일 데이터가 없으면 회색으로 "-" 처리✅
  4. 프로필
     - 유저의 프로필 사진 출력 ✅
     - 터치 시, 프로필 Popup이 뜸 ✅
@@ -30,6 +30,9 @@ import PopupView
     - 도움말, 이동약관은 Web브라우저로 이동하도록 설정
  */
 class MainViewModel: ObservableObject {
+    @Published var thisWeekDataes : [String:Int] = [:]
+    @Published var thisWeeks: [MyReportGridItem] = []
+    @Published var average: Int = 0
     
     //메인 헤더
     func calculateReMainTime(goalTime: Int, todayStudyTime: Int) -> Int{ //목표시간에서 현재 공부한 시간을 빼, 0보다 크면 남은 시간을, 아니면 -1을 반환
@@ -41,6 +44,26 @@ class MainViewModel: ObservableObject {
         }
     }
     
+    func makeWeeklyChartReport(userTimeData: UserTimeData, userData: UserData){
+        let data = userTimeData.studyDataes
+        let todayDate = Date().getCurrentDateAsString()
+        let thisWeek = Date().getWeeksAgoSunday(week: 1)
+        var sum = 0
+        for (_, value) in userTimeData.divideDataByWeeks(startDate: thisWeek?[0].getCurrentDateAsString() ?? Date().getCurrentDateAsString(), endDate: todayDate, data: data){
+            for (dKey, dValue) in value {
+                self.thisWeekDataes[dKey] = dValue.totalStudyTime - userData.goalStudyTime
+                sum += dValue.totalStudyTime
+            }
+        }
+        var arrayReport: [MyReportGridItem] = []
+        
+        for (key, value) in self.thisWeekDataes {
+            arrayReport.append(MyReportGridItem(weeklys: key.getDaysFromString(), date: key, studyTime: value))
+        }
+        arrayReport.sort(by: {$0.date < $1.date})
+        self.average = Int(sum/7)
+        self.thisWeeks = arrayReport
+    }
 }
 
 // MARK: 메인화면 뷰
@@ -86,7 +109,7 @@ struct MainView: View {
                         Button {
                             coordinator.push(.myReport)
                         } label: {
-                            MainMyReportGridView()
+                            MainMyReportGridView(viewModel: $viewModel)
                         }
                     }
                 }
@@ -129,6 +152,8 @@ struct MainView: View {
                     .closeOnTapOutside(true)
                     .backgroundColor(.black.opacity(0.5))
                     .isOpaque(true)
+            }.onChange(of: coordinator.isProfileEdit){
+                showingPopup = !coordinator.isProfileEdit
             }
         }
         .background(.whiteFFFFFF, ignoresSafeAreaEdges: .all)

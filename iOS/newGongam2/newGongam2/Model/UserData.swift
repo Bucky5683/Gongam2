@@ -29,6 +29,7 @@ class UserData: ObservableObject, Codable{
     @Published var stopwatchStudyTime: Int = 0
     @Published var timerStudyTime: Int = 0
     @Published var lastUpdateDate: String = ""
+    @Published var isNewUser: Bool = true
     
     enum CodingKeys: String, CodingKey {
         case profileImageURL
@@ -64,7 +65,7 @@ class UserData: ObservableObject, Codable{
         try container.encode(lastUpdateDate, forKey: .lastUpdateDate)
         try container.encode(email, forKey: .email)
     }
-    
+
 }
 
 // MARK: Firebase Function
@@ -105,6 +106,7 @@ extension UserData {
         print("UserData todayStudyTime : \(self.todayStudyTime)")
         print("UserData goalStudyTime : \(self.goalStudyTime)")
         print("UserData lastUpdateDate : \(self.lastUpdateDate)")
+        self.isNewUser = false
         
     }
     
@@ -130,6 +132,7 @@ extension UserData {
         FirebassDataManager.shared.newFetchUserData { [weak self] userData in
             guard let userData = userData else { return }
 
+            self?.isNewUser = true
             self?.id = userData.id
             self?.name = userData.name
             self?.profileImageURL = userData.profileImageURL
@@ -153,6 +156,19 @@ extension UserData {
     func setUserDataPartly(type: userDataType, data: Any){
         FirebassDataManager.shared.writeUserDataPartlyToFirebase(uid: self.id, type: type, data: data)
     }
+    
+    func deleteUserData(){
+        self.id = ""
+        self.profileImageURL = "https://firebasestorage.googleapis.com/v0/b/gongam2-ff081.appspot.com/o/example2.jpeg?alt=media&token=2b4bbe1f-9ba2-49a7-bf54-87b5ca70eddd"
+        self.name = ""
+        self.email = ""
+        self.todayStudyTime = 0
+        self.goalStudyTime = 0
+        self.stopwatchStudyTime = 0
+        self.timerStudyTime = 0
+        self.lastUpdateDate = ""
+        self.isNewUser = true
+    }
 }
 extension UserData {
     func toJSON() -> [String: Any] {
@@ -173,6 +189,8 @@ extension UserData {
     func getCurrentDateAsString() -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd"
+        let koreaTimeZone = TimeZone(identifier: "Asia/Seoul")!
+        dateFormatter.timeZone = koreaTimeZone
         
         let currentDate = Date()
         let dateString = dateFormatter.string(from: currentDate)

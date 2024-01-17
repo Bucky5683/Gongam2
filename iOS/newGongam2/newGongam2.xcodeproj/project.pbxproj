@@ -32,7 +32,6 @@
 		EB692A792B4E813200901457 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EB692A782B4E813200901457 /* Launch Screen.storyboard */; };
 		EB697FE92B4F739A0011EA58 /* Extenstiones.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB697FE82B4F739A0011EA58 /* Extenstiones.swift */; };
 		EB697FED2B4F8A3F0011EA58 /* NavigationCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB697FEC2B4F8A3F0011EA58 /* NavigationCoordinator.swift */; };
-		EB697FEF2B4FB54B0011EA58 /* MainModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB697FEE2B4FB54B0011EA58 /* MainModel.swift */; };
 		EB697FF12B4FD9100011EA58 /* StopwatchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB697FF02B4FD9100011EA58 /* StopwatchView.swift */; };
 		EB86AF322B47B7F0005A15A5 /* newGongam2App.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB86AF312B47B7F0005A15A5 /* newGongam2App.swift */; };
 		EB86AF362B47B7F2005A15A5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EB86AF352B47B7F2005A15A5 /* Assets.xcassets */; };
@@ -93,7 +92,6 @@
 		EB692A782B4E813200901457 /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 		EB697FE82B4F739A0011EA58 /* Extenstiones.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extenstiones.swift; sourceTree = "<group>"; };
 		EB697FEC2B4F8A3F0011EA58 /* NavigationCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationCoordinator.swift; sourceTree = "<group>"; };
-		EB697FEE2B4FB54B0011EA58 /* MainModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainModel.swift; sourceTree = "<group>"; };
 		EB697FF02B4FD9100011EA58 /* StopwatchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StopwatchView.swift; sourceTree = "<group>"; };
 		EB86AF2E2B47B7F0005A15A5 /* newGongam2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = newGongam2.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EB86AF312B47B7F0005A15A5 /* newGongam2App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = newGongam2App.swift; sourceTree = "<group>"; };
@@ -295,7 +293,6 @@
 				EB86AF5F2B47BA72005A15A5 /* UserData.swift */,
 				EB86AF632B47DC44005A15A5 /* UserTimeData.swift */,
 				EB41CDA42B4CC3600007E938 /* LoginModel.swift */,
-				EB697FEE2B4FB54B0011EA58 /* MainModel.swift */,
 				EB5DCAEB2B5104B9003E23AB /* RankModel.swift */,
 			);
 			path = Model;
@@ -490,7 +487,6 @@
 				EB86AF602B47BA72005A15A5 /* UserData.swift in Sources */,
 				EB54A03F2B4BD8320074C13B /* SetProfileView.swift in Sources */,
 				EB152A382B4B7549004A0679 /* LoginView.swift in Sources */,
-				EB697FEF2B4FB54B0011EA58 /* MainModel.swift in Sources */,
 				EB5DCAE92B50C470003E23AB /* NotificationService.swift in Sources */,
 				EB54A0482B4BF04C0074C13B /* Utilities.swift in Sources */,
 				EB697FED2B4F8A3F0011EA58 /* NavigationCoordinator.swift in Sources */,

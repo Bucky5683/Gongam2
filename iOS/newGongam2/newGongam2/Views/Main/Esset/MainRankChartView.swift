@@ -18,40 +18,63 @@ struct MainRankChartView: View {
                 Spacer()
             }
             VStack{
-                HStack{
-                    Rectangle().frame(width: 67, height: 11).padding(.leading, 72)
-                        .foregroundColor(.pinkECB9C2)
-                        .shadow(radius: 10)
+                if (self.userTimeData.totalStudyTime - self.userTimeData.averageTime)>0 {
                     HStack{
-                        Text("\(self.userTimeData.name)님의 등수")
-                        Text("\(self.userTimeData.myRank)")
-                    }.background(.pinkECB9C2)
-                        .shadow(radius: 10)
-                    Spacer()
-                }.disabled((self.userTimeData.totalStudyTime - self.userTimeData.averageTime)>0)
-                HStack{
-                    Rectangle().frame(width: 67, height: 11).padding(.leading, 72)
-                        .foregroundColor(.lightGrayA5ABBD)
-                        .shadow(radius: 10)
+                        Rectangle().frame(width: 67, height: 11).padding(.leading, 72)
+                            .foregroundColor(.pinkECB9C2)
+                            .shadow(radius: 10)
+                        HStack{
+                            Text("\(self.userTimeData.name)님의 등수")
+                            if self.userTimeData.myRank > 999 {
+                                Text("999+")
+                            } else {
+                                Text("\(self.userTimeData.myRank)")
+                            }
+                        }.background(.pinkECB9C2)
+                            .shadow(radius: 10)
+                        Spacer()
+                    }
                     HStack{
-                        Text("평균 공부시간")
-                        Text(":")
-                        Text("\(self.userTimeData.averageTime.timeToTextForWeekly())")
-                    }.background(.lightGrayA5ABBD)
-                        .shadow(radius: 10)
-                    Spacer()
+                        Rectangle().frame(width: 67, height: 11).padding(.leading, 72)
+                            .foregroundColor(.lightGrayA5ABBD)
+                            .shadow(radius: 10)
+                        HStack{
+                            Text("평균 공부시간")
+                            Text(":")
+                            Text("\(self.userTimeData.averageTime.timeToTextForWeekly())")
+                        }.background(.lightGrayA5ABBD)
+                            .shadow(radius: 10)
+                        Spacer()
+                    }
+                } else {
+                    HStack{
+                        Rectangle().frame(width: 67, height: 11).padding(.leading, 72)
+                            .foregroundColor(.lightGrayA5ABBD)
+                            .shadow(radius: 10)
+                        HStack{
+                            Text("평균 공부시간")
+                            Text(":")
+                            Text("\(self.userTimeData.averageTime.timeToTextForWeekly())")
+                        }.background(.lightGrayA5ABBD)
+                            .shadow(radius: 10)
+                        Spacer()
+                    }
+                    HStack{
+                        Rectangle().frame(width: 67, height: 11).padding(.leading, 72)
+                            .foregroundColor(.lightBlueCBD9FE)
+                            .shadow(radius: 10)
+                        HStack{
+                            Text("\(self.userTimeData.name)님의 등수")
+                            if self.userTimeData.myRank > 999 {
+                                Text("999+")
+                            } else {
+                                Text("\(self.userTimeData.myRank)")
+                            }
+                        }.background(.lightBlueCBD9FE)
+                            .shadow(radius: 10)
+                        Spacer()
+                    }
                 }
-                HStack{
-                    Rectangle().frame(width: 67, height: 11).padding(.leading, 72)
-                        .foregroundColor(.lightBlueCBD9FE)
-                        .shadow(radius: 10)
-                    HStack{
-                        Text("\(self.userTimeData.name)님의 등수")
-                        Text("\(self.userTimeData.myRank)")
-                    }.background(.lightBlueCBD9FE)
-                        .shadow(radius: 10)
-                    Spacer()
-                }.disabled((self.userTimeData.totalStudyTime - self.userTimeData.averageTime)<=0)
             }
         }.background(.whiteFFFFFF, ignoresSafeAreaEdges: .all)
     }

@@ -105,7 +105,6 @@ extension FirebassDataManager {
                     let decoder = JSONDecoder()
                     let decodedUserData = try decoder.decode(UserData.self, from: jsonData)
                     decodedUserData.id = uid
-                    decodedUserData.lastUpdateDate = decodedUserData.getCurrentDateAsString()
                     completion(decodedUserData)
                 } catch {
                     print("Error decoding data: \(error.localizedDescription)")
@@ -261,6 +260,25 @@ extension FirebassDataManager {
                 print("Error uploading data: \(error.localizedDescription)")
             } else {
                 print("Data uploaded successfully to key")
+            }
+        }
+    }
+}
+
+extension FirebassDataManager {
+    //MARK: 사용자 관리
+    func deleteData(uid: String) {
+        let user = Auth.auth().currentUser
+        
+        user?.delete() { error in
+            if let error = error {
+                // An error happened.
+                print("ERROR USER DELETE : \(error)")
+            } else {
+                // Account deleted.
+                self.database.child("StudyDataes").child(uid).removeValue()
+                self.database.child("Users").child(uid).removeValue()
+                self.database.child("Rank").child(uid).removeValue()
             }
         }
     }
