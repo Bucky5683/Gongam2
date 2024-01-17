@@ -86,7 +86,8 @@ fun MainScreen(profileImageUrl: String) {
         Spacer(modifier = Modifier.height(42.5.dp))
         if (rankUserList.isNotEmpty()) {
             rankingViewModel.setUserRank(user.email ?: "")
-            RankingView(context = context, isBelowAverage = true)
+            rankingViewModel.setStudyTimeAverage()
+            RankingView(context = context)
         }
         Spacer(modifier = Modifier.height(15.dp))
         MyReportView(-99, -99, -99, 99, 99, -99, -99)

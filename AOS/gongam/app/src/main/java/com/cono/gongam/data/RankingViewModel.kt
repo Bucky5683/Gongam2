@@ -18,6 +18,7 @@ import kotlin.coroutines.suspendCoroutine
 class RankingViewModel : ViewModel() {
     private val _rankUserList = MutableLiveData<List<RankUser>>()
     private var userRank: String = ""
+    private var studyTimeAverage: Int = 0
     val rankUserList: LiveData<List<RankUser>> get() = _rankUserList
 
     fun updateRankUserList() {
@@ -36,8 +37,26 @@ class RankingViewModel : ViewModel() {
         } else ""
     }
 
+    fun setStudyTimeAverage() {
+        val users = rankUserList.value
+
+        if (users == null) {
+            updateRankUserList()
+        } else {
+            val totalStudyTimeSum = users.mapNotNull { it.totalStudyTime }.sum()
+            val average =
+                if (users.isNotEmpty()) totalStudyTimeSum.toDouble() / users.size
+                else 0.0
+            studyTimeAverage = average.toInt()
+        }
+    }
+
     fun getUserRank(): String {
         return userRank
+    }
+
+    fun getStudyTimeAverage(): Int {
+        return studyTimeAverage
     }
 
     private suspend fun getRankingDataFromFirebaseDB(): List<RankUser> {

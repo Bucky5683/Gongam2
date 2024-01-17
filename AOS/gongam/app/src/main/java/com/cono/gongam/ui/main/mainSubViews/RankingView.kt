@@ -38,9 +38,12 @@ import com.cono.gongam.data.RankingViewModel
 import com.cono.gongam.data.User
 import com.cono.gongam.data.UserViewModel
 import com.cono.gongam.ui.ranking.RankingActivity
+import com.cono.gongam.utils.TimeUtils
 
+
+// TODO : 유저의 평균값 -> 주 단위의 값으로 변경 필요
 @Composable
-fun RankingView(context: Context, isBelowAverage: Boolean = true) {
+fun RankingView(context: Context) {
     Column(
         modifier = Modifier
             .fillMaxWidth(),
@@ -48,7 +51,7 @@ fun RankingView(context: Context, isBelowAverage: Boolean = true) {
     ) {
         ContentsTitleView("랭킹", true, context = context)
         Spacer(modifier = Modifier.height(37.dp))
-        VerticalGraph(context, isBelowAverage)
+        VerticalGraph(context)
         Spacer(modifier = Modifier.height(12.dp))
         SetCompareAverageText()
         Spacer(modifier = Modifier.height(31.dp))
@@ -56,9 +59,12 @@ fun RankingView(context: Context, isBelowAverage: Boolean = true) {
 }
 
 @Composable
-private fun VerticalGraph(context: Context, isBelowAverage: Boolean = true) {
+private fun VerticalGraph(context: Context) {
+    val userViewModel: UserViewModel = viewModel()
     val rankingViewModel: RankingViewModel = viewModel()
+    val user: User? = userViewModel.getCurrentUser()
     val rankUserList by rankingViewModel.rankUserList.observeAsState(initial = emptyList())
+    val isBelowAverage = user?.timerStudyTime!! + user.stopwatchStudyTime!! < rankingViewModel.getStudyTimeAverage()
 
     Box(
         modifier = Modifier
@@ -126,6 +132,8 @@ private fun DrawGrayGraph() {
 
 @Composable
 private fun DrawAverageStudyTimes() {
+    val rankingViewModel: RankingViewModel = viewModel()
+
     Row(
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -178,9 +186,8 @@ private fun DrawAverageStudyTimes() {
                         fontSize = 10.sp,
                         textAlign = TextAlign.Center,
                     )
-                    // TODO :: 공부시간 평균값 할당
                     Text(
-                        text = "9999:99:99",
+                        text = TimeUtils.convertSecondsToTime(rankingViewModel.getStudyTimeAverage()),
                         color = Color.White,
                         fontWeight = FontWeight(700),
                         fontSize = 10.sp,
@@ -267,6 +274,13 @@ private fun DrawUserStudyTimes(isBelowAverage: Boolean) {
 
 @Composable
 private fun SetCompareAverageText() {
+    val userViewModel: UserViewModel = viewModel()
+    val rankingViewModel: RankingViewModel = viewModel()
+    val user = userViewModel.getCurrentUser()
+    val diffFromAverage = (user?.timerStudyTime!! + user.stopwatchStudyTime!!) - rankingViewModel.getStudyTimeAverage()
+    val less: Boolean = diffFromAverage < 0
+    if (diffFromAverage < 0) diffFromAverage * (-1)
+
     Row(
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -276,16 +290,14 @@ private fun SetCompareAverageText() {
             color = colorResource(id = R.color.main_gray),
             fontWeight = FontWeight(500)
         )
-        // TODO :: 유저 공부 시간과 평균값의 차이값 할당
         Text(
-            text = "999:99:99",
+            text = TimeUtils.convertSecondsToTime(diffFromAverage),
             fontSize = 15.sp,
-            color = colorResource(id = R.color.blue_scale2),
+            color = if (less) colorResource(id = R.color.blue_scale2) else colorResource(id = R.color.red_scale2),
             fontWeight = FontWeight(700)
         )
-        // TODO :: 덜 공부 했을 때와 더 공부했을 때 구분해서 문구 설정
         Text(
-            text = " 만큼 덜 공부했어요!",
+            text = if (less) " 만큼 덜 공부했어요!" else " 만큼 더 공부했어요!",
             fontSize = 12.sp,
             color = colorResource(id = R.color.main_gray),
             fontWeight = FontWeight(500)
@@ -304,13 +316,13 @@ private fun PreviewDrawUserStudyTimes() {
 @Preview(showBackground = true)
 @Composable
 private fun PreviewRankingViewUnderAverage() {
-    RankingView(context = LocalContext.current, isBelowAverage = true)
+    RankingView(context = LocalContext.current)
 }
 
 @Preview(showBackground = true)
 @Composable
 private fun PreviewRankingViewAboveAverage() {
-    RankingView(context = LocalContext.current, isBelowAverage = false)
+    RankingView(context = LocalContext.current)
 }
 
 //@Preview(showBackground = true)
