@@ -11,12 +11,11 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.database
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
-class RankingViewModel @Inject constructor() : ViewModel() {
+class RankingViewModel : ViewModel() {
     private val _rankUserList = MutableLiveData<List<RankUser>>()
     val rankUserList: LiveData<List<RankUser>> get() = _rankUserList
 
@@ -66,10 +65,3 @@ class RankingViewModel @Inject constructor() : ViewModel() {
         return list.sortedByDescending { it.totalStudyTime ?: 0 }
     }
 }
-
-//    fun getRankingDataFromFirebaseDB() {
-//        viewModelScope.launch {
-//            val fetchedRankUserList = getRankingData()
-////            updateRankUserList(fetchedRankUserList)
-//        }
-//    }

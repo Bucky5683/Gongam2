@@ -1,10 +1,8 @@
 package com.cono.gongam.ui.ranking
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -31,7 +29,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -50,11 +47,10 @@ import com.cono.gongam.utils.TimeUtils
 
 class RankingActivity : ComponentActivity() {
     private lateinit var sharedPreferencesUtil: SharedPreferencesUtil
-    private val rankingViewModel by viewModels<RankingViewModel>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
-        sharedPreferencesUtil = SharedPreferencesUtil(this)
-        rankingViewModel.updateRankUserList()
         super.onCreate(savedInstanceState)
+        sharedPreferencesUtil = SharedPreferencesUtil(this)
 
         setContent {
             GongamTheme {
@@ -63,7 +59,7 @@ class RankingActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    RankingScreen(rankingViewModel, sharedPreferencesUtil)
+                    RankingScreen(sharedPreferencesUtil)
                 }
             }
         }
@@ -71,33 +67,7 @@ class RankingActivity : ComponentActivity() {
 }
 
 @Composable
-fun RankingCards(rankingViewModel: RankingViewModel = viewModel()) {
-    val rankUserList by rankingViewModel.rankUserList.observeAsState(initial = emptyList())
-    Log.d("TestRankingViewModel", "rankingactivity :: ${rankUserList} ")
-
-    if (rankUserList.isNotEmpty()) {
-        Log.d("TestRankingViewModel", "rankingactivity :: not empty -> $rankUserList")
-
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .wrapContentHeight()
-        ) {
-            rankUserList.forEachIndexed { index, user ->
-//                Log.d("TimeUtilsTest", "time -> ${TimeUtils.convertSecondsToTime(user.totalStudyTime ?: 0)}")
-                Log.d("TimeUtilsTest", "time -> ${TimeUtils.convertSecondsToTime(216012)}")
-                Log.d("TimeUtilsTest", "time -> ${TimeUtils.convertSecondsToTime(198)}")
-                if (index < 5) {
-                    RankingUserCard(grade = index + 1, profileImgUrl = user.profileImageURL ?: "", name = user.name ?: "", studyTime = user.totalStudyTime ?: 0)
-                    Spacer(modifier = Modifier.height(8.dp))
-                }
-            }
-        }
-    }
-}
-
-@Composable
-fun RankingScreen(rankingViewModel: RankingViewModel = viewModel(), sharedPreferencesUtil: SharedPreferencesUtil) {
+fun RankingScreen(sharedPreferencesUtil: SharedPreferencesUtil) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -106,22 +76,23 @@ fun RankingScreen(rankingViewModel: RankingViewModel = viewModel(), sharedPrefer
     ) {
         TopTitle(backgroundColor = colorResource(id = R.color.white), textColor = colorResource(id = R.color.black), centerText = "랭킹", dividerLineColor = colorResource(
             id = R.color.gray_line2), backPress = true)
-        MyGradeView(rankingViewModel = rankingViewModel, sharedPreferencesUtil = sharedPreferencesUtil)
+        MyGradeView(sharedPreferencesUtil = sharedPreferencesUtil)
         TitleThisWeekTop5()
-        RankingCards(rankingViewModel)
+        RankingCards()
     }
 }
 
 @Composable
-fun MyGradeView(rankingViewModel: RankingViewModel = viewModel(), sharedPreferencesUtil: SharedPreferencesUtil) {
+fun MyGradeView(sharedPreferencesUtil: SharedPreferencesUtil) {
     val user = sharedPreferencesUtil.getUser()
+
+    val rankingViewModel: RankingViewModel = viewModel()
+    rankingViewModel.updateRankUserList()
+
     val rankUserList by rankingViewModel.rankUserList.observeAsState(initial = emptyList())
 
     if (rankUserList.isNotEmpty()) {
         val userRank = rankingViewModel.getUserRank(user.email ?: "")
-        Log.d("MyGradeView", "userRank : $userRank")
-        Log.d("MyGradeView", "user.timerStudyTime : ${user.timerStudyTime}")
-        Log.d("MyGradeView", "user.stopwatchStudyTime : ${user.stopwatchStudyTime}")
         val totalStudyTime = (user.timerStudyTime!! + user.stopwatchStudyTime!!).toString()
 
         Box(
@@ -175,6 +146,27 @@ fun TitleThisWeekTop5() {
             fontSize = 18.sp,
             fontWeight = FontWeight(700),
         )
+    }
+}
+
+@Composable
+fun RankingCards() {
+    val rankingViewModel: RankingViewModel = viewModel()
+    val rankUserList by rankingViewModel.rankUserList.observeAsState(initial = emptyList())
+
+    if (rankUserList.isNotEmpty()) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentHeight()
+        ) {
+            rankUserList.forEachIndexed { index, user ->
+                if (index < 5) {
+                    RankingUserCard(grade = index + 1, profileImgUrl = user.profileImageURL ?: "", name = user.name ?: "", studyTime = user.totalStudyTime ?: 0)
+                    Spacer(modifier = Modifier.height(8.dp))
+                }
+            }
+        }
     }
 }
 
@@ -296,7 +288,6 @@ fun CardText(grade: Int, name: String, studyTime: Int) {
     }
 }
 
-
 // ------------------------------------ Previews ------------------------------------
 
 //@Preview(showBackground = true, showSystemUi = true)
@@ -305,11 +296,11 @@ fun CardText(grade: Int, name: String, studyTime: Int) {
 //    RankingScreen(RankingViewModel(), SharedPreferencesUtil(context = LocalContext.current))
 //}
 
-@Preview
-@Composable
-fun PreviewMyGradeView() {
-    MyGradeView(sharedPreferencesUtil = SharedPreferencesUtil(context = LocalContext.current))
-}
+//@Preview
+//@Composable
+//fun PreviewMyGradeView() {
+//    MyGradeView(sharedPreferencesUtil = SharedPreferencesUtil(context = LocalContext.current))
+//}
 
 @Preview(showBackground = true)
 @Composable

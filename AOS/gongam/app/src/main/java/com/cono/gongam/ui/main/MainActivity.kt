@@ -1,5 +1,6 @@
 package com.cono.gongam.ui.main
 
+import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -12,6 +13,8 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -19,7 +22,9 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.cono.gongam.R
+import com.cono.gongam.data.RankingViewModel
 import com.cono.gongam.ui.main.mainSubViews.ContentsTitleView
 import com.cono.gongam.ui.main.mainSubViews.MyReportView
 import com.cono.gongam.ui.main.mainSubViews.RankingView
@@ -55,7 +60,10 @@ class MainActivity : ComponentActivity() {
 // Compose main at here
 @Composable
 fun MainScreen(profileImageUrl: String) {
-    val context = LocalContext.current
+    val context: Context = LocalContext.current
+    val rankingViewModel: RankingViewModel = viewModel()
+    rankingViewModel.updateRankUserList()
+    val rankUserList by rankingViewModel.rankUserList.observeAsState(initial = emptyList())
 
     Column(
         modifier = Modifier
@@ -68,7 +76,9 @@ fun MainScreen(profileImageUrl: String) {
         Spacer(modifier = Modifier.height(15.dp))
         TimerView(context)
         Spacer(modifier = Modifier.height(42.5.dp))
-        RankingView(context)
+        if (rankUserList.isNotEmpty()) {
+            RankingView(context = context, isBelowAverage = true)
+        }
         Spacer(modifier = Modifier.height(15.dp))
         MyReportView(-99, -99, -99, 99, 99, -99, -99)
         Spacer(modifier = Modifier.height(23.dp))
