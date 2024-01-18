@@ -105,7 +105,7 @@ fun PreviewMain() {
 
 @Preview
 @Composable
-fun PreivewTopView() {
+fun PreviewTopView() {
     TopView(profileImgUrl = "")
 }
 

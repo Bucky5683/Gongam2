@@ -179,6 +179,8 @@ fun GoogleLoginButton(onLoginSuccess: (lUser: User) -> Unit, onRegisterSuccess: 
                             val userData = dataSnapshot.getValue(User::class.java)
                             user.timerStudyTime = userData?.timerStudyTime
                             user.stopwatchStudyTime = userData?.stopwatchStudyTime
+                            user.todayStudyTime = userData?.timerStudyTime!! + userData.stopwatchStudyTime!!
+                            user.goalStudyTime = userData.goalStudyTime
 
                             onLoginSuccess(user)
                         }

@@ -1,6 +1,5 @@
 package com.cono.gongam.ui.main.mainSubViews
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -12,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Surface
@@ -23,27 +23,37 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.cono.gongam.R
+import com.cono.gongam.data.UserViewModel
 import com.cono.gongam.ui.register.debugPlaceHolder
+import com.cono.gongam.utils.TimeUtils
 
 @Composable
 fun TopView(profileImgUrl: String) {
+    val userViewModel: UserViewModel = viewModel()
+    val user = userViewModel.getCurrentUser()
+    val studyTime = user?.todayStudyTime ?: 0
+    val goalTime = user?.goalStudyTime ?: 0
+    val diffTime = goalTime - studyTime
+    val studiedThanGoal: Boolean = goalTime - studyTime < 0
+
     Surface(
         modifier = Modifier
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .height(290.dp),
         color = colorResource(id = R.color.main_gray)
     ) {
         Column(
-            verticalArrangement = Arrangement.Top, // 위로 정렬
-            horizontalAlignment = Alignment.CenterHorizontally // 가운데 정렬
+            verticalArrangement = Arrangement.Top,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Spacer(modifier = Modifier.height(45.dp)) // 상태바로 잘리는 부분을 위한 spacer
             Spacer(modifier = Modifier.height(13.7.dp))
@@ -51,14 +61,6 @@ fun TopView(profileImgUrl: String) {
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.End
             ) {
-//                Image(
-//                    painter = painterResource(id = R.drawable.img_test_profile),
-//                    contentDescription = "profile Img",
-//                    contentScale = ContentScale.Fit,
-//                    modifier = Modifier
-//                        .width(30.dp)
-//                        .height(30.dp),
-//                )
                 ProfileImage(profileImgUrl = profileImgUrl)
                 Spacer(modifier = Modifier.width(15.dp))
             }
@@ -71,23 +73,24 @@ fun TopView(profileImgUrl: String) {
                 textDecoration = TextDecoration.Underline,
             )
             Text(
-                text = "99:99:99",
+                text = TimeUtils.convertSecondsToTime(studyTime),
                 color = Color.White,
                 fontSize = 30.sp,
                 modifier = Modifier.padding(top = 15.dp, bottom = 15.dp),
                 textAlign = TextAlign.Center,
                 fontWeight = FontWeight(700),
             )
-            GoalText()
+            GoalText(studiedThanGoal, diffTime)
         }
     }
 }
 
 @Composable
-fun GoalText() {
+fun GoalText(studiedThanGoal: Boolean, diffTime: Int) {
+
     Box(
         modifier = Modifier
-            .width(200.dp)
+            .wrapContentWidth()
             .padding(bottom = 52.dp)
             .background(
                 color = colorResource(R.color.gray_scale1),
@@ -102,12 +105,12 @@ fun GoalText() {
             Text(
                 text = "\uD83D\uDD25",
                 modifier = Modifier
-                    .padding(start = 6.dp),
+                    .padding(start = 20.dp),
                 fontSize = 12.sp,
                 textAlign = TextAlign.Center,
             )
             Text(
-                text = "목표까지",
+                text = if (!studiedThanGoal) "목표까지" else "목표 달성!",
                 color = colorResource(id = R.color.main_gray),
                 modifier = Modifier
                     .padding(start = 5.dp, top = 6.dp, bottom = 6.dp),
@@ -115,19 +118,21 @@ fun GoalText() {
                 textAlign = TextAlign.Center,
                 fontWeight = FontWeight(400),
             )
-            Text(
-                text = "99:99:99",
-                color = colorResource(id = R.color.main_gray),
-                modifier = Modifier
-                    .padding(start = 5.dp, top = 6.dp, bottom = 6.dp, end = 5.dp),
-                fontSize = 12.sp,
-                textAlign = TextAlign.Center,
-                fontWeight = FontWeight(700),
-            )
+            if (!studiedThanGoal) {
+                Text(
+                    text = TimeUtils.convertSecondsToTime(diffTime),
+                    color = colorResource(id = R.color.main_gray),
+                    modifier = Modifier
+                        .padding(start = 5.dp, top = 6.dp, bottom = 6.dp),
+                    fontSize = 12.sp,
+                    textAlign = TextAlign.Center,
+                    fontWeight = FontWeight(700),
+                )
+            }
             Text(
                 text = "\uD83D\uDD25",
                 modifier = Modifier
-                    .padding(end = 6.dp),
+                    .padding(start = 5.dp, end = 20.dp),
                 fontSize = 12.sp,
                 textAlign = TextAlign.Center,
             )
