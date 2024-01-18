@@ -217,7 +217,7 @@ fun RegisterScreen(nextBtnOnClick: () -> Unit, profileImgUrl: String = "", selec
         )
         {
             Spacer(modifier = Modifier.weight(1f))
-            CircleTextButton(buttonText = "Next", nextBtnOnClick = { nextBtnOnClick() }, buttonColor = colorResource(
+            CircleTextButton(buttonText = "Next", btnOnClick = { nextBtnOnClick() }, buttonColor = colorResource(
                 id = R.color.main_gray
             ))
             Spacer(modifier = Modifier.weight(1f))
@@ -273,5 +273,5 @@ fun PreviewRegisterScreen() {
 @Preview
 @Composable
 fun PreviewNextButton() {
-    CircleTextButton("Next", nextBtnOnClick = {}, buttonColor = colorResource(id = R.color.main_gray))
+    CircleTextButton("Next", btnOnClick = {}, buttonColor = colorResource(id = R.color.main_gray))
 }

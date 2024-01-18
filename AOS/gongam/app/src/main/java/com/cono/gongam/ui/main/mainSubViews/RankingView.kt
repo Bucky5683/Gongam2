@@ -97,9 +97,9 @@ private fun VerticalGraph(context: Context) {
                     Column(
                         modifier = Modifier.weight(1f)
                     ) {
-                        Spacer(modifier = Modifier.weight(5f))
-                        DrawUserStudyTimes(isBelowAverage = false)
                         Spacer(modifier = Modifier.weight(1f))
+                        DrawUserStudyTimes(isBelowAverage = false)
+                        Spacer(modifier = Modifier.weight(5f))
                     }
                     DrawAverageStudyTimes()
                     Spacer(modifier = Modifier.weight(1f))

@@ -124,11 +124,11 @@ fun SpacedEdgeTextsWithCenterVertically(
 }
 
 @Composable
-fun CircleTextButton(buttonText: String, nextBtnOnClick: () -> Unit, buttonColor: Color) {
+fun CircleTextButton(buttonText: String, btnOnClick: () -> Unit, buttonColor: Color) {
     // TODO :: 버튼 shadow 적용
     Button(
         onClick = {
-            nextBtnOnClick()
+            btnOnClick()
         },
         modifier = Modifier
             .width(100.dp)
