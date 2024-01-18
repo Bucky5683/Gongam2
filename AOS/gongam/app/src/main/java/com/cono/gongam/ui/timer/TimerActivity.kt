@@ -19,6 +19,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -99,6 +101,7 @@ fun TimerScreen(sharedPreferencesUtil: SharedPreferencesUtil) {
     val remainGoalTime = if (goalStudyTime == 0) 0 else if (goalStudyTime - sumSeconds < 0) 0 else goalStudyTime - sumSeconds
 
     var isTimerSpinnerVisible by remember { mutableStateOf(true) }
+    var isStopped by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -137,13 +140,36 @@ fun TimerScreen(sharedPreferencesUtil: SharedPreferencesUtil) {
             RemainingTimeText(remainGoalTime)
         }
         Spacer(modifier = Modifier.weight(1f))
-        CircleTextButton(buttonText = "START",
+        StartStopButton(
             btnOnClick = {
                 timerViewModel.startCountDown()
                 isTimerSpinnerVisible = false
-            },
-            buttonColor = colorResource(id = R.color.blue_scale2))
+                isStopped = !isStopped
+            })
         Spacer(modifier = Modifier.weight(1f))
+    }
+}
+
+@Composable
+fun StartStopButton(btnOnClick: () -> Unit) {
+    var isButtonClicked by remember { mutableStateOf(false) }
+
+    Button(
+        onClick = {
+            btnOnClick()
+            isButtonClicked = !isButtonClicked
+        },
+        modifier = Modifier
+            .width(100.dp)
+            .height(100.dp),
+        colors = ButtonDefaults.buttonColors(
+            containerColor = if (!isButtonClicked) colorResource(id = R.color.blue_scale2) else colorResource(
+                id = R.color.red_scale2
+            ),
+            contentColor = colorResource(id = R.color.white)
+        ),
+    ) {
+        Text(text = if (!isButtonClicked) "START" else "STOP", fontSize = 18.sp, fontWeight = FontWeight(700))
     }
 }
 
