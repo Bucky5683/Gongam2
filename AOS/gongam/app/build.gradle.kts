@@ -1,5 +1,3 @@
-import org.jetbrains.kotlin.com.intellij.lang.java.JavaLanguage
-
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -116,6 +114,11 @@ dependencies {
     implementation("com.google.dagger:hilt-android:2.48")
     kapt("com.google.dagger:hilt-android-compiler:2.44")
     implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
+
+    implementation("androidx.compose.runtime:runtime-livedata:1.5.4")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0")
+
 
 }
 

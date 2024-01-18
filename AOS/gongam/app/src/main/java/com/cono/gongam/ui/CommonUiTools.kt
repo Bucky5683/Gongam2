@@ -1,8 +1,6 @@
 package com.cono.gongam.ui
 
-import androidx.activity.OnBackPressedCallback
 import androidx.activity.OnBackPressedDispatcherOwner
-import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -19,6 +17,10 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -28,6 +30,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -94,13 +97,16 @@ fun TopTitle(backgroundColor: Color, textColor: Color, leftText: String = "Main"
 }
 
 @Composable
-fun SpacedEdgeTextsWithCenterVertically(leftText: String, leftTextSize: TextUnit, leftTextColor: Color, leftTextWeight: FontWeight, setLeftUnderLine: Boolean = false,
-                                        rightText: String, rightTextSize: TextUnit, rightTextColor: Color, rightTextWeight: FontWeight, setRightUnderLine: Boolean = false,) {
+fun SpacedEdgeTextsWithCenterVertically(
+    leftText: String, leftTextSize: TextUnit, leftTextColor: Color, leftTextWeight: FontWeight, setLeftUnderLine: Boolean = false,
+    rightText: String, rightTextSize: TextUnit, rightTextColor: Color, rightTextWeight: FontWeight, setRightUnderLine: Boolean = false,
+    horizontalPaddingVal: Dp = 19.dp
+    ) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentHeight()
-            .padding(horizontal = 19.dp),
+            .padding(horizontal = horizontalPaddingVal),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
@@ -122,17 +128,17 @@ fun SpacedEdgeTextsWithCenterVertically(leftText: String, leftTextSize: TextUnit
 }
 
 @Composable
-fun CircleTextButton(buttonText: String, nextBtnOnClick: () -> Unit) {
+fun CircleTextButton(buttonText: String, btnOnClick: () -> Unit, buttonColor: Color) {
     // TODO :: 버튼 shadow 적용
     Button(
         onClick = {
-            nextBtnOnClick()
+            btnOnClick()
         },
         modifier = Modifier
             .width(100.dp)
             .height(100.dp),
         colors = ButtonDefaults.buttonColors(
-            containerColor = colorResource(id = R.color.main_gray)
+            containerColor = buttonColor
         ),
     ) {
         Text(text = buttonText, fontSize = 18.sp, fontWeight = FontWeight(700), color = colorResource(id = R.color.white))

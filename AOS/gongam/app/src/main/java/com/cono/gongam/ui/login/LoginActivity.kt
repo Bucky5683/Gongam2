@@ -9,6 +9,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -40,7 +41,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.cono.gongam.R
+import com.cono.gongam.data.RankUser
 import com.cono.gongam.data.User
+import com.cono.gongam.data.UserViewModel
 import com.cono.gongam.ui.login.ui.theme.GongamTheme
 import com.cono.gongam.ui.main.MainActivity
 import com.cono.gongam.ui.register.RegisterActivity
@@ -60,14 +63,11 @@ import kotlinx.coroutines.tasks.await
 
 @AndroidEntryPoint
 class LoginActivity : ComponentActivity() {
-//    private val userViewModel: UserViewModel by viewModels()
-//    @Inject
-//    lateinit var userViewModel: UserViewModel
+    private val userViewModel: UserViewModel by viewModels<UserViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-//        val userViewModel = ViewModelProvider(this)[UserViewModel::class.java]
         setContent {
             GongamTheme {
                 // A surface container using the 'background' color from the theme
@@ -95,7 +95,6 @@ class LoginActivity : ComponentActivity() {
 //                            Log.d("[LoginScreen]", "getCurrentUser : ${userViewModel.getCurrentUser()}")
                             val sharedPreferencesUtil = SharedPreferencesUtil(this)
                             sharedPreferencesUtil.saveUser(newUser)
-                            Log.d("[LoginScreen]", "getUserInSP : ${sharedPreferencesUtil.getUser()}")
                             startActivity(Intent(this@LoginActivity, RegisterActivity::class.java))
                             finish()
                         }
@@ -158,15 +157,31 @@ fun GoogleLoginButton(onLoginSuccess: (lUser: User) -> Unit, onRegisterSuccess: 
                         if (isNewUser(uid = uid)) { // 새로운 유저 -> DB에 삽입
                             Firebase.database.getReference("Users").child(uid).setValue(user)
                                 .addOnSuccessListener {
-                                    Log.d("[LoginScreen]", "RealtimeDB :: $uid, $email 사용자 추가 완료")
+                                    Log.d("[LoginScreen]", "RealtimeDB : $uid, $email 사용자 추가 완료")
                                 }
                                 .addOnFailureListener {
                                     Log.d("[LoginScreen]", "새 사용자 추가 실패: ${it.message}")
 //                                    Toast.makeText(context, "오류가 발생했습니다. 다시 시도해 주세요.", Toast.LENGTH_SHORT).show()
                                 }
 
+                            val userInRank = RankUser(email = email, name = name, profileImageURL = profileImageUrl.toString())
+                            Firebase.database.getReference("Rank").child(uid).setValue(userInRank)
+                                .addOnSuccessListener {
+                                    Log.d("[LoginScreen]", "RealtimeDB : Rank 사용자 추가 완료")
+                                }
+                                .addOnFailureListener {
+                                    Log.d("[LoginScreen]", "Rank 추가 실패: ${it.message}")
+                                }
+
                             onRegisterSuccess(user)
                         } else { // 이미 존재하는 유저
+                            val dataSnapshot = Firebase.database.getReference("Users").child(uid).get().await()
+                            val userData = dataSnapshot.getValue(User::class.java)
+                            user.timerStudyTime = userData?.timerStudyTime
+                            user.stopwatchStudyTime = userData?.stopwatchStudyTime
+                            user.todayStudyTime = userData?.timerStudyTime!! + userData.stopwatchStudyTime!!
+                            user.goalStudyTime = userData.goalStudyTime
+
                             onLoginSuccess(user)
                         }
                     }
@@ -236,10 +251,10 @@ suspend fun isNewUser(uid: String): Boolean {
     val dataSnapshot = usersRef.child(uid).get().await()
 
     if (!dataSnapshot.exists()) {
-        Log.d("[databasetest]", "데이터 존재하지 않음")
+        Log.d("[databasetest]", "data not exist")
         isNewUser = true
     } else {
-        Log.d("[databasetest]", "데이터 존재")
+        Log.d("[databasetest]", "data exist")
     }
 
     return isNewUser
@@ -250,5 +265,5 @@ suspend fun isNewUser(uid: String): Boolean {
 @Preview(showSystemUi = true, showBackground = true)
 @Composable
 fun PreviewLoginScreen() {
-    LoginScreen(onLoginSuccess = {}, onRegisterSuccess = {})
+    LoginScreen(onLoginSuccess = {lUser: User -> }, onRegisterSuccess = {})
 }

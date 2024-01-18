@@ -20,7 +20,8 @@
     <color name="gray_line">#2E323C</color>
     <color name="gray_line2">#B2B2B2</color>
 
-    <color name="red_scale1">#FF0000</color>
+    <color name="red_scale1">#E4BBC2</color>
+    <color name="red_scale2">#FF0000</color>
 
     <color name="blue_scale1">#CBD9FE</color>
     <color name="blue_scale2">#5C84FF</color>

@@ -136,7 +136,7 @@ private fun DayStudyHoursView(day: String, hours: Int) {
                   },
                 fontSize = 10.sp,
                 fontWeight = FontWeight(400),
-                color = if (hours < 0) colorResource(id = R.color.blue_scale2) else colorResource(id = R.color.red_scale1),
+                color = if (hours < 0) colorResource(id = R.color.blue_scale2) else colorResource(id = R.color.red_scale2),
                 textAlign = TextAlign.Center,
                 modifier = Modifier
                     .fillMaxWidth()

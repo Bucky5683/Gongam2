@@ -1,13 +1,17 @@
 package com.cono.gongam.ui.register
 
+import android.app.Activity
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.viewModels
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -22,10 +26,13 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.TextFieldDefaults
-import androidx.compose.material3.Button
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -38,17 +45,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.ViewModelProvider
 import coil.compose.AsyncImage
 import com.cono.gongam.R
-import com.cono.gongam.data.UserViewModel
 import com.cono.gongam.ui.CircleTextButton
 import com.cono.gongam.ui.main.MainActivity
 import com.cono.gongam.ui.register.ui.theme.GongamTheme
 import com.cono.gongam.utils.SharedPreferencesUtil
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class RegisterActivity : ComponentActivity() {
@@ -56,11 +59,23 @@ class RegisterActivity : ComponentActivity() {
 //    @Inject
 //    lateinit var userViewModel: UserViewModel
     private lateinit var sharedPreferencesUtil : SharedPreferencesUtil
+    private lateinit var imgSelectedInGalleryUrl: String
+
+    private val startForResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            val data: Intent? = result.data
+            val selectedImageUri = handleGalleryResult(data)
+            selectedImageUri?.let {
+                imgSelectedInGalleryUrl = it.toString()
+            }
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         sharedPreferencesUtil = SharedPreferencesUtil(this)
+        imgSelectedInGalleryUrl = sharedPreferencesUtil.getUser().profileImageURL ?: ""
 
 //        val userViewModel = ViewModelProvider(this)[UserViewModel::class.java]
         setContent {
@@ -76,17 +91,43 @@ class RegisterActivity : ComponentActivity() {
                             startActivity(intent)
                             finish()
                         },
-                        profileImgUrl = sharedPreferencesUtil.getUser().profileImageURL ?: "" // 여기서 에러 발생
+                        profileImgUrl = sharedPreferencesUtil.getUser().profileImageURL ?: "",
+                        selectImage = { selectImage() },
+                        imgSelectedInGalleryUrl = imgSelectedInGalleryUrl,
+                        nickName = sharedPreferencesUtil.getUser().name ?: "",
+                        email = sharedPreferencesUtil.getUser().email ?: ""
                     )
                 }
             }
         }
     }
+
+    private fun selectImage() {
+        val galleryIntent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+        startForResult.launch(galleryIntent)
+    }
+
+    private fun handleGalleryResult(data: Intent?): Uri? {
+        if (data == null || data.data == null) {
+            Log.e("GalleryResult", "Invalid gallery result")
+            return null
+        }
+
+        val selectedImageUri: Uri = data.data!!
+        Log.d("GalleryResult", "Selected Image URI : $selectedImageUri")
+
+//        imgSelectedInGalleryUrl = selectedImageUri.toString()
+
+        return selectedImageUri
+    }
 }
 
 @Composable
-fun ProfileImageEdit(profileImgUrl: String) {
+fun ProfileImageEdit(profileImgUrl: String, selectImage: () -> Unit, imgSelectedInGalleryUrl: String) {
     // TODO :: 이미지 shadow 적용
+    // TODO :: 갤러리 result 이미지 반영
+    var currentProfileImageUrl by remember { mutableStateOf(profileImgUrl) }
+
 
     Log.d("ProfileImage :: ", "url : $profileImgUrl")
     Box(
@@ -97,14 +138,18 @@ fun ProfileImageEdit(profileImgUrl: String) {
         contentAlignment = Alignment.BottomEnd
     ) {
         AsyncImage(
-            model = profileImgUrl,
+            model = currentProfileImageUrl,
             placeholder = debugPlaceHolder(R.drawable.img_test_profile),
-            contentDescription = null,
+            contentDescription = "profile_Img",
             contentScale = ContentScale.Crop,
             modifier = Modifier
                 .clip(CircleShape)
                 .fillMaxWidth()
                 .aspectRatio(1f)
+                .clickable {
+                    selectImage()
+                    currentProfileImageUrl = imgSelectedInGalleryUrl
+                }
         )
         Row(
             modifier = Modifier
@@ -120,7 +165,7 @@ fun ProfileImageEdit(profileImgUrl: String) {
             ) {
                 Image(
                     painter = painterResource(id = R.drawable.img_edit_profile),
-                    contentDescription = "profile_Img",
+                    contentDescription = null,
                     modifier = Modifier
                         .clip(CircleShape)
                         .fillMaxSize()
@@ -146,7 +191,8 @@ fun debugPlaceHolder(@DrawableRes debugPreview: Int) =
     }
 
 @Composable
-fun RegisterScreen(nextBtnOnClick: () -> Unit, profileImgUrl: String = "") {
+fun RegisterScreen(nextBtnOnClick: () -> Unit, profileImgUrl: String = "", selectImage: () -> Unit, imgSelectedInGalleryUrl: String,
+                   nickName: String, email: String) {
     Column(
         modifier = Modifier.fillMaxSize(),
     ) {
@@ -156,12 +202,12 @@ fun RegisterScreen(nextBtnOnClick: () -> Unit, profileImgUrl: String = "") {
                 .fillMaxWidth()
                 .wrapContentHeight()
         ) {
-            ProfileImageEdit(profileImgUrl)
+            ProfileImageEdit(profileImgUrl = profileImgUrl, selectImage = selectImage, imgSelectedInGalleryUrl = imgSelectedInGalleryUrl)
             Spacer(modifier = Modifier.height(12.dp))
             InputTextTitle("닉네임")
-            CustomTextField(onValueChange = {})
+            CustomTextField(onValueChange = {}, defaultText = nickName)
             InputTextTitle("이메일")
-            CustomTextField(onValueChange = {})
+            CustomTextField(onValueChange = {}, defaultText = email)
         }
         Column(
             modifier = Modifier
@@ -171,7 +217,9 @@ fun RegisterScreen(nextBtnOnClick: () -> Unit, profileImgUrl: String = "") {
         )
         {
             Spacer(modifier = Modifier.weight(1f))
-            CircleTextButton(buttonText = "Next", nextBtnOnClick = { nextBtnOnClick() })
+            CircleTextButton(buttonText = "Next", btnOnClick = { nextBtnOnClick() }, buttonColor = colorResource(
+                id = R.color.main_gray
+            ))
             Spacer(modifier = Modifier.weight(1f))
         }
     }
@@ -187,13 +235,18 @@ fun InputTextTitle(title: String) {
 
 @Composable
 fun CustomTextField(
-    onValueChange: (String) -> Unit,
+    onValueChange: (String) -> Unit, defaultText: String
 ) {
+    var text by remember { mutableStateOf(defaultText) }
+
     Column(
         modifier = Modifier.padding(vertical = 9.dp)
     ) {
         androidx.compose.material.TextField(
-            value = "", onValueChange = onValueChange,
+            value = text,
+            onValueChange = {
+                text = it
+            },
             maxLines = 1,
             modifier = Modifier
                 .fillMaxWidth()
@@ -214,11 +267,11 @@ fun CustomTextField(
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun PreviewRegisterScreen() {
-    RegisterScreen( nextBtnOnClick = {} )
+    RegisterScreen( nextBtnOnClick = {}, selectImage = {}, imgSelectedInGalleryUrl = "", nickName = "nickname", email = "email")
 }
 
 @Preview
 @Composable
 fun PreviewNextButton() {
-    CircleTextButton("Next", nextBtnOnClick = {})
+    CircleTextButton("Next", btnOnClick = {}, buttonColor = colorResource(id = R.color.main_gray))
 }
