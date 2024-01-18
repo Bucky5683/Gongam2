@@ -13,70 +13,143 @@ struct MainRankChartView: View {
     var body: some View {
         ZStack{
             HStack{
-                Rectangle().frame(width: 54, height: 215).padding(.leading, 78)
-                    .shadow(radius: 10)
+                Rectangle().frame(width: 54, height: 215)
+                    .foregroundStyle(
+                        LinearGradient(
+                            stops: [
+                                Gradient.Stop(color: Color(red: 0.25, green: 0.28, blue: 0.34).opacity(0.7), location: 0.00),
+                                Gradient.Stop(color: Color(red: 0.25, green: 0.28, blue: 0.34), location: 1.00),
+                            ],
+                            startPoint: UnitPoint(x: 0.5, y: 0),
+                            endPoint: UnitPoint(x: 0.5, y: 1)
+                        )
+                    )
+                    .cornerRadius(10)
+                    .padding(.leading, 78)
                 Spacer()
             }
-            VStack{
+            VStack(spacing: 10){
                 if (self.userTimeData.totalStudyTime - self.userTimeData.averageTime)>0 {
                     HStack{
-                        Rectangle().frame(width: 67, height: 11).padding(.leading, 72)
+                        Rectangle().frame(width: 67, height: 11)
                             .foregroundColor(.pinkECB9C2)
-                            .shadow(radius: 10)
+                            .cornerRadius(10)
+                            .padding(.leading, 72)
                         HStack{
                             Text("\(self.userTimeData.name)님의 등수")
+                                .font(Font.system(size: 12))
+                                .foregroundColor(.darkBlue414756)
+                                .padding(.leading, 15)
                             if self.userTimeData.myRank > 999 {
                                 Text("999+")
+                                    .font(
+                                        Font.system(size: 20)
+                                            .weight(.bold)
+                                    )
+                                    .foregroundColor(.darkBlue414756)
+                                    .padding(.trailing, 15)
+                                    .padding(.top, 11)
+                                    .padding(.bottom, 11)
                             } else {
                                 Text("\(self.userTimeData.myRank)")
+                                    .font(
+                                        Font.system(size: 20)
+                                            .weight(.bold)
+                                    )
+                                    .foregroundColor(.darkBlue414756)
+                                    .padding(.trailing, 15)
+                                    .padding(.top, 11)
+                                    .padding(.bottom, 11)
                             }
                         }.background(.pinkECB9C2)
-                            .shadow(radius: 10)
+                            .cornerRadius(10)
                         Spacer()
                     }
-                    HStack{
-                        Rectangle().frame(width: 67, height: 11).padding(.leading, 72)
+                    .shadow(color: .black.opacity(0.25), radius: 2, x: 0, y: 4)
+                    HStack(spacing: 13){
+                        Rectangle().frame(width: 67, height: 11)
                             .foregroundColor(.lightGrayA5ABBD)
-                            .shadow(radius: 10)
+                            .cornerRadius(10)
+                            .padding(.leading, 72)
                         HStack{
-                            Text("평균 공부시간")
-                            Text(":")
-                            Text("\(self.userTimeData.averageTime.timeToTextForWeekly())")
+                            Text("평균 공부시간 : \(self.userTimeData.averageTime.timeToTextForWeekly())")
+                                .font(
+                                    Font.system(size: 10)
+                                        .weight(.medium)
+                                )
+                                .foregroundColor(.white)
+                                .padding(.leading, 15)
+                                .padding(.trailing, 15)
+                                .padding(.top, 3)
+                                .padding(.bottom, 3)
                         }.background(.lightGrayA5ABBD)
-                            .shadow(radius: 10)
+                            .cornerRadius(10)
                         Spacer()
                     }
+                    .shadow(color: .black.opacity(0.25), radius: 2, x: 0, y: 4)
                 } else {
-                    HStack{
-                        Rectangle().frame(width: 67, height: 11).padding(.leading, 72)
+                    HStack(spacing: 13){
+                        Rectangle().frame(width: 67, height: 11)
                             .foregroundColor(.lightGrayA5ABBD)
-                            .shadow(radius: 10)
+                            .cornerRadius(10)
+                            .padding(.leading, 72)
                         HStack{
-                            Text("평균 공부시간")
-                            Text(":")
-                            Text("\(self.userTimeData.averageTime.timeToTextForWeekly())")
+                            Text("평균 공부시간 : \(self.userTimeData.averageTime.timeToTextForWeekly())")
+                                .font(
+                                    Font.system(size: 10)
+                                        .weight(.medium)
+                                )
+                                .foregroundColor(.white)
+                                .padding(.leading, 15)
+                                .padding(.trailing, 15)
+                                .padding(.top, 3)
+                                .padding(.bottom, 3)
                         }.background(.lightGrayA5ABBD)
-                            .shadow(radius: 10)
+                            .cornerRadius(10)
+
                         Spacer()
                     }
-                    HStack{
-                        Rectangle().frame(width: 67, height: 11).padding(.leading, 72)
+                    .shadow(color: .black.opacity(0.25), radius: 2, x: 0, y: 4)
+                    HStack(spacing: 13){
+                        Rectangle().frame(width: 67, height: 11)
                             .foregroundColor(.lightBlueCBD9FE)
-                            .shadow(radius: 10)
+                            .cornerRadius(10)
+                            .padding(.leading, 72)
                         HStack{
                             Text("\(self.userTimeData.name)님의 등수")
+                                .font(Font.system(size: 12))
+                                .foregroundColor(.darkBlue414756)
+                                .padding(.leading, 15)
                             if self.userTimeData.myRank > 999 {
                                 Text("999+")
+                                    .font(
+                                        Font.system(size: 20)
+                                            .weight(.bold)
+                                    )
+                                    .foregroundColor(.darkBlue414756)
+                                    .padding(.trailing, 15)
+                                    .padding(.top, 11)
+                                    .padding(.bottom, 11)
                             } else {
-                                Text("\(self.userTimeData.myRank)")
+                                Text("\(String(format: "%03d", self.userTimeData.myRank))")
+                                    .font(
+                                        Font.system(size: 20)
+                                            .weight(.bold)
+                                    )
+                                    .foregroundColor(.darkBlue414756)
+                                    .padding(.trailing, 15)
+                                    .padding(.top, 11)
+                                    .padding(.bottom, 11)
                             }
                         }.background(.lightBlueCBD9FE)
-                            .shadow(radius: 10)
+                            .cornerRadius(10)
+
                         Spacer()
                     }
+                    .shadow(color: .black.opacity(0.25), radius: 2, x: 0, y: 4)
                 }
             }
-        }.background(.whiteFFFFFF, ignoresSafeAreaEdges: .all)
+        }.background(.whiteFFFFFF)
     }
 }
 

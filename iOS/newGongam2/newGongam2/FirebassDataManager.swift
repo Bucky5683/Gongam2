@@ -126,24 +126,28 @@ extension FirebassDataManager {
         allMembersTimeDataQuery.getData { (error, snapshot) in
             if let error = error {
                 print("Error getting data: \(error.localizedDescription)")
+                completion(nil)
                 return
             }
             
             guard let dataDict = snapshot?.value as? [String:[String:Any]] else {
                 print("Failed to cast snapshot value to [String: [String: Any]]")
+                completion(nil)
                 return
             }
             
             let userStudyData = UserTimeData()
             var findMyData: Bool = false
-            var myRank = 0
+            var myRank = 1
             var sum = 0
             var idx = 0
             var top5User: [String : [String:Any]] = [:]
             
             for (key, value) in dataDict {
-                print(value)
+                print("Rank Data value: \(value)")
+                
                 sum += value["totalStudyTime"] as! Int
+                
                 if key == currentUser.uid {
                     userStudyData.name = value["name"] as! String
                     userStudyData.email = value["email"] as! String
@@ -263,12 +267,12 @@ extension FirebassDataManager {
             }
         }
     }
-}
-
-extension FirebassDataManager {
     //MARK: 사용자 관리
     func deleteData(uid: String) {
         let user = Auth.auth().currentUser
+        self.database.child("StudyDataes").child(uid).removeValue()
+        self.database.child("Users").child(uid).removeValue()
+        self.database.child("Rank").child(uid).removeValue()
         
         user?.delete() { error in
             if let error = error {
@@ -276,9 +280,7 @@ extension FirebassDataManager {
                 print("ERROR USER DELETE : \(error)")
             } else {
                 // Account deleted.
-                self.database.child("StudyDataes").child(uid).removeValue()
-                self.database.child("Users").child(uid).removeValue()
-                self.database.child("Rank").child(uid).removeValue()
+                print("Account deleted Success")
             }
         }
     }

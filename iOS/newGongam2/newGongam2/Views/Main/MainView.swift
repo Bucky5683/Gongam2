@@ -74,54 +74,132 @@ struct MainView: View {
     @State var viewModel: MainViewModel = MainViewModel()
     @State var showingPopup = false
 
+    init() {
+        UINavigationBar.appearance().titleTextAttributes = [.foregroundColor: UIColor.whiteFFFFFF]
+        UINavigationBar.appearance().largeTitleTextAttributes = [.foregroundColor: UIColor.whiteFFFFFF]
+    }
+    
     var body: some View {
-        NavigationView{
+        GeometryReader { geometry in
             ZStack{
-                VStack{
-                    MainHeaderView(viewModel: $viewModel)
-                    //MARK: 타이머
-                    VStack {
-                        Text("타이머")
-                        TimersButtonView(isTimer: true)
-                        TimersButtonView(isTimer: false)
-                    }
-                    
-                    //MARK: 랭크
-                    VStack{
-                        MainSubHeaderView(isRank: true)
-                        Button {
-                            coordinator.push(.rank)
-                        } label: {
-                            MainRankChartView()
-                        }
-                        if (userTimeData.averageTime - userTimeData.totalStudyTime) < 0 {
-                            Text("평균보다 \((userTimeData.totalStudyTime - userTimeData.averageTime).timeToText())만큼 덜 공부했어요")
-                        } else if (userTimeData.averageTime - userTimeData.totalStudyTime) > 0 {
-                            Text("평균보다 \((userTimeData.averageTime - userTimeData.totalStudyTime).timeToText())만큼 더 공부했어요")
-                        } else {
-                            Text("평균만큼 공부했어요")
-                        }
-                    }
-                    
-                    //MARK: 마이리포트
-                    VStack{
-                        MainSubHeaderView(isRank: false)
-                        Button {
-                            coordinator.push(.myReport)
-                        } label: {
-                            MainMyReportGridView(viewModel: $viewModel)
+                HStack{
+                    ScrollView{
+                        VStack{
+                            MainHeaderView(viewModel: $viewModel)
+                                .background(Color.darkBlue414756)
+                                .frame(width: geometry.size.width, height: 280)
+                                .padding(.bottom, 15)
+                            //MARK: 타이머
+                            VStack(spacing: 15) {
+                                HStack{
+                                    Text("타이머")
+                                        .font(Font.system(size: 18))
+                                        .bold()
+                                        .underline(true, color: .darkBlue414756)
+                                        .foregroundColor(.darkBlue414756)
+                                        .padding(.bottom, 8)
+                                    Spacer()
+                                }
+                                TimersButtonView(isTimer: true)
+                                TimersButtonView(isTimer: false)
+                                    .padding(.bottom, 35)
+                            }
+                            .padding(.leading, 40)
+                            .padding(.trailing, 40)
+                            .padding(.bottom, 15)
+                            
+                            //MARK: 랭크
+                            VStack(spacing: 15){
+                                MainSubHeaderView(isRank: true)
+                                    .padding(.leading, 40)
+                                    .padding(.trailing, 40)
+                                    .padding(.bottom, 15)
+                                Button {
+                                    coordinator.push(.rank)
+                                } label: {
+                                    MainRankChartView()
+                                }
+                                if (userTimeData.averageTime - userTimeData.totalStudyTime) < 0 {
+                                    HStack(alignment: .bottom){
+                                        Text("평균보다")
+                                            .font(Font.system(size: 12).weight(.medium))
+                                            .foregroundColor(.darkBlue414756)
+                                        Text((userTimeData.totalStudyTime - userTimeData.averageTime).timeToText())
+                                            .font(Font.system(size: 15))
+                                            .bold()
+                                            .foregroundColor(.blue5C84FF)
+                                        Text("만큼 덜 공부했어요!")
+                                            .font(Font.system(size: 15).weight(.medium))
+                                            .foregroundColor(.darkBlue414756)
+                                    }.padding(.bottom, 30)
+                                        .padding(.leading, 40)
+                                        .padding(.trailing, 40)
+                                } else if (userTimeData.averageTime - userTimeData.totalStudyTime) > 0 {
+                                    HStack(alignment: .bottom){
+                                        Text("평균보다")
+                                            .font(Font.system(size: 12).weight(.medium))
+                                            .foregroundColor(.darkBlue414756)
+                                        Text((userTimeData.averageTime - userTimeData.totalStudyTime).timeToText())
+                                            .font(Font.system(size: 15))
+                                            .bold()
+                                            .foregroundColor(.redFF0000)
+                                        Text("만큼 더 공부했어요!")
+                                            .font(Font.system(size: 12).weight(.medium))
+                                            .foregroundColor(.darkBlue414756)
+                                    }
+                                    .padding(.bottom, 30)
+                                    .padding(.leading, 40)
+                                    .padding(.trailing, 40)
+                                } else {
+                                    Text("평균만큼 공부했어요")
+                                        .font(Font.system(size: 12).weight(.medium))
+                                        .foregroundColor(.darkBlue414756)
+                                        .padding(.bottom, 30)
+                                        .padding(.leading, 40)
+                                        .padding(.trailing, 40)
+                                }
+                            }
+                            .padding(.bottom, 15)
+                            
+                            //MARK: 마이리포트
+                            VStack(spacing: 30){
+                                MainSubHeaderView(isRank: false)
+                                Button {
+                                    coordinator.push(.myReport)
+                                } label: {
+                                    MainMyReportGridView(viewModel: $viewModel)
+                                }.padding(.bottom, 20)
+                            }.padding(.leading, 40)
+                                .padding(.trailing, 40)
+                                .padding(.bottom, 15)
                         }
                     }
                 }
-                
-            }.popup(isPresented: $showingPopup){
-                VStack{
-                    HStack{
-                        VStack{
+            }
+            .background(.whiteFFFFFF)
+            .popup(isPresented: $showingPopup){
+                VStack(spacing: 20){
+                    HStack(alignment: .bottom, spacing: 12){
+                        VStack(alignment: .leading, spacing: 5){
                             Text(userData.name)
+                                .font(Font.system(size: 15).weight(.bold))
+                                .foregroundColor(.black)
                             Text(userData.email)
-                            Text("목표 공부시간 \(userData.goalStudyTime.timeToText())")
+                                .lineLimit(1)
+                                .truncationMode(.tail)
+                                .font(Font.system(size: 12).weight(.medium))
+                                .foregroundColor(.black)
+                            HStack{
+                                Text("목표 공부시간")
+                                    .font(Font.system(size: 12).weight(.medium))
+                                    .underline(true, color: .black)
+                                    .foregroundColor(.black)
+                                Text(userData.goalStudyTime.timeToText())
+                                    .font(Font.system(size: 12).weight(.medium))
+                                    .foregroundColor(.black)
+                            }
                         }
+                        .padding(.leading, 15)
                         Button {
                             coordinator.isProfileEdit = true
                             coordinator.push(.setProfile)
@@ -131,19 +209,59 @@ struct MainView: View {
                             } placeholder: {
                                 ProgressView()
                             }.frame(width: 80, height: 80)
+                                .cornerRadius(80)
+                                .padding(.leading, 15)
+                                .padding(.trailing, 15)
+                                .padding(.top, 15)
                         }
                     }
-                    Button {
-                        print("Clicked Helper!!")
-                    } label: {
-                        Text("도움말")
+                    VStack(spacing: 8){
+                        Button {
+                            print("Clicked Helper!!")
+                        } label: {
+                            HStack(spacing: 7){
+                                Image("HelperImage")
+                                    .resizable()
+                                    .frame(width: 30, height: 30)
+                                    .padding(.leading, 12)
+                                Text("도움말")
+                                    .font(Font.system(size: 15).weight(.medium))
+                                    .foregroundColor(.black)
+                                Spacer()
+                            }
+                            .frame(height: 44)
+                            .background(.white)
+                        }
+                        .cornerRadius(10)
+                            .shadow(color: .black.opacity(0.25), radius: 2, x: 0, y: 4)
+                            .padding(.leading, 15)
+                            .padding(.trailing, 15)
+                        Button {
+                            print("Clicked 이용약관!!")
+                        } label: {
+                            HStack(spacing: 7){
+                                Image("HelperImage")
+                                    .resizable()
+                                    .frame(width: 30, height: 30)
+                                    .padding(.leading, 12)
+                                Text("이용약관")
+                                    .font(Font.system(size: 15).weight(.medium))
+                                    .foregroundColor(.black)
+                                Spacer()
+                            }
+                            .frame(height: 44)
+                                .background(.white)
+                        }.cornerRadius(10)
+                            .shadow(color: .black.opacity(0.25), radius: 2, x: 0, y: 4)
+                            .padding(.leading, 15)
+                            .padding(.trailing, 15)
                     }
-                    Button {
-                        print("Clicked 이용약관!!")
-                    } label: {
-                        Text("이용약관")
-                    }
-                }.background(.whiteFFFFFF)
+                    .padding(.bottom, 15)
+                }
+                .background(.whiteFFFFFF)
+                .frame(width: 270)
+                    .cornerRadius(10)
+                
             } customize: {
                 $0
                     .type(.floater())
@@ -155,23 +273,22 @@ struct MainView: View {
             }.onChange(of: coordinator.isProfileEdit){
                 showingPopup = !coordinator.isProfileEdit
             }
-        }
-        .background(.whiteFFFFFF, ignoresSafeAreaEdges: .all)
-        .navigationBarTitle("",displayMode: .inline)
-        .navigationBarBackButtonHidden(true)
-        .navigationBarItems(leading: Text(""), trailing: Button{
-            print("MainHeader Profile Image Clicked!")
-            showingPopup = true
-        }label: {
-            AsyncImage(url: URL(string: userData.profileImageURL)){ image in
-                image.resizable()
-            } placeholder: {
-                ProgressView()
-            }.frame(width: 30, height: 30)
-        })
+            .navigationBarTitle("",displayMode: .inline)
+            .navigationBarBackButtonHidden(true)
+            .navigationBarItems(leading: Text(""), trailing: Button{
+                print("MainHeader Profile Image Clicked!")
+                showingPopup = true
+            }label: {
+                AsyncImage(url: URL(string: userData.profileImageURL)){ image in
+                    image.resizable()
+                } placeholder: {
+                    ProgressView()
+                }.frame(width: 30, height: 30)
+                    .cornerRadius(30)
+            })
+        }.edgesIgnoringSafeArea(.top)
     }
 }
-
 
 struct TimersButtonView: View {
     @Environment(NavigationCoordinator.self) var coordinator: NavigationCoordinator
@@ -180,28 +297,58 @@ struct TimersButtonView: View {
         HStack{
             if isTimer{
                 Text("⏰")
+                    .padding(.leading, 20)
                 Text("타이머")
+                    .font(Font.system(size: 15))
+                    .fontWeight(.regular)
+                    .foregroundColor(.darkBlue414756)
+                    .multilineTextAlignment(.leading)
+                    .frame(width: 60)
+                    .padding(.leading, 10)
+                Spacer()
                 Button{
                     coordinator.push(.timer)
                 } label: {
                     HStack{
                         Text("GO")
+                            .font(Font.system(size: 15))
+                            .fontWeight(.regular)
+                            .foregroundColor(.whiteFFFFFF)
                         Image("goButtonIcon")
+                            .resizable()
+                            .frame(width: 15, height: 15)
                     }
-                }
+                }.frame(width: 80, height: 48)
+                .background(.darkBlue414756)
             } else {
                 Text("⏱️")
+                    .padding(.leading, 20)
                 Text("스톱워치")
+                    .font(Font.system(size: 15))
+                    .fontWeight(.regular)
+                    .foregroundColor(.darkBlue414756)
+                    .multilineTextAlignment(.leading)
+                    .frame(width: 60)
+                    .padding(.leading, 10)
+                Spacer()
                 Button{
                     coordinator.push(.stopwatch)
                 } label: {
                     HStack{
                         Text("GO")
+                            .font(Font.system(size: 15))
+                            .fontWeight(.regular)
+                            .foregroundColor(.whiteFFFFFF)
                         Image("goButtonIcon")
+                            .resizable()
+                            .frame(width: 15, height: 15)
                     }
-                }
+                }.frame(width: 80, height: 48)
+                    .background(.darkBlue414756)
             }
-        }
+        }.background(.whiteFFFFFF)
+            .cornerRadius(10)
+        .shadow(color: .black.opacity(0.1), radius: 5, x: 0, y: 4)
     }
 }
 
@@ -209,12 +356,19 @@ struct MainSubHeaderView: View {
     @Environment(NavigationCoordinator.self) var coordinator: NavigationCoordinator
     var isRank: Bool = false
     var body: some View {
-        HStack{
-            Spacer()
+        HStack(alignment: .bottom){
             if isRank {
                 Text("랭크")
+                    .font(Font.system(size: 18))
+                    .bold()
+                    .underline(true, color: .darkBlue414756)
+                    .foregroundColor(.darkBlue414756)
             } else {
                 Text("마이 리포트")
+                    .font(Font.system(size: 18))
+                    .bold()
+                    .underline(true, color: .darkBlue414756)
+                    .foregroundColor(.darkBlue414756)
             }
             Spacer()
             if isRank {
@@ -222,15 +376,19 @@ struct MainSubHeaderView: View {
                     coordinator.push(.rank)
                 } label: {
                     Text("더보기 >")
+                        .font(Font.system(size: 12).weight(.regular))
+                        .foregroundColor(.lightGrayA5ABBD)
                 }
             } else {
                 Button{
                     coordinator.push(.myReport)
                 } label: {
                     Text("더보기 >")
+                        .font(Font.system(size: 12).weight(.regular))
+                        .foregroundColor(.lightGrayA5ABBD)
                 }
             }
-            Spacer()
         }
+        .padding(.top,15)
     }
 }

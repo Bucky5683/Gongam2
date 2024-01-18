@@ -65,6 +65,7 @@ class TimeViewModel: ObservableObject {
                 self.seconds = 59
             }
         }
+        self.timeRemaining = self.hours + self.minutes + self.seconds
     }
     
     func updateFirebase(userData: UserData, userTimeData: UserTimeData, isTimerFinished: Bool){
@@ -103,8 +104,10 @@ class TimeViewModel: ObservableObject {
                 self.timerTime += 1
                 self.timeRemaining -= 1
                 self.seconds = self.timeRemaining % 60
-                self.minutes = (self.timeRemaining - self.seconds) % 60
-                self.hours = (self.timeRemaining - self.seconds - (self.minutes * 60))
+                self.minutes = (self.timeRemaining - self.seconds) % 3600
+                self.hours = (self.timeRemaining - self.seconds - self.minutes)
+                print("\(self.timeRemaining) = \(self.hours) : \(self.minutes) : \(self.seconds)")
+                
                 self.timerFinished = false
             } else {
                 self.stopTimer()

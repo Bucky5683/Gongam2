@@ -15,6 +15,7 @@ import FirebaseAuth
 import FirebaseFirestore
 import GoogleSignInSwift
 import GoogleSignIn
+import PopupView
 
 struct LoginView: View {
     @EnvironmentObject var userData: UserData
@@ -22,52 +23,72 @@ struct LoginView: View {
     @Environment(NavigationCoordinator.self) var coordinator: NavigationCoordinator
     @StateObject var viewModel = LoginViewModel()
     @State private var shouldNavigateToSetProfile = false
+    @State private var isNotlogined: Bool = false
     
     var body: some View {
-        NavigationView{
-            VStack{
-                Image("LaunchImage")
-                    .frame(width: 118)
-                GoogleSignInButton(viewModel: GoogleSignInButtonViewModel(scheme: .dark, style: .wide, state: .normal)){
-                    Task{
-                        do{
-                            try await viewModel.googleLogin()
-                            await viewModel.setUserDataes(userData: userData, userTimeData: userTimeData)
-                            await MainActor.run {
-                                self.nextView(self.userData.isNewUser)
+        GeometryReader { geometry in
+            HStack{
+                Spacer()
+                VStack{
+                    Spacer()
+                    Image("LaunchImage")
+                        .frame(width: 118)
+                    Spacer()
+                    GoogleSignInButton(viewModel: GoogleSignInButtonViewModel(scheme: .dark, style: .standard, state: .normal)){
+                        Task{
+                            do{
+                                try await viewModel.googleLogin()
+                                let logined = await viewModel.setUserDataes(userData: userData, userTimeData: userTimeData)
+                                self.isNotlogined = !logined
+                                if logined {
+                                    await MainActor.run {
+                                        self.nextView(self.userData.isNewUser)
+                                    }
+                                }
+                            } catch {
+                                print(error)
                             }
-                        } catch {
-                            print(error)
                         }
                     }
-                }
-                SignInWithAppleButton { (request) in
-                    viewModel.norce = randomNonceString()
-                    request.requestedScopes = [.email, .fullName]
-                    request.nonce = sha256(viewModel.norce)
-                } onCompletion: { (result) in
-                    Task {
-                        switch result {
-                        case .success(let user):
-                            print("success")
-                            guard let credential = user.credential as? ASAuthorizationAppleIDCredential else{
-                                print("error with firebase")
-                                return
-                            }
-                            viewModel.appleLogin(credential: credential)
-                            await viewModel.setUserDataes(userData: userData, userTimeData: userTimeData)
-                            await MainActor.run {
-                                self.nextView(self.userData.isNewUser)
-                            }
-                        case .failure(let error):
-                            print(error.localizedDescription)
-                        }
+                    .frame(width: geometry.size.width * 0.9, height: 50)
+                    .alert(isPresented: $isNotlogined){
+                        Alert(title: Text("로그인 오류"), message: Text("구글 로그인에 실패했습니다. 다시 로그인해주세요."), dismissButton: .default(Text("확인")))
                     }
+                    SignInWithAppleButton { (request) in
+                        viewModel.norce = randomNonceString()
+                        request.requestedScopes = [.email, .fullName]
+                        request.nonce = sha256(viewModel.norce)
+                    } onCompletion: { (result) in
+                        Task {
+                            switch result {
+                            case .success(let user):
+                                print("success")
+                                guard let credential = user.credential as? ASAuthorizationAppleIDCredential else{
+                                    print("error with firebase")
+                                    return
+                                }
+                                viewModel.appleLogin(credential: credential)
+                                let logined = await viewModel.setUserDataes(userData: userData, userTimeData: userTimeData)
+                                self.isNotlogined = !logined
+                                if logined {
+                                    await MainActor.run {
+                                        self.nextView(self.userData.isNewUser)
+                                    }
+                                }
+                            case .failure(let error):
+                                print(error.localizedDescription)
+                            }
+                        }
+                    }.alert(isPresented: $isNotlogined){
+                        Alert(title: Text("로그인 오류"), message: Text("애플 로그인에 실패했습니다. 다시 로그인해주세요."), dismissButton: .default(Text("확인")))
+                    }
+                    .frame(width: geometry.size.width * 0.9, height: 50)
+                    Spacer()
                 }
-                .frame(width: UIScreen.main.bounds.width * 0.9, height: 50)
+                Spacer()
             }
         }
-        .background(.whiteFFFFFF, ignoresSafeAreaEdges: .all)
+        .background(.whiteFFFFFF)
         .navigationBarHidden(true)
     }
     
@@ -179,9 +200,10 @@ final class LoginViewModel: ObservableObject {
     }
     
     @MainActor
-    func setUserDataes(userData: UserData, userTimeData: UserTimeData) async{
+    func setUserDataes(userData: UserData, userTimeData: UserTimeData) async -> Bool{
         userData.downloadUserData()
         userTimeData.downloadUserTimeData()
+        return true
     }
     //    func kakaoAuthSignIn() {
     //        if AuthApi.hasToken() { // 발급된 토큰이 있는지
