@@ -314,7 +314,14 @@ struct TimerView: View {
         .navigationBarHidden(!self.viewModel.isStarted)
         .navigationBarTitle("타이머",displayMode: .inline)
         .navigationBarBackButtonHidden(true)
-        .navigationBarItems(leading: Button("Main"){self.coordinator.pop()})
+        .navigationBarItems(leading:
+            Button{
+                self.coordinator.pop()
+            } label: {
+                Text("Main")
+                    .foregroundColor(.white)
+            }
+        )
     }
 }
 
