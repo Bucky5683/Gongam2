@@ -12,70 +12,81 @@ struct RankView: View {
     @EnvironmentObject var userTimeData: UserTimeData
     @State var top5UsersArray: [RankerUser] = []
     
+    init() {
+        //Use this if NavigationBarTitle is with Large Font
+        UINavigationBar.appearance().largeTitleTextAttributes = [.foregroundColor: UIColor.black]
+
+        //Use this if NavigationBarTitle is with displayMode = .inline
+        UINavigationBar.appearance().titleTextAttributes = [.foregroundColor: UIColor.black]
+    }
+    
     var body: some View {
-        NavigationView{
-            VStack(spacing: 30){
-                VStack(spacing: 10){
-                    HStack(alignment: .bottom){
-                        Text("나의 등수")
-                            .font(Font.system(size: 17))
-                            .foregroundColor(.white)
-                        Spacer()
-                        Text("\(self.userTimeData.myRank)")
-                            .font(Font.system(size: 32).weight(.semibold))
-                            .multilineTextAlignment(.trailing)
-                            .foregroundColor(.white)
-                    }.padding(.leading, 19)
-                        .padding(.top, 37)
-                        .padding(.trailing,19)
-                    HStack{
-                        Text("이번주 공부시간")
-                            .font(Font.system(size: 14))
-                            .foregroundColor(.white)
-                        Spacer()
-                        Text("\(self.userTimeData.totalStudyTime.timeToText())")
-                            .font(Font.system(size: 14))
-                            .multilineTextAlignment(.trailing)
-                            .foregroundColor(.white)
-                    }.padding(.leading, 19)
-                        .padding(.bottom, 38)
-                        .padding(.trailing,19)
-                }.background(.darkBlue414756)
-                .frame(height: 133)
-                .shadow(color: .black.opacity(0.25), radius: 2, x: 0, y: 4)
-                HStack{
-                    Text("이번 주 Top 5").font(Font.system(size: 18).bold()).foregroundColor(.darkBlue414756)
+        VStack(spacing: 30){
+            //Rectangle().foregroundColor(.white).frame(height: 88)
+            VStack(spacing: 10){
+                HStack(alignment: .bottom){
+                    Text("나의 등수")
+                        .font(Font.system(size: 17))
+                        .foregroundColor(.white)
                     Spacer()
+                    Text("\(self.userTimeData.myRank)")
+                        .font(Font.system(size: 32).weight(.semibold))
+                        .multilineTextAlignment(.trailing)
+                        .foregroundColor(.white)
+                }.padding(.leading, 19)
+                    .padding(.top, 37)
+                    .padding(.trailing,19)
+                HStack{
+                    Text("이번주 공부시간")
+                        .font(Font.system(size: 14))
+                        .foregroundColor(.white)
+                    Spacer()
+                    Text("\(self.userTimeData.totalStudyTime.timeToText())")
+                        .font(Font.system(size: 14))
+                        .multilineTextAlignment(.trailing)
+                        .foregroundColor(.white)
+                }.padding(.leading, 19)
+                    .padding(.bottom, 38)
+                    .padding(.trailing,19)
+            }.background(.darkBlue414756)
+            .frame(height: 133)
+            .cornerRadius(10)
+            .padding(.top, 30)
+            .shadow(color: .black.opacity(0.25), radius: 2, x: 0, y: 4)
+            
+            HStack{
+                Text("이번 주 Top 5").font(Font.system(size: 18).bold()).foregroundColor(.darkBlue414756)
+                Spacer()
+            }
+            .padding(.leading, 15)
+            .padding(.trailing, 15)
+            if self.top5UsersArray.count > 0{
+                VStack(spacing: 8){
+                    RankerView(rankerProfile: self.top5UsersArray[0])
+                    RankerView(rankerProfile: self.top5UsersArray[1])
+                    RankerView(rankerProfile: self.top5UsersArray[2])
+                    RankerView(rankerProfile: self.top5UsersArray[3])
+                    RankerView(rankerProfile: self.top5UsersArray[4])
                 }
                 .padding(.leading, 15)
                 .padding(.trailing, 15)
-                if self.top5UsersArray.count > 0{
-                    VStack(spacing: 8){
-                        RankerView(rankerProfile: self.top5UsersArray[0])
-                        RankerView(rankerProfile: self.top5UsersArray[1])
-                        RankerView(rankerProfile: self.top5UsersArray[2])
-                        RankerView(rankerProfile: self.top5UsersArray[3])
-                        RankerView(rankerProfile: self.top5UsersArray[4])
-                    }
-                    .padding(.leading, 15)
-                    .padding(.trailing, 15)
-                }
-                Spacer()
             }
-            .padding(.leading, 22)
-            .padding(.trailing, 22)
-            .onAppear(){
-                self.loadData()
-            }.background(.white)
+            Spacer()
         }
+        .padding(.leading, 22)
+        .padding(.trailing, 22)
+        .onAppear(){
+            self.loadData()
+        }.background(.white)
         .navigationBarTitle("랭킹",displayMode: .inline)
+        .foregroundColor(.black)
         .navigationBarBackButtonHidden(true)
         .navigationBarItems(leading:
                                 Button{
                                     self.coordinator.pop()
                                 } label: {
                                     Text("Main")
-                                        .foregroundColor(.white)
+                                        .foregroundColor(.black)
                                 })
     }
     
@@ -151,7 +162,7 @@ struct RankerView: View {
                     .cornerRadius(40)
                     .padding(.top, 13)
                     .padding(.bottom, 13)
-                    .padding(.leading, 22)
+                    .padding(.leading, 25)
                 VStack(alignment: .leading){
                     Text(rankerProfile.name)
                         .font(Font.system(size: 15)).foregroundColor(.darkBlue414756)
@@ -165,7 +176,7 @@ struct RankerView: View {
                     .font(Font.system(size: 16).bold())
                     .multilineTextAlignment(.trailing)
                     .foregroundColor(.darkBlue414756)
-                    .padding(.trailing, 22)
+                    .padding(.trailing, 23)
             case 3:
                 AsyncImage(url: URL(string: rankerProfile.profileURL)){ image in
                     image.resizable()
@@ -175,7 +186,7 @@ struct RankerView: View {
                     .cornerRadius(40)
                     .padding(.top, 12)
                     .padding(.bottom, 12)
-                    .padding(.leading, 22)
+                    .padding(.leading, 25)
                 VStack(alignment: .leading){
                     Text(rankerProfile.name)
                         .font(Font.system(size: 15))
@@ -191,7 +202,7 @@ struct RankerView: View {
                     .font(Font.system(size: 16).bold())
                     .multilineTextAlignment(.trailing)
                     .foregroundColor(.darkBlue414756)
-                    .padding(.trailing, 22)
+                    .padding(.trailing, 23)
             case 4:
                 AsyncImage(url: URL(string: rankerProfile.profileURL)){ image in
                     image.resizable()
@@ -201,7 +212,7 @@ struct RankerView: View {
                     .cornerRadius(40)
                     .padding(.top, 10)
                     .padding(.bottom, 10)
-                    .padding(.leading, 22)
+                    .padding(.leading, 27)
                 Text(rankerProfile.name)
                     .font(Font.system(size: 15)).foregroundColor(.darkBlue414756)
                     .multilineTextAlignment(.leading)
@@ -213,7 +224,7 @@ struct RankerView: View {
                     .font(Font.system(size: 15).bold())
                     .multilineTextAlignment(.trailing)
                     .foregroundColor(.darkBlue414756)
-                    .padding(.trailing, 22)
+                    .padding(.trailing, 26)
             case 5:
                 AsyncImage(url: URL(string: rankerProfile.profileURL)){ image in
                     image.resizable()
@@ -223,7 +234,7 @@ struct RankerView: View {
                     .cornerRadius(40)
                     .padding(.top, 10)
                     .padding(.bottom, 10)
-                    .padding(.leading, 22)
+                    .padding(.leading, 27)
                 Text(rankerProfile.name)
                     .font(Font.system(size: 15)).foregroundColor(.darkBlue414756)
                     .multilineTextAlignment(.leading)
@@ -235,12 +246,13 @@ struct RankerView: View {
                     .font(Font.system(size: 15).bold())
                     .multilineTextAlignment(.trailing)
                     .foregroundColor(.darkBlue414756)
-                    .padding(.trailing, 22)
+                    .padding(.trailing, 26)
             default:
                 Spacer()
             }
             
         }.background(.whiteFFFFFF)
+            .cornerRadius(10)
             .shadow(color: .black.opacity(0.25), radius: 2, x: 0, y: 4)
     }
 }

@@ -71,10 +71,18 @@ struct StopwatchView: View {
     @Environment(NavigationCoordinator.self) var coordinator: NavigationCoordinator
     @ObservedObject var viewModel: StopwatchViewModel = StopwatchViewModel()
     
+    init() {
+        //Use this if NavigationBarTitle is with Large Font
+        UINavigationBar.appearance().largeTitleTextAttributes = [.foregroundColor: UIColor.whiteFFFFFF]
+
+        //Use this if NavigationBarTitle is with displayMode = .inline
+        UINavigationBar.appearance().titleTextAttributes = [.foregroundColor: UIColor.whiteFFFFFF]
+    }
+    
     var body: some View {
         VStack{
             HStack{
-                if self.viewModel.isStarted == false{
+                if self.viewModel.isStarted == true{
                     Text("📚😴📚")
                         .font(Font.system(size: 48).bold())
                         .padding(.bottom, 25)

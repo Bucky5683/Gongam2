@@ -44,18 +44,16 @@ struct MainMyReportGridView: View {
             HStack(alignment: .bottom){
                 Text("이번 주는 평균")
                     .font(Font.system(size: 12).weight(.medium))
+                    .foregroundColor(.black)
                 Text(self.userTimeData.totalStudyTime.timeToTextForWeekly())
                     .font(Font.system(size: 15).weight(.bold))
                     .foregroundColor(self.colorSwitch())
                 Text("만큼 공부했어요")
                     .font(Font.system(size: 12).weight(.medium))
+                    .foregroundColor(.black)
             }
             
         }.background(.whiteFFFFFF)
-            .onAppear(){
-                self.userTimeData.downloadData()
-                self.viewModel.makeWeeklyChartReport(userTimeData: self.userTimeData, userData: self.userData)
-            }
     }
 }
 
@@ -63,7 +61,8 @@ struct MyReportGridItem: View {
     var weeklys = ""
     var date = ""
     var studyTime = 0
-    
+    @EnvironmentObject var userData: UserData
+    @EnvironmentObject var userTimeData: UserTimeData
     static func == (lhs: MyReportGridItem, rhs: MyReportGridItem) -> Bool {
         // Implement your own equality check based on your requirements
         return lhs.weeklys == rhs.weeklys &&
@@ -86,19 +85,25 @@ struct MyReportGridItem: View {
             Text(self.weeklys)
                 .font(Font.system(size: 15).bold())
                 .foregroundColor(.black)
-            if Int(self.studyTime / 3600) != 0{
-                Text("\(self.studyTime/3600)h")
-                    .font(Font.system(size: 10).weight(.regular))
-                    .foregroundColor(self.colorSwitch())
-            } else if Int(self.studyTime / 60) != 0{
-                Text("\(self.studyTime/60)m")
-                    .font(Font.system(size: 10).weight(.regular))
-                    .foregroundColor(self.colorSwitch())
-            } else if self.studyTime != 0{
-                Text("\(self.studyTime)s")
-                    .font(Font.system(size: 10).weight(.regular))
-                    .foregroundColor(self.colorSwitch())
-            } else {
+            if self.userTimeData.studyDataes[date]?.totalStudyTime ?? 0 > 0{
+                if Int(self.studyTime / 3600) != 0{
+                    Text("\(self.studyTime/3600)h")
+                        .font(Font.system(size: 10).weight(.regular))
+                        .foregroundColor(self.colorSwitch())
+                } else if Int(self.studyTime / 60) != 0{
+                    Text("\(self.studyTime/60)m")
+                        .font(Font.system(size: 10).weight(.regular))
+                        .foregroundColor(self.colorSwitch())
+                } else if self.studyTime != 0{
+                    Text("\(self.studyTime)s")
+                        .font(Font.system(size: 10).weight(.regular))
+                        .foregroundColor(self.colorSwitch())
+                } else {
+                    Text("\(self.studyTime)s")
+                        .font(Font.system(size: 10).weight(.regular))
+                        .foregroundColor(self.colorSwitch())
+                }
+            }else {
                 Text("-")
                     .font(Font.system(size: 10).weight(.regular))
                     .foregroundColor(self.colorSwitch())
