@@ -99,9 +99,13 @@ fun TimerScreen(sharedPreferencesUtil: SharedPreferencesUtil) {
     val goalStudyTime = user?.goalStudyTime ?: 0
     val sumSeconds by timerViewModel.sumSeconds.observeAsState(initial = 0)
     val remainGoalTime = if (goalStudyTime == 0) 0 else if (goalStudyTime - sumSeconds < 0) 0 else goalStudyTime - sumSeconds
+    
+    val isStopped by timerViewModel.isStopped.observeAsState(initial = false)
 
-    var isTimerSpinnerVisible by remember { mutableStateOf(true) }
-    var isStopped by remember { mutableStateOf(false) }
+    val remainingTime by timerViewModel.remainingTime.observeAsState(initial = Triple(0, 0, 0))
+    if (remainingTime == Triple(0, 0, 0)) {
+        timerViewModel.setIsStopped(true)
+    }
 
     Column(
         modifier = Modifier
@@ -116,7 +120,7 @@ fun TimerScreen(sharedPreferencesUtil: SharedPreferencesUtil) {
                 fontSize = 48.sp,)
         }
         Spacer(modifier = Modifier.height(25.dp))
-        if (isTimerSpinnerVisible) {
+        if (isStopped) {
             TimerSpinner()
         } else {
             TimerTickingText()
@@ -133,43 +137,41 @@ fun TimerScreen(sharedPreferencesUtil: SharedPreferencesUtil) {
         ) {
             SpacedEdgeTextsWithCenterVertically(
                 leftText = "오늘 목표", leftTextSize = 18.sp, leftTextColor = Color.White, leftTextWeight = FontWeight(700), setLeftUnderLine = true,
-                rightText = TimeUtils.convertSecondsToTime(goalStudyTime ?: 0), rightTextSize = 18.sp, rightTextColor = Color.White, rightTextWeight = FontWeight(400),
+                rightText = TimeUtils.convertSecondsToTime(goalStudyTime), rightTextSize = 18.sp, rightTextColor = Color.White, rightTextWeight = FontWeight(400),
                 horizontalPaddingVal = 0.dp
             )
             Spacer(modifier = Modifier.height(10.dp))
             RemainingTimeText(remainGoalTime)
         }
         Spacer(modifier = Modifier.weight(1f))
-        StartStopButton(
-            btnOnClick = {
-                timerViewModel.startCountDown()
-                isTimerSpinnerVisible = false
-                isStopped = !isStopped
-            })
+        StartStopButton()
         Spacer(modifier = Modifier.weight(1f))
     }
 }
 
 @Composable
-fun StartStopButton(btnOnClick: () -> Unit) {
-    var isButtonClicked by remember { mutableStateOf(false) }
+fun StartStopButton() {
+    val timerViewModel: TimerViewModel = viewModel()
+    val remainingTime by timerViewModel.remainingTime.observeAsState(initial = Triple(0, 0, 0))
+    val isStopped by timerViewModel.isStopped.observeAsState(initial = false)
+    if (remainingTime == Triple(0, 0, 0)) {
+        timerViewModel.setIsStopped(true)
+    }
 
     Button(
         onClick = {
-            btnOnClick()
-            isButtonClicked = !isButtonClicked
+            timerViewModel.setIsStopped(!isStopped)
+            timerViewModel.startCountDown()
         },
         modifier = Modifier
             .width(100.dp)
             .height(100.dp),
         colors = ButtonDefaults.buttonColors(
-            containerColor = if (!isButtonClicked) colorResource(id = R.color.blue_scale2) else colorResource(
-                id = R.color.red_scale2
-            ),
+            containerColor = if (isStopped) colorResource(id = R.color.blue_scale2) else colorResource(id = R.color.red_scale2),
             contentColor = colorResource(id = R.color.white)
         ),
     ) {
-        Text(text = if (!isButtonClicked) "START" else "STOP", fontSize = 18.sp, fontWeight = FontWeight(700))
+        Text(text = if (isStopped) "START" else "STOP", fontSize = 18.sp, fontWeight = FontWeight(700))
     }
 }
 
@@ -195,6 +197,7 @@ fun TimerSpinner() {
                         maxValue = 99
                         textColor = Color.White.toArgb()
                         textSize = 130f
+                        value = timerViewModel.hour
                         selectionDividerHeight = 0
                         setOnValueChangedListener { _, _, newVal ->
                             timerViewModel.setHour(newVal)
@@ -234,6 +237,7 @@ fun TimerSpinner() {
                         maxValue = 59
                         textColor = Color.White.toArgb()
                         textSize = 130f
+                        value = timerViewModel.minute
                         selectionDividerHeight = 0
                         setOnValueChangedListener { _, _, newVal ->
                             timerViewModel.setMinute(newVal)
@@ -274,6 +278,7 @@ fun TimerSpinner() {
                         maxValue = 59
                         textColor = Color.White.toArgb()
                         textSize = 130f
+                        value = timerViewModel.second
                         selectionDividerHeight = 0
                         setOnValueChangedListener { _, _, newVal ->
                             timerViewModel.setSecond(newVal)
