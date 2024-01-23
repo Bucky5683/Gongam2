@@ -22,6 +22,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.cono.gongam.R
+import com.cono.gongam.ui.myreport.MyReportActivity
 import com.cono.gongam.ui.ranking.RankingActivity
 
 @Composable
@@ -56,8 +57,7 @@ fun ContentsTitleView(title: String, showMoreButton: Boolean, context: Context? 
                             if (title == "랭킹") {
                                 intent = Intent(context, RankingActivity::class.java)
                             } else {
-                                // TODO :: MyReportActivity로 변경
-                                intent = Intent(context, RankingActivity::class.java)
+                                intent = Intent(context, MyReportActivity::class.java)
                             }
                             context!!.startActivity(intent)
                         },

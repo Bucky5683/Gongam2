@@ -84,7 +84,7 @@ fun TimerActivityScreen(sharedPreferencesUtil: SharedPreferencesUtil) {
             .fillMaxHeight()
             .background(color = colorResource(id = R.color.main_gray))
     ) {
-        TopTitle(backgroundColor = colorResource(id = R.color.main_gray), textColor = colorResource(id = R.color.white), centerText = "타이머", dividerLineColor = colorResource(id = R.color.gray_line))
+        TopTitle(backgroundColor = colorResource(id = R.color.main_gray), textColor = colorResource(id = R.color.white), centerText = "타이머", dividerLineColor = colorResource(id = R.color.gray_line), backPress = true)
         TimerScreen(sharedPreferencesUtil)
     }
 }
