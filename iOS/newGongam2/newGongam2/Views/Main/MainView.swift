@@ -127,8 +127,8 @@ struct MainView: View {
                                         Text((userTimeData.totalStudyTime - userTimeData.averageTime).timeToText())
                                             .font(Font.system(size: 15))
                                             .bold()
-                                            .foregroundColor(.blue5C84FF)
-                                        Text("만큼 덜 공부했어요!")
+                                            .foregroundColor(.redFF0000)
+                                        Text("만큼 더 공부했어요!")
                                             .font(Font.system(size: 15).weight(.medium))
                                             .foregroundColor(.darkBlue414756)
                                     }.padding(.bottom, 30)
@@ -142,8 +142,8 @@ struct MainView: View {
                                         Text((userTimeData.averageTime - userTimeData.totalStudyTime).timeToText())
                                             .font(Font.system(size: 15))
                                             .bold()
-                                            .foregroundColor(.redFF0000)
-                                        Text("만큼 더 공부했어요!")
+                                            .foregroundColor(.blue5C84FF)
+                                        Text("만큼 덜 공부했어요!")
                                             .font(Font.system(size: 12).weight(.medium))
                                             .foregroundColor(.darkBlue414756)
                                     }
@@ -168,6 +168,10 @@ struct MainView: View {
                                     coordinator.push(.myReport)
                                 } label: {
                                     MainMyReportGridView(viewModel: $viewModel)
+                                        .onAppear(){
+                                            self.userTimeData.downloadData()
+                                            self.viewModel.makeWeeklyChartReport(userTimeData: self.userTimeData, userData: self.userData)
+                                        }
                                 }.padding(.bottom, 20)
                             }.padding(.leading, 40)
                                 .padding(.trailing, 40)

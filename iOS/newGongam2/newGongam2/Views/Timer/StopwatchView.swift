@@ -71,39 +71,100 @@ struct StopwatchView: View {
     @Environment(NavigationCoordinator.self) var coordinator: NavigationCoordinator
     @ObservedObject var viewModel: StopwatchViewModel = StopwatchViewModel()
     
+    init() {
+        //Use this if NavigationBarTitle is with Large Font
+        UINavigationBar.appearance().largeTitleTextAttributes = [.foregroundColor: UIColor.whiteFFFFFF]
+
+        //Use this if NavigationBarTitle is with displayMode = .inline
+        UINavigationBar.appearance().titleTextAttributes = [.foregroundColor: UIColor.whiteFFFFFF]
+    }
+    
     var body: some View {
         VStack{
-            if self.viewModel.isStarted == false{
-                Text("📚😴📚")
-            } else{
-                Text("📚🙇📚")
+            HStack{
+                if self.viewModel.isStarted == true{
+                    Text("📚😴📚")
+                        .font(Font.system(size: 48).bold())
+                        .padding(.bottom, 25)
+                        .padding(.top, 75)
+                        .padding(.leading, 67)
+                } else{
+                    Text("📚🙇📚")
+                        .font(Font.system(size: 48).bold())
+                        .padding(.bottom, 25)
+                        .padding(.top, 75)
+                        .padding(.leading, 67)
+                }
+                Spacer()
             }
             HStack {
-                Text("\(String(format: "%02d", self.viewModel.hours/3600))")
+                VStack{
+                    Text("\(String(format: "%02d", self.viewModel.hours/3600))")
+                        .font(Font.system(size: 48).bold())
+                        .foregroundColor(.whiteFFFFFF)
+                    Text("시간")
+                        .font(Font.system(size: 15).bold())
+                        .foregroundColor(.whiteFFFFFF)
+                }
                 Text(":")
-                Text("\(String(format: "%02d", self.viewModel.minutes/60))")
+                VStack{
+                    Text("\(String(format: "%02d", self.viewModel.minutes/60))")
+                        .font(Font.system(size: 48).bold())
+                        .foregroundColor(.whiteFFFFFF)
+                    Text("분")
+                        .font(Font.system(size: 15).bold())
+                        .foregroundColor(.whiteFFFFFF)
+                }
                 Text(":")
-                Text("\(String(format: "%02d", self.viewModel.seconds))")
+                VStack{
+                    Text("\(String(format: "%02d", self.viewModel.seconds))")
+                        .font(Font.system(size: 48).bold())
+                        .foregroundColor(.whiteFFFFFF)
+                    Text("초")
+                        .font(Font.system(size: 15).bold())
+                        .foregroundColor(.whiteFFFFFF)
+                }
             }
             HStack{
                 Text("오늘 목표")
+                    .font(Font.system(size: 18).bold())
+                    .underline()
+                    .foregroundColor(.white)
                 Spacer()
-                Text("\(self.userData.goalStudyTime)")
-            }
+                Text("\(self.userData.goalStudyTime.timeToText())")
+                    .font(Font.system(size: 18))
+                    .multilineTextAlignment(.trailing)
+                    .foregroundColor(.white)
+            }.padding(.top, 51)
+                .padding(.leading, 67)
+                .padding(.trailing, 64)
             if self.viewModel.isStarted {
                 HStack{
                     Spacer()
                     Text("목표까지")
+                        .font(Font.system(size: 12).bold())
+                        .multilineTextAlignment(.trailing)
+                        .foregroundColor(.lightGrayA5ABBD)
                     let remainTime = viewModel.calculateReMainTime(goalTime: self.userData.goalStudyTime, todayStudyTime: self.userData.todayStudyTime)
                     if remainTime > 0{
                         Text("\(remainTime.timeToText())")
+                            .font(Font.system(size: 12).bold())
+                            .underline()
+                            .multilineTextAlignment(.trailing)
+                            .foregroundColor(.lightGrayA5ABBD)
                         Text("남았어요")
+                            .font(Font.system(size: 12).bold())
+                            .multilineTextAlignment(.trailing)
+                            .foregroundColor(.lightGrayA5ABBD)
                     } else {
                         Text("완료했어요")
+                            .font(Font.system(size: 12).bold())
+                            .multilineTextAlignment(.trailing)
+                            .foregroundColor(.lightGrayA5ABBD)
                     }
-                    Spacer()
-                }
+                }.padding(.trailing, 64)
             }
+            Spacer()
             ZStack {
                 if self.viewModel.isStarted {
                     Button {
@@ -111,7 +172,13 @@ struct StopwatchView: View {
                         self.viewModel.isStarted = false
                     } label: {
                         Text("START")
+                            .font(Font.system(size: 18).bold())
+                            .multilineTextAlignment(.center)
+                            .foregroundColor(.white)
                     }.disabled(self.viewModel.isStarted == false)
+                        .frame(width: 100, height: 100)
+                        .background(.blue5C84FF)
+                        .cornerRadius(100)
                     
                 } else {
                     Button {
@@ -120,17 +187,34 @@ struct StopwatchView: View {
                         self.viewModel.isStarted = true
                     } label: {
                         Text("STOP")
+                            .font(Font.system(size: 18).bold())
+                            .multilineTextAlignment(.center)
+                            .foregroundColor(.white)
                     }.disabled(self.viewModel.isStarted == true)
+                        .frame(width: 100, height: 100)
+                        .background(.redFF0000)
+                        .cornerRadius(100)
                 }
             }
             if self.viewModel.isStarted == false {
                 Text("STOP을 누르면 시간이 저장돼요!")
+                    .font(Font.system(size: 12).bold())
+                    .multilineTextAlignment(.trailing)
+                    .foregroundColor(.lightGrayA5ABBD)
+                    .padding(.top, 31)
             }
+            Spacer()
         }
         .background(.darkBlue414756, ignoresSafeAreaEdges: .all)
         .navigationBarHidden(!self.viewModel.isStarted)
         .navigationBarTitle("스톱워치",displayMode: .inline)
         .navigationBarBackButtonHidden(true)
-        .navigationBarItems(leading: Button("Main"){self.coordinator.pop()})
+        .navigationBarItems(leading: 
+                                Button{
+                                    self.coordinator.pop()
+                                } label: {
+                                    Text("Main")
+                                        .foregroundColor(.white)
+                                })
     }
 }
