@@ -56,10 +56,11 @@ fun ContentsTitleView(title: String, showMoreButton: Boolean, context: Context? 
                             val intent: Intent
                             if (title == "랭킹") {
                                 intent = Intent(context, RankingActivity::class.java)
-                            } else {
+                                context!!.startActivity(intent)
+                            } else if (title == "마이 리포트"){
                                 intent = Intent(context, MyReportActivity::class.java)
+                                context!!.startActivity(intent)
                             }
-                            context!!.startActivity(intent)
                         },
                     fontSize = 12.sp,
                     fontWeight = FontWeight(400),

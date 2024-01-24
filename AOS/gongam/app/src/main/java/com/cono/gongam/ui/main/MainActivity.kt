@@ -75,7 +75,7 @@ fun MainScreen(profileImageUrl: String) {
     userViewModel.setCurrentUser(user)
     studyDatesViewModel.updateStudyDates(sharedPreferences.getUid())
 
-    val thisWeekData by studyDatesViewModel.thisWeekStudyData.observeAsState()
+    val thisWeekData by studyDatesViewModel.thisWeekStudyDate.observeAsState()
     val rankUserList by rankingViewModel.rankUserList.observeAsState(initial = emptyList())
 
     Column(
@@ -95,7 +95,7 @@ fun MainScreen(profileImageUrl: String) {
             RankingView(context = context)
         }
         Spacer(modifier = Modifier.height(15.dp))
-        MyReportView(thisWeekData)
+        MyReportView(thisWeekData, context)
         Spacer(modifier = Modifier.height(23.dp))
     }
 }

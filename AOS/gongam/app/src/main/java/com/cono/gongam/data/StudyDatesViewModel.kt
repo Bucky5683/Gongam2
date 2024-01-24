@@ -22,12 +22,24 @@ class StudyDatesViewModel : ViewModel() {
     val studyDatesList: LiveData<List<Pair<String, StudyDates>>> get() = _studyDatesList
 
     private val _thisWeekStudyDate = MutableLiveData<List<Pair<String, StudyDates>>?>()
-    val thisWeekStudyData: MutableLiveData<List<Pair<String, StudyDates>>?> get() = _thisWeekStudyDate
+    val thisWeekStudyDate: MutableLiveData<List<Pair<String, StudyDates>>?> get() = _thisWeekStudyDate
 //    fun getThisWeekStudyData(): List<Pair<String, StudyDates>>? {
 //        return thisWeekStudyData
 //    }
     private val _averageThisWeek = MutableLiveData<Int>()
     val averageThisWeek: LiveData<Int> get() = _averageThisWeek
+
+    fun getThisWeekStudyDataWithDay(): MutableList<Pair<Int, StudyDates>> {
+        val pairDayStudy : MutableList<Pair<Int, StudyDates>> = mutableListOf()
+
+        _thisWeekStudyDate.value?.let {
+            for ((dateString, studyDates) in it) {
+                pairDayStudy.add(Pair(DateUtils.getDayFromDateString(dateString), studyDates))
+            }
+        }
+
+        return pairDayStudy
+    }
 
     fun updateStudyDates(uid: String) {
         viewModelScope.launch {

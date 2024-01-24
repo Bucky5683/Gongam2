@@ -1,5 +1,6 @@
 package com.cono.gongam.ui.main.mainSubViews
 
+import android.content.Context
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -34,7 +35,7 @@ import java.time.DayOfWeek
 import java.time.LocalDate
 
 @Composable
-fun MyReportView(thisWeekData: List<Pair<String, StudyDates>>?) {
+fun MyReportView(thisWeekData: List<Pair<String, StudyDates>>?, context: Context) {
     val userViewModel : UserViewModel = viewModel()
     val goalStudyTime = userViewModel.getCurrentUser()?.goalStudyTime?.toFloat() ?: 0.0f
     val studyDatesViewModel: StudyDatesViewModel = viewModel()
@@ -77,7 +78,7 @@ fun MyReportView(thisWeekData: List<Pair<String, StudyDates>>?) {
             .fillMaxWidth()
             .background(Color.White)
     ) {
-        ContentsTitleView(title = "마이 리포트", showMoreButton = true)
+        ContentsTitleView(title = "마이 리포트", showMoreButton = true, context = context)
         Spacer(modifier = Modifier.height(29.dp))
         WeekStudyHours(sunH, monH, tueH, wedH, thuH, friH, satH)
         Spacer(modifier = Modifier.height(20.dp))
