@@ -12,7 +12,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Surface
@@ -71,7 +73,9 @@ fun MyReportActivityScreen() {
     val thisWeekStudyDate by studyDatesViewModel.thisWeekStudyDate.observeAsState()
 
     Column (
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
     ){
         TopTitle(backgroundColor = colorResource(id = R.color.white), textColor = colorResource(id = R.color.black), centerText = "마이 리포트", dividerLineColor = colorResource(id = R.color.gray_line2), backPress = true)
         DateRangeText()
@@ -156,7 +160,9 @@ fun DayBlock(dayString: String, totalStudyHours: String, timerStudyHours: String
                     fontWeight = FontWeight(700),
                     color = colorResource(id = R.color.main_gray),
                 ),
-                modifier = Modifier.padding(start = 20.dp).width(20.dp))
+                modifier = Modifier
+                    .padding(start = 20.dp)
+                    .width(20.dp))
             Spacer(modifier = Modifier.width(30.dp))
             Text(text = totalStudyHours,
                 style = TextStyle(
@@ -223,6 +229,7 @@ fun DayBlocks(thisWeekStudyDataWithDay: MutableList<Pair<Int, StudyDates>>) {
         DayBlock("T", totalStudyHoursArray[4], timerStudyHoursArray[4], stopWatchStudyHoursArray[4])
         DayBlock("F", totalStudyHoursArray[5], timerStudyHoursArray[5], stopWatchStudyHoursArray[5])
         DayBlock("S", totalStudyHoursArray[6], timerStudyHoursArray[6], stopWatchStudyHoursArray[6])
+        Spacer(modifier = Modifier.height(50.dp))
     }
 }
 

@@ -24,8 +24,6 @@ class TimerViewModel : ViewModel() {
     val sumSeconds: LiveData<Int> get() = _sumSeconds
     val isStopped: LiveData<Boolean> get() = _isStopped
 
-    private val handler = android.os.Handler(Looper.getMainLooper())
-
     val hour: Int get() = _hour
     val minute: Int get() = _minute
     val second: Int get() = _second
@@ -55,15 +53,14 @@ class TimerViewModel : ViewModel() {
                     delay(1000)
                     _sumSeconds.value = _sumSeconds.value?.plus(1)
 
-                    // 수정된 부분: 0초에서도 마지막에 0초로 표시되도록 수정
                     if (remainingSecond > 0) {
                         remainingSecond--
-                    } else { // 초 == 0
+                    } else {
                         if (remainingMinute > 0) {
                             remainingMinute--
                             remainingSecond = 59
                         }
-                        else { // 초 == 0 and 분 == 0
+                        else {
                             if (remainingHour > 0) {
                                 remainingHour--
                                 remainingMinute = 59

@@ -1,20 +1,26 @@
 package com.cono.gongam.ui
 
 import androidx.activity.OnBackPressedDispatcherOwner
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -26,6 +32,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
@@ -145,7 +153,49 @@ fun CircleTextButton(buttonText: String, btnOnClick: () -> Unit, buttonColor: Co
     }
 }
 
+@Composable
+fun ButtonWithQuestionMark(text: String = "null") {
+    Card(
+        modifier = Modifier
+            .height(44.dp)
+            .fillMaxWidth()
+            .background(color = Color.White),
+        shape = RoundedCornerShape(16.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 10.dp)
+    ) {
+        Row(
+            modifier = Modifier.fillMaxSize()
+                .background(Color.White),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Spacer(modifier = Modifier.width(12.dp))
+            Image(
+                modifier = Modifier
+                    .width(30.dp)
+                    .height(30.dp),
+                painter = painterResource(id = R.drawable.img_question),
+                contentDescription = null
+            )
+            Text(
+                text = text,
+                style = TextStyle(
+                    fontSize = 15.sp,
+                    fontWeight = FontWeight(400),
+                    color = Color.Black,
+                ),
+                modifier = Modifier.padding(start = 6.dp)
+            )
+        }
+    }
+}
+
 // ------------------------------------ Previews ------------------------------------
+
+@Preview
+@Composable
+fun PreviewButtonWithQuestionMark() {
+    ButtonWithQuestionMark()
+}
 
 @Preview
 @Composable
