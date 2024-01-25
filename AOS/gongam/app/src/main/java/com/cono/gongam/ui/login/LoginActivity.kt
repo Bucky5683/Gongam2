@@ -77,24 +77,24 @@ class LoginActivity : ComponentActivity() {
                 ) {
                     LoginScreen(
                         onLoginSuccess =
-                        { user ->
+                        { user, uid ->
                             Toast.makeText(applicationContext, "로그인 되었습니다.", Toast.LENGTH_SHORT).show()
 
                             val sharedPreferencesUtil = SharedPreferencesUtil(this)
-                            sharedPreferencesUtil.saveUser(user)
+                            sharedPreferencesUtil.saveUser(user, uid)
                             Log.d("[LoginScreen]", "getUserInSP : ${sharedPreferencesUtil.getUser()}")
 
                             startActivity(Intent(this@LoginActivity, MainActivity::class.java))
                             finish()
                         },
                         onRegisterSuccess =
-                        { newUser ->
+                        { newUser, uid ->
                             Log.d("[LoginScreen]", "newUser 정보 : ${newUser}")
                             Toast.makeText(applicationContext, "로그인 되었습니다.", Toast.LENGTH_SHORT).show()
 //                            userViewModel.setCurrentUser(newUser)
 //                            Log.d("[LoginScreen]", "getCurrentUser : ${userViewModel.getCurrentUser()}")
                             val sharedPreferencesUtil = SharedPreferencesUtil(this)
-                            sharedPreferencesUtil.saveUser(newUser)
+                            sharedPreferencesUtil.saveUser(newUser, uid)
                             startActivity(Intent(this@LoginActivity, RegisterActivity::class.java))
                             finish()
                         }
@@ -106,7 +106,7 @@ class LoginActivity : ComponentActivity() {
 }
 
 @Composable
-fun LoginScreen(onLoginSuccess: (lUser: User) -> Unit, onRegisterSuccess: (newUser: User) -> Unit) {
+fun LoginScreen(onLoginSuccess: (lUser: User, uid: String) -> Unit, onRegisterSuccess: (newUser: User, uid: String) -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxSize(),
@@ -129,7 +129,7 @@ fun LoginScreen(onLoginSuccess: (lUser: User) -> Unit, onRegisterSuccess: (newUs
 }
 
 @Composable
-fun GoogleLoginButton(onLoginSuccess: (lUser: User) -> Unit, onRegisterSuccess: (newUser: User) -> Unit) {
+fun GoogleLoginButton(onLoginSuccess: (lUser: User, uid: String) -> Unit, onRegisterSuccess: (newUser: User, uid: String) -> Unit) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
 
@@ -140,8 +140,8 @@ fun GoogleLoginButton(onLoginSuccess: (lUser: User) -> Unit, onRegisterSuccess: 
             val currentUser = FirebaseAuth.getInstance().currentUser
             currentUser?.let {
                 scope.launch {
-                    val currentUser = FirebaseAuth.getInstance().currentUser
-                    currentUser?.let { it ->
+//                    val currentUser = FirebaseAuth.getInstance().currentUser
+                    currentUser.let { it ->
                         val uid = it.uid // used as a key
                         val email = it.email
                         val name = it.displayName
@@ -161,7 +161,7 @@ fun GoogleLoginButton(onLoginSuccess: (lUser: User) -> Unit, onRegisterSuccess: 
                                 }
                                 .addOnFailureListener {
                                     Log.d("[LoginScreen]", "새 사용자 추가 실패: ${it.message}")
-//                                    Toast.makeText(context, "오류가 발생했습니다. 다시 시도해 주세요.", Toast.LENGTH_SHORT).show()
+//                                                    Toast.makeText(context, "오류가 발생했습니다. 다시 시도해 주세요.", Toast.LENGTH_SHORT).show()
                                 }
 
                             val userInRank = RankUser(email = email, name = name, profileImageURL = profileImageUrl.toString())
@@ -173,7 +173,7 @@ fun GoogleLoginButton(onLoginSuccess: (lUser: User) -> Unit, onRegisterSuccess: 
                                     Log.d("[LoginScreen]", "Rank 추가 실패: ${it.message}")
                                 }
 
-                            onRegisterSuccess(user)
+                            onRegisterSuccess(user, uid)
                         } else { // 이미 존재하는 유저
                             val dataSnapshot = Firebase.database.getReference("Users").child(uid).get().await()
                             val userData = dataSnapshot.getValue(User::class.java)
@@ -182,7 +182,7 @@ fun GoogleLoginButton(onLoginSuccess: (lUser: User) -> Unit, onRegisterSuccess: 
                             user.todayStudyTime = userData?.timerStudyTime!! + userData.stopwatchStudyTime!!
                             user.goalStudyTime = userData.goalStudyTime
 
-                            onLoginSuccess(user)
+                            onLoginSuccess(user, uid)
                         }
                     }
                 }
@@ -265,5 +265,5 @@ suspend fun isNewUser(uid: String): Boolean {
 @Preview(showSystemUi = true, showBackground = true)
 @Composable
 fun PreviewLoginScreen() {
-    LoginScreen(onLoginSuccess = {lUser: User -> }, onRegisterSuccess = {})
+    LoginScreen(onLoginSuccess = {lUser: User, uid: String -> }, onRegisterSuccess = {lUser: User, uid: String -> })
 }

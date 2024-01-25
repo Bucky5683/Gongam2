@@ -25,6 +25,7 @@ import androidx.core.view.WindowCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.cono.gongam.R
 import com.cono.gongam.data.RankingViewModel
+import com.cono.gongam.data.StudyDatesViewModel
 import com.cono.gongam.data.User
 import com.cono.gongam.data.UserViewModel
 import com.cono.gongam.ui.main.mainSubViews.ContentsTitleView
@@ -66,11 +67,15 @@ fun MainScreen(profileImageUrl: String) {
     val sharedPreferences = SharedPreferencesUtil(context)
     val user: User = sharedPreferences.getUser()
 
-    val rankingViewModel: RankingViewModel = viewModel()
     val userViewModel: UserViewModel = viewModel()
+    val rankingViewModel: RankingViewModel = viewModel()
+    val studyDatesViewModel: StudyDatesViewModel = viewModel()
+
     rankingViewModel.updateRankUserList()
     userViewModel.setCurrentUser(user)
+    studyDatesViewModel.updateStudyDates(sharedPreferences.getUid())
 
+    val thisWeekData by studyDatesViewModel.thisWeekStudyDate.observeAsState()
     val rankUserList by rankingViewModel.rankUserList.observeAsState(initial = emptyList())
 
     Column(
@@ -90,7 +95,7 @@ fun MainScreen(profileImageUrl: String) {
             RankingView(context = context)
         }
         Spacer(modifier = Modifier.height(15.dp))
-        MyReportView(-99, -99, -99, 99, 99, -99, -99)
+        MyReportView(thisWeekData, context)
         Spacer(modifier = Modifier.height(23.dp))
     }
 }
@@ -115,12 +120,12 @@ fun PreviewTimerView() {
     ContentsTitleView("타이머", false)
 }
 
-@Preview(showBackground = true)
-@Composable
-fun PreviewRankingView() {
-    val context = LocalContext.current
-    RankingView(context = context)
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun PreviewRankingView() {
+//    val context = LocalContext.current
+//    RankingView(context = context)
+//}
 
 //@Preview
 //@Composable
