@@ -75,195 +75,195 @@ class LoginActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = Color.White,
                 ) {
-                    LoginScreen(
-                        onLoginSuccess =
-                        { user, uid ->
-                            Toast.makeText(applicationContext, "로그인 되었습니다.", Toast.LENGTH_SHORT).show()
-
-                            val sharedPreferencesUtil = SharedPreferencesUtil(this)
-                            sharedPreferencesUtil.saveUser(user, uid)
-                            Log.d("[LoginScreen]", "getUserInSP : ${sharedPreferencesUtil.getUser()}")
-
-                            startActivity(Intent(this@LoginActivity, MainActivity::class.java))
-                            finish()
-                        },
-                        onRegisterSuccess =
-                        { newUser, uid ->
-                            Log.d("[LoginScreen]", "newUser 정보 : ${newUser}")
-                            Toast.makeText(applicationContext, "로그인 되었습니다.", Toast.LENGTH_SHORT).show()
-//                            userViewModel.setCurrentUser(newUser)
-//                            Log.d("[LoginScreen]", "getCurrentUser : ${userViewModel.getCurrentUser()}")
-                            val sharedPreferencesUtil = SharedPreferencesUtil(this)
-                            sharedPreferencesUtil.saveUser(newUser, uid)
-                            startActivity(Intent(this@LoginActivity, RegisterActivity::class.java))
-                            finish()
-                        }
-                    )
+//                    LoginScreen(
+//                        onLoginSuccess =
+//                        { user, uid ->
+//                            Toast.makeText(applicationContext, "로그인 되었습니다.", Toast.LENGTH_SHORT).show()
+//
+//                            val sharedPreferencesUtil = SharedPreferencesUtil(this)
+//                            sharedPreferencesUtil.saveUser(user, uid)
+//                            Log.d("[LoginScreen]", "getUserInSP : ${sharedPreferencesUtil.getUser()}")
+//
+//                            startActivity(Intent(this@LoginActivity, MainActivity::class.java))
+//                            finish()
+//                        },
+//                        onRegisterSuccess =
+//                        { newUser, uid ->
+//                            Log.d("[LoginScreen]", "newUser 정보 : ${newUser}")
+//                            Toast.makeText(applicationContext, "로그인 되었습니다.", Toast.LENGTH_SHORT).show()
+////                            userViewModel.setCurrentUser(newUser)
+////                            Log.d("[LoginScreen]", "getCurrentUser : ${userViewModel.getCurrentUser()}")
+//                            val sharedPreferencesUtil = SharedPreferencesUtil(this)
+//                            sharedPreferencesUtil.saveUser(newUser, uid)
+//                            startActivity(Intent(this@LoginActivity, RegisterActivity::class.java))
+//                            finish()
+//                        }
+//                    )
                 }
             }
         }
     }
 }
 
-@Composable
-fun LoginScreen(onLoginSuccess: (lUser: User, uid: String) -> Unit, onRegisterSuccess: (newUser: User, uid: String) -> Unit) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Spacer(modifier = Modifier.weight(1f))
-        SplashImage()
-        Spacer(modifier = Modifier.weight(2f))
-    }
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(horizontal = 24.dp, vertical = 113.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Spacer(modifier = Modifier.weight(1f))
-        GoogleLoginButton(onLoginSuccess = onLoginSuccess, onRegisterSuccess = onRegisterSuccess)
-    }
-}
+//@Composable
+//fun LoginScreen(onLoginSuccess: (lUser: User, uid: String) -> Unit, onRegisterSuccess: (newUser: User, uid: String) -> Unit) {
+//    Column(
+//        modifier = Modifier
+//            .fillMaxSize(),
+//        horizontalAlignment = Alignment.CenterHorizontally
+//    ) {
+//        Spacer(modifier = Modifier.weight(1f))
+//        SplashImage()
+//        Spacer(modifier = Modifier.weight(2f))
+//    }
+//    Column(
+//        modifier = Modifier
+//            .fillMaxSize()
+//            .padding(horizontal = 24.dp, vertical = 113.dp),
+//        verticalArrangement = Arrangement.Center,
+//        horizontalAlignment = Alignment.CenterHorizontally
+//    ) {
+//        Spacer(modifier = Modifier.weight(1f))
+//        GoogleLoginButton(onLoginSuccess = onLoginSuccess, onRegisterSuccess = onRegisterSuccess)
+//    }
+//}
 
-@Composable
-fun GoogleLoginButton(onLoginSuccess: (lUser: User, uid: String) -> Unit, onRegisterSuccess: (newUser: User, uid: String) -> Unit) {
-    val context = LocalContext.current
-    val scope = rememberCoroutineScope()
+//@Composable
+//fun GoogleLoginButton(onLoginSuccess: (lUser: User, uid: String) -> Unit, onRegisterSuccess: (newUser: User, uid: String) -> Unit) {
+//    val context = LocalContext.current
+//    val scope = rememberCoroutineScope()
+//
+//    val startForResult = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+//        val response = IdpResponse.fromResultIntent(result.data)
+//
+//        if (result.resultCode == Activity.RESULT_OK) {
+//            val currentUser = FirebaseAuth.getInstance().currentUser
+//            currentUser?.let {
+//                scope.launch {
+////                    val currentUser = FirebaseAuth.getInstance().currentUser
+//                    currentUser.let { it ->
+//                        val uid = it.uid // used as a key
+//                        val email = it.email
+//                        val name = it.displayName
+//                        val profileImageUrl = it.photoUrl
+//                        val todayDate = DateUtils.getCurrentDate()
+//                        val user = User(email = email, lastUpdateDate = todayDate, name = name, profileImageURL = profileImageUrl.toString())
+//
+//                        Log.d("[LoginScreen]", "GoogleLoginButton :: firebase getInstance() :: uid: $uid")
+//                        Log.d("[LoginScreen]", "GoogleLoginButton :: firebase getInstance() :: email: $email")
+//                        Log.d("[LoginScreen]", "GoogleLoginButton :: firebase getInstance() :: name: $name")
+//                        Log.d("[LoginScreen]", "GoogleLoginButton :: firebase getInstance() :: profileImageUrl: $profileImageUrl")
+//
+//                        if (isNewUser(uid = uid)) { // 새로운 유저 -> DB에 삽입
+//                            Firebase.database.getReference("Users").child(uid).setValue(user)
+//                                .addOnSuccessListener {
+//                                    Log.d("[LoginScreen]", "RealtimeDB : $uid, $email 사용자 추가 완료")
+//                                }
+//                                .addOnFailureListener {
+//                                    Log.d("[LoginScreen]", "새 사용자 추가 실패: ${it.message}")
+////                                                    Toast.makeText(context, "오류가 발생했습니다. 다시 시도해 주세요.", Toast.LENGTH_SHORT).show()
+//                                }
+//
+//                            val userInRank = RankUser(email = email, name = name, profileImageURL = profileImageUrl.toString())
+//                            Firebase.database.getReference("Rank").child(uid).setValue(userInRank)
+//                                .addOnSuccessListener {
+//                                    Log.d("[LoginScreen]", "RealtimeDB : Rank 사용자 추가 완료")
+//                                }
+//                                .addOnFailureListener {
+//                                    Log.d("[LoginScreen]", "Rank 추가 실패: ${it.message}")
+//                                }
+//
+//                            onRegisterSuccess(user, uid)
+//                        } else { // 이미 존재하는 유저
+//                            val dataSnapshot = Firebase.database.getReference("Users").child(uid).get().await()
+//                            val userData = dataSnapshot.getValue(User::class.java)
+//                            user.timerStudyTime = userData?.timerStudyTime
+//                            user.stopwatchStudyTime = userData?.stopwatchStudyTime
+//                            user.todayStudyTime = userData?.timerStudyTime!! + userData.stopwatchStudyTime!!
+//                            user.goalStudyTime = userData.goalStudyTime
+//
+//                            onLoginSuccess(user, uid)
+//                        }
+//                    }
+//                }
+//            }
+//        } else {
+//            Toast.makeText(context, "로그인에 실패했습니다.", Toast.LENGTH_SHORT).show()
+//        }
+//    }
+//
+//    ElevatedCard(
+//        modifier = Modifier
+//            .fillMaxWidth()
+//            .wrapContentHeight()
+//            .padding(16.dp)
+//            .background(Color.White)
+//            .clickable {
+//                val providers = arrayListOf(
+//                    AuthUI.IdpConfig
+//                        .GoogleBuilder()
+//                        .build()
+//                )
+//
+//                val signInIntent = AuthUI
+//                    .getInstance()
+//                    .createSignInIntentBuilder()
+//                    .setAvailableProviders(providers)
+//                    .build()
+//
+//                startForResult.launch(signInIntent)
+//            },
+//        elevation = CardDefaults.cardElevation(
+//            defaultElevation = 3.dp
+//        ), // Add shadow here
+//        shape = RoundedCornerShape(10.dp), // Adjust corner shape as needed
+//        colors = CardDefaults.cardColors(
+//            containerColor = Color.White
+//        )
+//    ) {
+//        Row(
+//            verticalAlignment = Alignment.CenterVertically,
+//            modifier = Modifier.padding(15.dp),
+//        ) {
+//            Image(
+//                painter = painterResource(id = R.drawable.img_google),
+//                contentDescription = "Google Logo",
+//                modifier = Modifier.size(24.dp)
+//            )
+//            Spacer(modifier = Modifier.width(15.dp))
+//            Text(
+//                text = "Google 로그인",
+//                fontSize = 17.sp,
+//                fontWeight = FontWeight(500),
+//                modifier = Modifier.align(Alignment.CenterVertically),
+//                color = colorResource(id = R.color.shadow_gray4)
+//            )
+//        }
+//    }
+//
+//}
 
-    val startForResult = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-        val response = IdpResponse.fromResultIntent(result.data)
-
-        if (result.resultCode == Activity.RESULT_OK) {
-            val currentUser = FirebaseAuth.getInstance().currentUser
-            currentUser?.let {
-                scope.launch {
-//                    val currentUser = FirebaseAuth.getInstance().currentUser
-                    currentUser.let { it ->
-                        val uid = it.uid // used as a key
-                        val email = it.email
-                        val name = it.displayName
-                        val profileImageUrl = it.photoUrl
-                        val todayDate = DateUtils.getCurrentDate()
-                        val user = User(email = email, lastUpdateDate = todayDate, name = name, profileImageURL = profileImageUrl.toString())
-
-                        Log.d("[LoginScreen]", "GoogleLoginButton :: firebase getInstance() :: uid: $uid")
-                        Log.d("[LoginScreen]", "GoogleLoginButton :: firebase getInstance() :: email: $email")
-                        Log.d("[LoginScreen]", "GoogleLoginButton :: firebase getInstance() :: name: $name")
-                        Log.d("[LoginScreen]", "GoogleLoginButton :: firebase getInstance() :: profileImageUrl: $profileImageUrl")
-
-                        if (isNewUser(uid = uid)) { // 새로운 유저 -> DB에 삽입
-                            Firebase.database.getReference("Users").child(uid).setValue(user)
-                                .addOnSuccessListener {
-                                    Log.d("[LoginScreen]", "RealtimeDB : $uid, $email 사용자 추가 완료")
-                                }
-                                .addOnFailureListener {
-                                    Log.d("[LoginScreen]", "새 사용자 추가 실패: ${it.message}")
-//                                                    Toast.makeText(context, "오류가 발생했습니다. 다시 시도해 주세요.", Toast.LENGTH_SHORT).show()
-                                }
-
-                            val userInRank = RankUser(email = email, name = name, profileImageURL = profileImageUrl.toString())
-                            Firebase.database.getReference("Rank").child(uid).setValue(userInRank)
-                                .addOnSuccessListener {
-                                    Log.d("[LoginScreen]", "RealtimeDB : Rank 사용자 추가 완료")
-                                }
-                                .addOnFailureListener {
-                                    Log.d("[LoginScreen]", "Rank 추가 실패: ${it.message}")
-                                }
-
-                            onRegisterSuccess(user, uid)
-                        } else { // 이미 존재하는 유저
-                            val dataSnapshot = Firebase.database.getReference("Users").child(uid).get().await()
-                            val userData = dataSnapshot.getValue(User::class.java)
-                            user.timerStudyTime = userData?.timerStudyTime
-                            user.stopwatchStudyTime = userData?.stopwatchStudyTime
-                            user.todayStudyTime = userData?.timerStudyTime!! + userData.stopwatchStudyTime!!
-                            user.goalStudyTime = userData.goalStudyTime
-
-                            onLoginSuccess(user, uid)
-                        }
-                    }
-                }
-            }
-        } else {
-            Toast.makeText(context, "로그인에 실패했습니다.", Toast.LENGTH_SHORT).show()
-        }
-    }
-
-    ElevatedCard(
-        modifier = Modifier
-            .fillMaxWidth()
-            .wrapContentHeight()
-            .padding(16.dp)
-            .background(Color.White)
-            .clickable {
-                val providers = arrayListOf(
-                    AuthUI.IdpConfig
-                        .GoogleBuilder()
-                        .build()
-                )
-
-                val signInIntent = AuthUI
-                    .getInstance()
-                    .createSignInIntentBuilder()
-                    .setAvailableProviders(providers)
-                    .build()
-
-                startForResult.launch(signInIntent)
-            },
-        elevation = CardDefaults.cardElevation(
-            defaultElevation = 3.dp
-        ), // Add shadow here
-        shape = RoundedCornerShape(10.dp), // Adjust corner shape as needed
-        colors = CardDefaults.cardColors(
-            containerColor = Color.White
-        )
-    ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.padding(15.dp),
-        ) {
-            Image(
-                painter = painterResource(id = R.drawable.img_google),
-                contentDescription = "Google Logo",
-                modifier = Modifier.size(24.dp)
-            )
-            Spacer(modifier = Modifier.width(15.dp))
-            Text(
-                text = "Google 로그인",
-                fontSize = 17.sp,
-                fontWeight = FontWeight(500),
-                modifier = Modifier.align(Alignment.CenterVertically),
-                color = colorResource(id = R.color.shadow_gray4)
-            )
-        }
-    }
-
-}
-
-suspend fun isNewUser(uid: String): Boolean {
-    val usersRef = Firebase.database.getReference("Users")
-    var isNewUser = false
-
-    // 해당 UID의 사용자 데이터가 있는지 확인
-    val dataSnapshot = usersRef.child(uid).get().await()
-
-    if (!dataSnapshot.exists()) {
-        Log.d("[databasetest]", "data not exist")
-        isNewUser = true
-    } else {
-        Log.d("[databasetest]", "data exist")
-    }
-
-    return isNewUser
-}
+//suspend fun isNewUser(uid: String): Boolean {
+//    val usersRef = Firebase.database.getReference("Users")
+//    var isNewUser = false
+//
+//    // 해당 UID의 사용자 데이터가 있는지 확인
+//    val dataSnapshot = usersRef.child(uid).get().await()
+//
+//    if (!dataSnapshot.exists()) {
+//        Log.d("[databasetest]", "data not exist")
+//        isNewUser = true
+//    } else {
+//        Log.d("[databasetest]", "data exist")
+//    }
+//
+//    return isNewUser
+//}
 
 // ------------------------------------ Previews ------------------------------------
 
-@Preview(showSystemUi = true, showBackground = true)
-@Composable
-fun PreviewLoginScreen() {
-    LoginScreen(onLoginSuccess = {lUser: User, uid: String -> }, onRegisterSuccess = {lUser: User, uid: String -> })
-}
+//@Preview(showSystemUi = true, showBackground = true)
+//@Composable
+//fun PreviewLoginScreen() {
+//    LoginScreen(onLoginSuccess = {lUser: User, uid: String -> }, onRegisterSuccess = {lUser: User, uid: String -> })
+//}

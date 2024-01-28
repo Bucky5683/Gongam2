@@ -23,16 +23,21 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.cono.gongam.R
 import com.cono.gongam.data.RankingViewModel
 import com.cono.gongam.data.StudyDatesViewModel
 import com.cono.gongam.data.User
 import com.cono.gongam.data.UserViewModel
+import com.cono.gongam.ui.login.LoginScreen
 import com.cono.gongam.ui.main.mainSubViews.ContentsTitleView
 import com.cono.gongam.ui.main.mainSubViews.MyReportView
 import com.cono.gongam.ui.main.mainSubViews.RankingView
 import com.cono.gongam.ui.main.mainSubViews.TimerView
 import com.cono.gongam.ui.main.mainSubViews.TopView
+import com.cono.gongam.ui.splash.SplashScreen
 import com.cono.gongam.ui.theme.GongamTheme
 import com.cono.gongam.utils.SharedPreferencesUtil
 
@@ -50,13 +55,34 @@ class MainActivity : ComponentActivity() {
                 Surface(
                     modifier = Modifier
                         .fillMaxSize(),
-                    color = colorResource(id = R.color.main_gray)
+                    color = Color.White
                 ) {
-                    MainScreen(profileImageUrl = sharedPreferencesUtil.getUser().profileImageURL ?: "")
+//                    MainScreen(profileImageUrl = sharedPreferencesUtil.getUser().profileImageURL ?: "")
+                    MyApp()
                 }
             }
         }
 
+    }
+}
+
+@Composable
+fun MyApp() {
+    val navController = rememberNavController()
+
+    NavHost(navController, startDestination = "splash") {
+        composable("Splash") {
+            SplashScreen(navController)
+        }
+        composable("Login") {
+            LoginScreen(navController)
+        }
+//        composable("Register") {
+//            RegisterScreen(navController)
+//        }
+//        composable("Main") {
+//            MainScreen(navController)
+//        }
     }
 }
 
