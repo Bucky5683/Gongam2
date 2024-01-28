@@ -122,6 +122,10 @@ dependencies {
 
     // Image loading library
     implementation(libs.coil)
+
+    // TensorFlow Lite
+    implementation("org.tensorflow:tensorflow-lite:2.7.0")
+    implementation("org.tensorflow:tensorflow-lite-support:0.3.0")
 }
 
 kapt {
