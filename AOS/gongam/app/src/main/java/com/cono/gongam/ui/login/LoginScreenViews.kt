@@ -24,20 +24,26 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.cono.gongam.R
 import com.cono.gongam.data.RankUser
+import com.cono.gongam.data.RankingViewModel
+import com.cono.gongam.data.StudyDatesViewModel
 import com.cono.gongam.data.User
 import com.cono.gongam.data.UserViewModel
 import com.cono.gongam.ui.splash.SplashImage
@@ -54,6 +60,9 @@ import kotlinx.coroutines.tasks.await
 @Composable
 fun LoginScreen(navController: NavController) {
     val userViewModel: UserViewModel = viewModel()
+    val rankingViewModel: RankingViewModel = viewModel()
+    val studyDatesViewModel: StudyDatesViewModel = viewModel()
+    val rankUserList by rankingViewModel.rankUserList.observeAsState()
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -79,7 +88,9 @@ fun LoginScreen(navController: NavController) {
             onRegisterSuccess = { newUser, uid ->
                 saveSharedPreferences(context = navController.context, newUser, uid)
                 registerOnSuccess(context = navController.context, navController) },
-            userViewModel = userViewModel
+            userViewModel = userViewModel,
+            rankingViewModel = rankingViewModel,
+            studyDatesViewModel = studyDatesViewModel
         )
     }
 }
@@ -105,9 +116,13 @@ fun saveSharedPreferences(context: Context, user: User, uid: String) {
 }
 
 @Composable
-fun GoogleLoginButton(onLoginSuccess: (lUser: User, uid: String) -> Unit, onRegisterSuccess: (newUser: User, uid: String) -> Unit, userViewModel: UserViewModel) {
+fun GoogleLoginButton(
+    onLoginSuccess: (lUser: User, uid: String) -> Unit, onRegisterSuccess: (newUser: User, uid: String) -> Unit,
+    userViewModel: UserViewModel, rankingViewModel: RankingViewModel, studyDatesViewModel: StudyDatesViewModel)
+{
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
+    val lifeCycleOwner = LocalLifecycleOwner.current
 
     val startForResult = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
 //        val response = IdpResponse.fromResultIntent(result.data)
@@ -159,7 +174,7 @@ fun GoogleLoginButton(onLoginSuccess: (lUser: User, uid: String) -> Unit, onRegi
                             onLoginSuccess(user, uid)
                         }
 
-                        userViewModel.setCurrentUser(user)
+                        initViewModels(userViewModel, rankingViewModel, studyDatesViewModel, user, lifeCycleOwner, uid)
                     }
                 }
             }
@@ -217,6 +232,25 @@ fun GoogleLoginButton(onLoginSuccess: (lUser: User, uid: String) -> Unit, onRegi
         }
     }
 
+}
+
+
+private fun initViewModels(
+    userViewModel: UserViewModel,
+    rankingViewModel: RankingViewModel,
+    studyDatesViewModel: StudyDatesViewModel,
+    user: User, lifeCycleOwner: LifecycleOwner,
+    uid: String
+)
+{
+    userViewModel.setCurrentUser(user)
+    rankingViewModel.updateRankUserList()
+
+    rankingViewModel.rankUserList.observe(lifeCycleOwner) {
+        rankingViewModel.setUserRank(user.email ?: "")
+        rankingViewModel.setStudyTimeAverage()
+        studyDatesViewModel.updateStudyDates(uid)
+    }
 }
 
 suspend fun isNewUser(uid: String): Boolean {

@@ -23,6 +23,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -80,15 +81,14 @@ fun MyApp() {
 //        composable("Register") {
 //            RegisterScreen(navController)
 //        }
-//        composable("Main") {
-//            MainScreen(navController)
-//        }
+        composable("Main") {
+            MainScreen(navController)
+        }
     }
 }
 
-// Compose main at here
 @Composable
-fun MainScreen(profileImageUrl: String) {
+fun MainScreen(navController: NavController) {
     val context: Context = LocalContext.current
     val sharedPreferences = SharedPreferencesUtil(context)
     val user: User = sharedPreferences.getUser()
@@ -96,10 +96,6 @@ fun MainScreen(profileImageUrl: String) {
     val userViewModel: UserViewModel = viewModel()
     val rankingViewModel: RankingViewModel = viewModel()
     val studyDatesViewModel: StudyDatesViewModel = viewModel()
-
-    rankingViewModel.updateRankUserList()
-    userViewModel.setCurrentUser(user)
-    studyDatesViewModel.updateStudyDates(sharedPreferences.getUid())
 
     val thisWeekData by studyDatesViewModel.thisWeekStudyDate.observeAsState()
     val rankUserList by rankingViewModel.rankUserList.observeAsState(initial = emptyList())
@@ -111,7 +107,7 @@ fun MainScreen(profileImageUrl: String) {
             )
             .verticalScroll(rememberScrollState())
     ) {
-        TopView(profileImgUrl = profileImageUrl)
+        TopView(profileImgUrl = user.profileImageURL ?: "")
         Spacer(modifier = Modifier.height(15.dp))
         TimerView(context)
         Spacer(modifier = Modifier.height(42.5.dp))
@@ -126,13 +122,54 @@ fun MainScreen(profileImageUrl: String) {
     }
 }
 
+
+// Compose main at here
+//@Composable
+//fun MainScreen2(profileImageUrl: String) {
+//    val context: Context = LocalContext.current
+//    val sharedPreferences = SharedPreferencesUtil(context)
+//    val user: User = sharedPreferences.getUser()
+//
+//    val userViewModel: UserViewModel = viewModel()
+//    val rankingViewModel: RankingViewModel = viewModel()
+//    val studyDatesViewModel: StudyDatesViewModel = viewModel()
+//
+//    rankingViewModel.updateRankUserList()
+//    userViewModel.setCurrentUser(user)
+//    studyDatesViewModel.updateStudyDates(sharedPreferences.getUid())
+//
+//    val thisWeekData by studyDatesViewModel.thisWeekStudyDate.observeAsState()
+//    val rankUserList by rankingViewModel.rankUserList.observeAsState(initial = emptyList())
+//
+//    Column(
+//        modifier = Modifier
+//            .background(
+//                color = Color.White
+//            )
+//            .verticalScroll(rememberScrollState())
+//    ) {
+//        TopView(profileImgUrl = profileImageUrl)
+//        Spacer(modifier = Modifier.height(15.dp))
+//        TimerView(context)
+//        Spacer(modifier = Modifier.height(42.5.dp))
+//        if (rankUserList.isNotEmpty()) {
+//            rankingViewModel.setUserRank(user.email ?: "")
+//            rankingViewModel.setStudyTimeAverage()
+//            RankingView(context = context)
+//        }
+//        Spacer(modifier = Modifier.height(15.dp))
+//        MyReportView(thisWeekData, context)
+//        Spacer(modifier = Modifier.height(23.dp))
+//    }
+//}
+
 // ------------------------------------ Previews ------------------------------------
 
-@Preview(showSystemUi = true, showBackground = true)
-@Composable
-fun PreviewMain() {
-    MainScreen(profileImageUrl = "")
-}
+//@Preview(showSystemUi = true, showBackground = true)
+//@Composable
+//fun PreviewMain() {
+//    MainScreen(profileImageUrl = "")
+//}
 
 @Preview
 @Composable
