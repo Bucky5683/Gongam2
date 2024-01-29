@@ -40,6 +40,7 @@ import com.cono.gongam.ui.main.mainSubViews.MyReportView
 import com.cono.gongam.ui.main.mainSubViews.RankingView
 import com.cono.gongam.ui.main.mainSubViews.TimerView
 import com.cono.gongam.ui.main.mainSubViews.TopView
+import com.cono.gongam.ui.myreport.MyReportScreen
 import com.cono.gongam.ui.ranking.RankingScreen
 import com.cono.gongam.ui.splash.SplashScreen
 import com.cono.gongam.ui.theme.GongamTheme
@@ -88,7 +89,10 @@ fun MyApp() {
             MainScreen(navController, userViewModel, rankingViewModel, studyDatesViewModel)
         }
         composable(TodoScreen.Ranking.name) {
-            RankingScreen(userViewModel, rankingViewModel, studyDatesViewModel)
+            RankingScreen(userViewModel, rankingViewModel)
+        }
+        composable(TodoScreen.MyReport.name) {
+            MyReportScreen(studyDatesViewModel)
         }
 //        composable("Register") {
 //            RegisterScreen(navController)

@@ -24,7 +24,6 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.cono.gongam.R
 import com.cono.gongam.data.TodoScreen
-import com.cono.gongam.ui.myreport.MyReportActivity
 import com.cono.gongam.ui.ranking.RankingActivity
 
 @Composable

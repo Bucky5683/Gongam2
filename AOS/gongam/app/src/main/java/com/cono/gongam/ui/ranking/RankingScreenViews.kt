@@ -45,7 +45,6 @@ import com.cono.gongam.utils.TimeUtils
 fun RankingScreen(
     userViewModel: UserViewModel,
     rankingViewModel: RankingViewModel,
-    studyDatesViewModel: StudyDatesViewModel
 ) {
     val rankUserList by rankingViewModel.rankUserList.observeAsState(initial = emptyList())
 
@@ -57,9 +56,6 @@ fun RankingScreen(
     ) {
         TopTitle(backgroundColor = colorResource(id = R.color.white), textColor = colorResource(id = R.color.black), centerText = "랭킹", dividerLineColor = colorResource(
             id = R.color.gray_line2), backPress = true)
-//        userViewModel.getCurrentUser()?.let {
-//            MyGradeView(it, rankingViewModel)
-//        }
         if (userViewModel.getCurrentUser() != null && rankUserList.isNotEmpty()) {
             MyGradeView(user = userViewModel.getCurrentUser()!!, userRank = rankingViewModel.getUserRank())
         }
