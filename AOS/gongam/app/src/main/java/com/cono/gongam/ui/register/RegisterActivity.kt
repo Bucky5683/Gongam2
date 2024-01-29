@@ -25,9 +25,10 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.TextFieldDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -233,6 +234,7 @@ fun InputTextTitle(title: String) {
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CustomTextField(
     onValueChange: (String) -> Unit, defaultText: String
@@ -242,7 +244,7 @@ fun CustomTextField(
     Column(
         modifier = Modifier.padding(vertical = 9.dp)
     ) {
-        androidx.compose.material.TextField(
+        androidx.compose.material3.TextField(
             value = text,
             onValueChange = {
                 text = it
@@ -254,7 +256,7 @@ fun CustomTextField(
                 .padding(horizontal = 38.dp),
             shape = RoundedCornerShape(10.dp),
             colors = TextFieldDefaults.textFieldColors(
-                backgroundColor = colorResource(id = R.color.gray_scale1),
+                containerColor = colorResource(id = R.color.gray_scale1),
                 focusedIndicatorColor = Color.Transparent,
                 unfocusedIndicatorColor = Color.Transparent
             )

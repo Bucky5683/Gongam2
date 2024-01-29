@@ -8,7 +8,7 @@ class SharedPreferencesUtil(context: Context) {
     private val sharedPreferences: SharedPreferences = context.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
     private val editor: SharedPreferences.Editor = sharedPreferences.edit()
 
-    fun saveUser(user: User) {
+    fun saveUser(user: User, uid: String) {
         editor.putString("email", user.email)
         editor.putInt("goalStudyTime", user.goalStudyTime ?: 0)
         editor.putString("lastUpdateDate", user.lastUpdateDate)
@@ -17,6 +17,8 @@ class SharedPreferencesUtil(context: Context) {
         editor.putInt("stopwatchStudyTime", user.stopwatchStudyTime ?: 0)
         editor.putInt("timerStudyTime", user.timerStudyTime ?: 0)
         editor.putInt("todayStudyTime", user.todayStudyTime ?: 0)
+
+        editor.putString("uid", uid)
         editor.apply()
     }
 
@@ -31,6 +33,10 @@ class SharedPreferencesUtil(context: Context) {
             timerStudyTime = sharedPreferences.getInt("timerStudyTime", 0),
             todayStudyTime = sharedPreferences.getInt("todayStudyTime", 0)
         )
+    }
+
+    fun getUid(): String {
+        return sharedPreferences.getString("uid", "") ?: ""
     }
 
     fun clearUser() {

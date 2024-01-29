@@ -1,5 +1,7 @@
 package com.cono.gongam.ui.main.mainSubViews
 
+import android.content.Context
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -11,6 +13,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -22,26 +26,71 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.cono.gongam.R
+import com.cono.gongam.data.StudyDates
+import com.cono.gongam.data.StudyDatesViewModel
+import com.cono.gongam.data.UserViewModel
+import java.time.DayOfWeek
+import java.time.LocalDate
 
 @Composable
-fun MyReportView(sunH: Int, monH: Int, tueH: Int, wedH: Int, thuH: Int, friH: Int, satH: Int) {
+fun MyReportView(thisWeekData: List<Pair<String, StudyDates>>?, context: Context) {
+    val userViewModel : UserViewModel = viewModel()
+    val goalStudyTime = userViewModel.getCurrentUser()?.goalStudyTime?.toFloat() ?: 0.0f
+    val studyDatesViewModel: StudyDatesViewModel = viewModel()
+    val averageThisWeek by studyDatesViewModel.averageThisWeek.observeAsState()
+
+    var sunH = -1.0f
+    var monH = -1.0f
+    var tueH = -1.0f
+    var wedH = -1.0f
+    var thuH = -1.0f
+    var friH = -1.0f
+    var satH = -1.0f
+
+    Log.d("MyReportView", "thisWeekData : $thisWeekData")
+    thisWeekData.let { data ->
+        data?.let {
+            for((date, studyTimes) in data) {
+                val totalStudyTime = String.format("%.1f", studyTimes.totalStudyTime / 3600.0f).toFloat()
+                val goalHours = String.format("%.1f", goalStudyTime / 3600.0f).toFloat()
+                val compareWithGoalTime = totalStudyTime - goalHours
+                val localDate = LocalDate.parse(date)
+                val dayOfWeek = localDate.dayOfWeek
+
+                when (dayOfWeek) {
+                    DayOfWeek.SUNDAY -> sunH = compareWithGoalTime
+                    DayOfWeek.MONDAY -> monH = compareWithGoalTime
+                    DayOfWeek.TUESDAY -> tueH = compareWithGoalTime
+                    DayOfWeek.WEDNESDAY -> wedH = compareWithGoalTime
+                    DayOfWeek.THURSDAY -> thuH = compareWithGoalTime
+                    DayOfWeek.FRIDAY -> friH = compareWithGoalTime
+                    DayOfWeek.SATURDAY -> satH = compareWithGoalTime
+                    else -> continue
+                }
+            }
+        }
+    }
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .background(Color.White)
     ) {
-        ContentsTitleView(title = "마이 리포트", showMoreButton = true)
+        ContentsTitleView(title = "마이 리포트", showMoreButton = true, context = context)
         Spacer(modifier = Modifier.height(29.dp))
         WeekStudyHours(sunH, monH, tueH, wedH, thuH, friH, satH)
         Spacer(modifier = Modifier.height(20.dp))
-        SetMyReportAverageText()
+        if (averageThisWeek != null) {
+            SetMyReportAverageText(averageThisWeek)
+        }
         Spacer(modifier = Modifier.height(22.dp))
     }
 }
 
 @Composable
-private fun SetMyReportAverageText() {
+private fun SetMyReportAverageText(averageThisWeek: Int?) {
     Row(
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -54,7 +103,7 @@ private fun SetMyReportAverageText() {
         )
         // TODO :: 평균값 할당
         Text(
-            text = "99:99:99",
+            text = com.cono.gongam.utils.TimeUtils.convertSecondsToTime(averageThisWeek ?: 0),
             fontSize = 15.sp,
             fontWeight = FontWeight(700),
             color = colorResource(id = R.color.blue_scale2),
@@ -70,7 +119,7 @@ private fun SetMyReportAverageText() {
 }
 
 @Composable
-private fun WeekStudyHours(sunH: Int, monH: Int, tueH: Int, wedH: Int, thuH: Int, friH: Int, satH: Int) {
+private fun WeekStudyHours(sunH: Float, monH: Float, tueH: Float, wedH: Float, thuH: Float, friH: Float, satH: Float) {
     Column (
         modifier = Modifier
             .fillMaxWidth()
@@ -99,7 +148,7 @@ private fun WeekStudyHours(sunH: Int, monH: Int, tueH: Int, wedH: Int, thuH: Int
 }
 
 @Composable
-private fun DayStudyHoursView(day: String, hours: Int) {
+private fun DayStudyHoursView(day: String, hours: Float) {
     Box(
         modifier = Modifier
             .width(58.dp)
@@ -129,14 +178,17 @@ private fun DayStudyHoursView(day: String, hours: Int) {
                     .fillMaxWidth()
             )
             Text(
-                text = if (hours < 0) {
+                text = if (hours == -1.0f) {
+                    "-"
+                }
+                else if (hours < 0) {
                     "- ${-1*hours}h"
                 } else {
                     "+ ${hours}h"
                   },
                 fontSize = 10.sp,
                 fontWeight = FontWeight(400),
-                color = if (hours < 0) colorResource(id = R.color.blue_scale2) else colorResource(id = R.color.red_scale2),
+                color = if (hours == -1.0f) colorResource(id = R.color.gray_scale1) else if (hours < 0) colorResource(id = R.color.blue_scale2) else colorResource(id = R.color.red_scale2),
                 textAlign = TextAlign.Center,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -150,11 +202,11 @@ private fun DayStudyHoursView(day: String, hours: Int) {
 @Preview
 @Composable
 private fun PreviewMyReportView() {
-    MyReportView(-99, -99, -99, 99, 99, -99, -99)
+//    MyReportView(-99, -99, -99, 99, 99, -99, -99)
 }
 
 @Preview(showBackground = true)
 @Composable
 private fun PreviewDayStudyHoursView() {
-    DayStudyHoursView("S", -99)
+    DayStudyHoursView("S", -99f)
 }

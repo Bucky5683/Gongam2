@@ -44,15 +44,15 @@ class SplashActivity : ComponentActivity() {
     }
 }
 
-@Composable
-fun SplashImage() {
-    Image(
-        painter = painterResource(id = R.drawable.img_gongam),
-        contentDescription = "splash Img",
-        contentScale = ContentScale.None,
-        modifier = Modifier.width(118.dp),
-    )
-}
+//@Composable
+//fun SplashImage() {
+//    Image(
+//        painter = painterResource(id = R.drawable.img_gongam),
+//        contentDescription = "splash Img",
+//        contentScale = ContentScale.None,
+//        modifier = Modifier.width(118.dp),
+//    )
+//}
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
