@@ -26,19 +26,20 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.cono.gongam.R
-import com.cono.gongam.ui.timer.TimerActivity
+import com.cono.gongam.data.TodoScreen
 
 @Composable
-fun TimerView(context: Context) {
+fun TimerView(navController: NavController) {
     ContentsTitleView("타이머", false)
     Spacer(modifier = Modifier.height(13.5.dp))
-    TimeButton(icon = "⏰", title = "타이머", context = context)
-    TimeButton(icon = "⏱️", title = "스톱워치", context = context)
+    TimerButton(icon = "⏰", title = "타이머", navController = navController)
+    TimerButton(icon = "⏱️", title = "스톱워치", navController = navController)
 }
 
 @Composable
-fun TimeButton(icon: String, title: String, context: Context) {
+fun TimerButton(icon: String, title: String, navController: NavController) {
     Row(
         modifier = Modifier.padding(top = 7.5.dp, bottom = 7.5.dp, start = 40.dp, end = 40.dp)
     ) {
@@ -54,8 +55,7 @@ fun TimeButton(icon: String, title: String, context: Context) {
                 .fillMaxWidth()
                 .background(color = Color.White, shape = RoundedCornerShape(size = 10.dp))
                 .clickable {
-                    val intent = Intent(context, TimerActivity::class.java)
-                    context.startActivity(intent)
+                    navController.navigate(TodoScreen.Timer.name)
                 }
         ) {
             Row {

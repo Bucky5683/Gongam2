@@ -1,10 +1,12 @@
 package com.cono.gongam.ui.main
 
 import android.content.Context
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -44,10 +46,12 @@ import com.cono.gongam.ui.myreport.MyReportScreen
 import com.cono.gongam.ui.ranking.RankingScreen
 import com.cono.gongam.ui.splash.SplashScreen
 import com.cono.gongam.ui.theme.GongamTheme
+import com.cono.gongam.ui.timer.TimerScreen
 import com.cono.gongam.utils.SharedPreferencesUtil
 
 class MainActivity : ComponentActivity() {
     private lateinit var sharedPreferencesUtil : SharedPreferencesUtil
+    @RequiresApi(Build.VERSION_CODES.Q)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -70,6 +74,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.Q)
 @Composable
 fun MyApp() {
     val navController = rememberNavController()
@@ -93,6 +98,9 @@ fun MyApp() {
         }
         composable(TodoScreen.MyReport.name) {
             MyReportScreen(studyDatesViewModel)
+        }
+        composable(TodoScreen.Timer.name) {
+            TimerScreen(userViewModel)
         }
 //        composable("Register") {
 //            RegisterScreen(navController)
@@ -135,7 +143,7 @@ fun MainScreen(
             TopView(user = it)
         }
         Spacer(modifier = Modifier.height(15.dp))
-        TimerView(context)
+        TimerView(navController = navController)
         Spacer(modifier = Modifier.height(42.5.dp))
         if (rankUserList.isNotEmpty()) {
             Log.d("MainScreen", "rankUserList is not empty")
