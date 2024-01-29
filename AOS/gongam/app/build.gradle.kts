@@ -57,6 +57,7 @@ dependencies {
 
     implementation(libs.core.ktx)
     implementation(libs.lifecycle.runtime.ktx)
+    implementation(libs.lifecycle.runtime.compose)
 //    implementation("androidx.fragment:fragment-ktx:1.6.2")
     implementation(libs.activity.ktx)
 
