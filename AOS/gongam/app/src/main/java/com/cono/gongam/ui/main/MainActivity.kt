@@ -47,7 +47,7 @@ class MainActivity : ComponentActivity() {
     private lateinit var sharedPreferencesUtil : SharedPreferencesUtil
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+// hi
         sharedPreferencesUtil = SharedPreferencesUtil(this)
 
         WindowCompat.setDecorFitsSystemWindows(window, false)
