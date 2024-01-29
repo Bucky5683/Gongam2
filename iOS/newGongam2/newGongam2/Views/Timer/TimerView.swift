@@ -237,6 +237,39 @@ struct TimerView: View {
                         .font(Font.system(size: 15).bold())
                         .foregroundColor(.whiteFFFFFF)
                 }
+                Spacer()
+                ZStack {
+                    if self.viewModel.isStarted {
+                        Button {
+                            self.viewModel.startTimer(userData: self.userData, userTimeData: self.userTimeData)
+                            self.viewModel.isStarted = false
+                        } label: {
+                            Text("START")
+                                .font(Font.system(size: 18).bold())
+                                .multilineTextAlignment(.center)
+                                .foregroundColor(.white)
+                        }.disabled(self.viewModel.isStarted == false)
+                            .frame(width: 100, height: 100)
+                            .background(.blue5C84FF)
+                            .cornerRadius(100)
+                        
+                    } else {
+                        Button {
+                            self.viewModel.stopTimer()
+                            self.viewModel.updateFirebase(userData: self.userData, userTimeData: self.userTimeData, isTimerFinished: self.viewModel.timerFinished)
+                            self.viewModel.isStarted = true
+                        } label: {
+                            Text("STOP")
+                                .font(Font.system(size: 18).bold())
+                                .multilineTextAlignment(.center)
+                                .foregroundColor(.white)
+                        }.disabled(self.viewModel.isStarted == true)
+                            .frame(width: 100, height: 100)
+                            .background(.redFF0000)
+                            .cornerRadius(100)
+                    }
+                }
+                Spacer()
             }
             HStack{
                 Text("오늘 목표")

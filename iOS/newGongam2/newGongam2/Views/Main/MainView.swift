@@ -29,6 +29,12 @@ import PopupView
     - Popup의 프로필 사진 터치 시, 프로필 수정 화면으로 이동 ✅
     - 도움말, 이동약관은 Web브라우저로 이동하도록 설정
  */
+enum timerType {
+    case timer
+    case stopwatch
+    case AItimer
+}
+
 class MainViewModel: ObservableObject {
     @Published var thisWeekDataes : [String:Int] = [:]
     @Published var thisWeeks: [MyReportGridItem] = []
@@ -100,8 +106,9 @@ struct MainView: View {
                                         .padding(.bottom, 8)
                                     Spacer()
                                 }
-                                TimersButtonView(isTimer: true)
-                                TimersButtonView(isTimer: false)
+                                TimersButtonView(isTimer: .timer)
+                                TimersButtonView(isTimer: .stopwatch)
+                                TimersButtonView(isTimer: .AItimer)
                                     .padding(.bottom, 35)
                             }
                             .padding(.leading, 40)
@@ -296,10 +303,11 @@ struct MainView: View {
 
 struct TimersButtonView: View {
     @Environment(NavigationCoordinator.self) var coordinator: NavigationCoordinator
-    var isTimer: Bool
+    var isTimer: timerType
     var body: some View {
         HStack{
-            if isTimer{
+            switch(isTimer){
+            case .timer:
                 Text("⏰")
                     .padding(.leading, 20)
                 Text("타이머")
@@ -324,7 +332,7 @@ struct TimersButtonView: View {
                     }
                 }.frame(width: 80, height: 48)
                 .background(.darkBlue414756)
-            } else {
+            case .stopwatch:
                 Text("⏱️")
                     .padding(.leading, 20)
                 Text("스톱워치")
@@ -337,6 +345,31 @@ struct TimersButtonView: View {
                 Spacer()
                 Button{
                     coordinator.push(.stopwatch)
+                } label: {
+                    HStack{
+                        Text("GO")
+                            .font(Font.system(size: 15))
+                            .fontWeight(.regular)
+                            .foregroundColor(.whiteFFFFFF)
+                        Image("goButtonIcon")
+                            .resizable()
+                            .frame(width: 15, height: 15)
+                    }
+                }.frame(width: 80, height: 48)
+                    .background(.darkBlue414756)
+            case .AItimer:
+                Text("👤")
+                    .padding(.leading, 20)
+                Text("AI 타이머")
+                    .font(Font.system(size: 15))
+                    .fontWeight(.regular)
+                    .foregroundColor(.darkBlue414756)
+                    .multilineTextAlignment(.leading)
+                    .frame(width: 60)
+                    .padding(.leading, 10)
+                Spacer()
+                Button{
+                    coordinator.push(.aiTimer)
                 } label: {
                     HStack{
                         Text("GO")
