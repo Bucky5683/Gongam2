@@ -62,7 +62,6 @@ fun LoginScreen(navController: NavController) {
     val userViewModel: UserViewModel = viewModel()
     val rankingViewModel: RankingViewModel = viewModel()
     val studyDatesViewModel: StudyDatesViewModel = viewModel()
-    val rankUserList by rankingViewModel.rankUserList.observeAsState()
 
     Column(
         modifier = Modifier.fillMaxSize(),

@@ -2,6 +2,7 @@ package com.cono.gongam.ui.main
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
@@ -78,12 +79,12 @@ fun MyApp() {
         composable("Login") {
             LoginScreen(navController)
         }
-//        composable("Register") {
-//            RegisterScreen(navController)
-//        }
         composable("Main") {
             MainScreen(navController)
         }
+//        composable("Register") {
+//            RegisterScreen(navController)
+//        }
     }
 }
 
@@ -99,6 +100,7 @@ fun MainScreen(navController: NavController) {
 
     val thisWeekData by studyDatesViewModel.thisWeekStudyDate.observeAsState()
     val rankUserList by rankingViewModel.rankUserList.observeAsState(initial = emptyList())
+//    val rankUserListState = rankingViewModel.rankUserList
 
     Column(
         modifier = Modifier
@@ -112,9 +114,12 @@ fun MainScreen(navController: NavController) {
         TimerView(context)
         Spacer(modifier = Modifier.height(42.5.dp))
         if (rankUserList.isNotEmpty()) {
+            Log.d("MainScreen", "rankUserList is not empty")
             rankingViewModel.setUserRank(user.email ?: "")
             rankingViewModel.setStudyTimeAverage()
             RankingView(context = context)
+        } else {
+            Log.d("MainScreen", "rankUserList is empty!")
         }
         Spacer(modifier = Modifier.height(15.dp))
         MyReportView(thisWeekData, context)
