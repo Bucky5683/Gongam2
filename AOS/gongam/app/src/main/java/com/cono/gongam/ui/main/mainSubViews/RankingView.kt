@@ -40,7 +40,6 @@ import com.cono.gongam.data.RankingViewModel
 import com.cono.gongam.data.TodoScreen
 import com.cono.gongam.data.User
 import com.cono.gongam.data.UserViewModel
-import com.cono.gongam.ui.ranking.RankingActivity
 import com.cono.gongam.utils.TimeUtils
 
 
