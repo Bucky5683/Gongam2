@@ -27,19 +27,24 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.cono.gongam.R
 import com.cono.gongam.data.StudyDates
 import com.cono.gongam.data.StudyDatesViewModel
+import com.cono.gongam.data.User
 import com.cono.gongam.data.UserViewModel
 import java.time.DayOfWeek
 import java.time.LocalDate
 
 @Composable
-fun MyReportView(thisWeekData: List<Pair<String, StudyDates>>?, context: Context) {
-    val userViewModel : UserViewModel = viewModel()
-    val goalStudyTime = userViewModel.getCurrentUser()?.goalStudyTime?.toFloat() ?: 0.0f
-    val studyDatesViewModel: StudyDatesViewModel = viewModel()
-    val averageThisWeek by studyDatesViewModel.averageThisWeek.observeAsState()
+fun MyReportView(
+    navController: NavController,
+    user: User,
+    thisWeekData: List<Pair<String, StudyDates>>?,
+    averageThisWeek: Int?,
+    context: Context
+) {
+    val goalStudyTime = user.goalStudyTime?.toFloat() ?: 0.0f
 
     var sunH = -1.0f
     var monH = -1.0f
@@ -57,9 +62,8 @@ fun MyReportView(thisWeekData: List<Pair<String, StudyDates>>?, context: Context
                 val goalHours = String.format("%.1f", goalStudyTime / 3600.0f).toFloat()
                 val compareWithGoalTime = totalStudyTime - goalHours
                 val localDate = LocalDate.parse(date)
-                val dayOfWeek = localDate.dayOfWeek
 
-                when (dayOfWeek) {
+                when (localDate.dayOfWeek) {
                     DayOfWeek.SUNDAY -> sunH = compareWithGoalTime
                     DayOfWeek.MONDAY -> monH = compareWithGoalTime
                     DayOfWeek.TUESDAY -> tueH = compareWithGoalTime
@@ -78,7 +82,7 @@ fun MyReportView(thisWeekData: List<Pair<String, StudyDates>>?, context: Context
             .fillMaxWidth()
             .background(Color.White)
     ) {
-        ContentsTitleView(title = "마이 리포트", showMoreButton = true, context = context)
+        ContentsTitleView(title = "마이 리포트", showMoreButton = true, context = context, navController = navController)
         Spacer(modifier = Modifier.height(29.dp))
         WeekStudyHours(sunH, monH, tueH, wedH, thuH, friH, satH)
         Spacer(modifier = Modifier.height(20.dp))
@@ -101,7 +105,6 @@ private fun SetMyReportAverageText(averageThisWeek: Int?) {
             fontWeight = FontWeight(500),
             color = colorResource(id = R.color.main_gray),
         )
-        // TODO :: 평균값 할당
         Text(
             text = com.cono.gongam.utils.TimeUtils.convertSecondsToTime(averageThisWeek ?: 0),
             fontSize = 15.sp,

@@ -106,7 +106,9 @@ fun MainScreen(
     val context: Context = LocalContext.current
     val sharedPreferences = SharedPreferencesUtil(context)
     val currentUser by userViewModel.currentUser.observeAsState()
+    val studyDatesList by studyDatesViewModel.studyDatesList.observeAsState()
     val thisWeekData by studyDatesViewModel.thisWeekStudyDate.observeAsState()
+    val averageThisWeek by studyDatesViewModel.averageThisWeek.observeAsState()
     val rankUserList by rankingViewModel.rankUserList.observeAsState(initial = emptyList())
     val userRank by rankingViewModel.userRank.observeAsState(initial = "")
     val studyTimeAverage by rankingViewModel.studyTimeAverage.observeAsState(initial = 0)
@@ -116,6 +118,7 @@ fun MainScreen(
         rankingViewModel.setUserRank(email = currentUser?.email ?: "")
         rankingViewModel.setStudyTimeAverage()
     }
+    studyDatesViewModel.updateStudyDates(sharedPreferences.getUid())
 
     Column(
         modifier = Modifier
@@ -135,7 +138,9 @@ fun MainScreen(
             currentUser?.let { RankingView(navController = navController, context = context, user = it, rankUserList = rankUserList, rankingViewModel = rankingViewModel, userRank = userRank, studyTimeAverage = studyTimeAverage) }
         }
         Spacer(modifier = Modifier.height(15.dp))
-        MyReportView(thisWeekData, context)
+        currentUser?.let {
+            MyReportView(navController = navController, user = it, thisWeekData = thisWeekData, averageThisWeek = averageThisWeek, context = context)
+        }
         Spacer(modifier = Modifier.height(23.dp))
     }
 }

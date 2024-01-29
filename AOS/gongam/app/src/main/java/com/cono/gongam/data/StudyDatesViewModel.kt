@@ -19,15 +19,16 @@ import kotlin.coroutines.suspendCoroutine
 
 class StudyDatesViewModel : ViewModel() {
     private val _studyDatesList = MutableLiveData<List<Pair<String, StudyDates>>>()
-    val studyDatesList: LiveData<List<Pair<String, StudyDates>>> get() = _studyDatesList
-
     private val _thisWeekStudyDate = MutableLiveData<List<Pair<String, StudyDates>>?>()
-    val thisWeekStudyDate: MutableLiveData<List<Pair<String, StudyDates>>?> get() = _thisWeekStudyDate
+    private val _averageThisWeek = MutableLiveData<Int>()
+
+    val studyDatesList: LiveData<List<Pair<String, StudyDates>>> get() = _studyDatesList
+    val thisWeekStudyDate: LiveData<List<Pair<String, StudyDates>>?> get() = _thisWeekStudyDate
+    val averageThisWeek: LiveData<Int> get() = _averageThisWeek
+
 //    fun getThisWeekStudyData(): List<Pair<String, StudyDates>>? {
 //        return thisWeekStudyData
 //    }
-    private val _averageThisWeek = MutableLiveData<Int>()
-    val averageThisWeek: LiveData<Int> get() = _averageThisWeek
 
     fun getThisWeekStudyDataWithDay(): MutableList<Pair<Int, StudyDates>> {
         val pairDayStudy : MutableList<Pair<Int, StudyDates>> = mutableListOf()
