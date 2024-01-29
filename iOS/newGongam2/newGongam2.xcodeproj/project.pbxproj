@@ -53,6 +53,7 @@
 		EB86AF7C2B47F962005A15A5 /* KakaoSDKAuth in Frameworks */ = {isa = PBXBuildFile; productRef = EB86AF7B2B47F962005A15A5 /* KakaoSDKAuth */; };
 		EB86AF7E2B47F962005A15A5 /* KakaoSDKCommon in Frameworks */ = {isa = PBXBuildFile; productRef = EB86AF7D2B47F962005A15A5 /* KakaoSDKCommon */; };
 		EB86AF802B47F962005A15A5 /* KakaoSDKUser in Frameworks */ = {isa = PBXBuildFile; productRef = EB86AF7F2B47F962005A15A5 /* KakaoSDKUser */; };
+		EB9D05742B672D0800478CCD /* YOLOv3FP16.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = EB9D05732B672D0800478CCD /* YOLOv3FP16.mlmodel */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -108,6 +109,7 @@
 		EB86AF632B47DC44005A15A5 /* UserTimeData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserTimeData.swift; sourceTree = "<group>"; };
 		EB86AF672B47DD5E005A15A5 /* TimerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerView.swift; sourceTree = "<group>"; };
 		EB86AF812B47F9C6005A15A5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		EB9D05732B672D0800478CCD /* YOLOv3FP16.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = YOLOv3FP16.mlmodel; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -242,6 +244,7 @@
 		EB86AF302B47B7F0005A15A5 /* newGongam2 */ = {
 			isa = PBXGroup;
 			children = (
+				EB9D05732B672D0800478CCD /* YOLOv3FP16.mlmodel */,
 				EB152A462B4BCDB2004A0679 /* newGongam2.entitlements */,
 				EB86AF812B47F9C6005A15A5 /* Info.plist */,
 				EB86AF312B47B7F0005A15A5 /* newGongam2App.swift */,
@@ -481,6 +484,7 @@
 				EB86AF5E2B47B966005A15A5 /* MainHeaderView.swift in Sources */,
 				EB86AF642B47DC44005A15A5 /* UserTimeData.swift in Sources */,
 				EB692A6E2B4E65D000901457 /* MainMyReportGridView.swift in Sources */,
+				EB9D05742B672D0800478CCD /* YOLOv3FP16.mlmodel in Sources */,
 				EB41CDA72B4CC7280007E938 /* AuthenticationManager.swift in Sources */,
 				EB692A762B4E6FD600901457 /* ReportView.swift in Sources */,
 				EB5DCAEC2B5104B9003E23AB /* RankModel.swift in Sources */,
