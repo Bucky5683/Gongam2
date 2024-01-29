@@ -31,6 +31,7 @@ import androidx.navigation.compose.rememberNavController
 import com.cono.gongam.R
 import com.cono.gongam.data.RankingViewModel
 import com.cono.gongam.data.StudyDatesViewModel
+import com.cono.gongam.data.TodoScreen
 import com.cono.gongam.data.User
 import com.cono.gongam.data.UserViewModel
 import com.cono.gongam.ui.login.LoginScreen
@@ -39,6 +40,7 @@ import com.cono.gongam.ui.main.mainSubViews.MyReportView
 import com.cono.gongam.ui.main.mainSubViews.RankingView
 import com.cono.gongam.ui.main.mainSubViews.TimerView
 import com.cono.gongam.ui.main.mainSubViews.TopView
+import com.cono.gongam.ui.ranking.RankingScreen
 import com.cono.gongam.ui.splash.SplashScreen
 import com.cono.gongam.ui.theme.GongamTheme
 import com.cono.gongam.utils.SharedPreferencesUtil
@@ -75,15 +77,18 @@ fun MyApp() {
     val rankingViewModel: RankingViewModel = viewModel()
     val studyDatesViewModel: StudyDatesViewModel = viewModel()
 
-    NavHost(navController, startDestination = "splash") {
-        composable("Splash") {
+    NavHost(navController, startDestination = TodoScreen.Splash.name) {
+        composable(route = TodoScreen.Splash.name) {
             SplashScreen(navController)
         }
-        composable("Login") {
+        composable(route = TodoScreen.Login.name) {
             LoginScreen(navController, userViewModel, rankingViewModel, studyDatesViewModel)
         }
-        composable("Main") {
+        composable(TodoScreen.Main.name) {
             MainScreen(navController, userViewModel, rankingViewModel, studyDatesViewModel)
+        }
+        composable(TodoScreen.Ranking.name) {
+            RankingScreen(userViewModel, rankingViewModel, studyDatesViewModel)
         }
 //        composable("Register") {
 //            RegisterScreen(navController)
@@ -127,7 +132,7 @@ fun MainScreen(
         Spacer(modifier = Modifier.height(42.5.dp))
         if (rankUserList.isNotEmpty()) {
             Log.d("MainScreen", "rankUserList is not empty")
-            currentUser?.let { RankingView(context = context, user = it, rankUserList = rankUserList, rankingViewModel = rankingViewModel, userRank = userRank, studyTimeAverage = studyTimeAverage) }
+            currentUser?.let { RankingView(navController = navController, context = context, user = it, rankUserList = rankUserList, rankingViewModel = rankingViewModel, userRank = userRank, studyTimeAverage = studyTimeAverage) }
         }
         Spacer(modifier = Modifier.height(15.dp))
         MyReportView(thisWeekData, context)

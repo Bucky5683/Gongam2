@@ -59,235 +59,235 @@ class RankingActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    RankingScreen(sharedPreferencesUtil)
+//                    RankingScreen(sharedPreferencesUtil)
                 }
             }
         }
     }
 }
 
-@Composable
-fun RankingScreen(sharedPreferencesUtil: SharedPreferencesUtil) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .fillMaxHeight()
-            .background(color = colorResource(id = R.color.white))
-    ) {
-        TopTitle(backgroundColor = colorResource(id = R.color.white), textColor = colorResource(id = R.color.black), centerText = "랭킹", dividerLineColor = colorResource(
-            id = R.color.gray_line2), backPress = true)
-        MyGradeView(sharedPreferencesUtil = sharedPreferencesUtil)
-        TitleThisWeekTop5()
-        RankingCards()
-    }
-}
+//@Composable
+//fun RankingScreen(sharedPreferencesUtil: SharedPreferencesUtil) {
+//    Column(
+//        modifier = Modifier
+//            .fillMaxWidth()
+//            .fillMaxHeight()
+//            .background(color = colorResource(id = R.color.white))
+//    ) {
+//        TopTitle(backgroundColor = colorResource(id = R.color.white), textColor = colorResource(id = R.color.black), centerText = "랭킹", dividerLineColor = colorResource(
+//            id = R.color.gray_line2), backPress = true)
+//        MyGradeView(sharedPreferencesUtil = sharedPreferencesUtil)
+//        TitleThisWeekTop5()
+//        RankingCards()
+//    }
+//}
 
-@Composable
-fun MyGradeView(sharedPreferencesUtil: SharedPreferencesUtil) {
-    val user = sharedPreferencesUtil.getUser()
+//@Composable
+//fun MyGradeView(sharedPreferencesUtil: SharedPreferencesUtil) {
+//    val user = sharedPreferencesUtil.getUser()
+//
+//    val rankingViewModel: RankingViewModel = viewModel()
+//    rankingViewModel.updateRankUserList()
+//
+//    val rankUserList by rankingViewModel.rankUserList.observeAsState(initial = emptyList())
+//
+//    if (rankUserList.isNotEmpty()) {
+//        rankingViewModel.setUserRank(user.email ?: "")
+//        val userRank = rankingViewModel.getUserRank()
+//        val totalStudyTime = (user.timerStudyTime!! + user.stopwatchStudyTime!!).toString()
+//
+//        Box(
+//            modifier = Modifier
+//                .fillMaxWidth()
+//                .height(193.dp)
+//        ) {
+//            Card(modifier = Modifier
+//                .fillMaxWidth()
+//                .fillMaxHeight()
+//                .padding(horizontal = 22.dp, vertical = 30.dp)
+//                .background(colorResource(id = R.color.white)),
+//                colors = CardDefaults.cardColors(
+//                    containerColor = colorResource(id = R.color.main_gray)
+//                ),
+//                elevation = CardDefaults.cardElevation(defaultElevation = 10.dp)
+//            ) {
+//                Column(
+//                    modifier = Modifier
+//                        .fillMaxHeight()
+//                        .fillMaxWidth(),
+//                    verticalArrangement = Arrangement.Center
+//                ) {
+//                    SpacedEdgeTextsWithCenterVertically(
+//                        leftText = "나의 등수", leftTextSize = 17.sp, leftTextColor = colorResource(id = R.color.white), leftTextWeight = FontWeight(400),
+//                        rightText = userRank, rightTextSize = 32.sp, rightTextColor = colorResource(id = R.color.white), rightTextWeight = FontWeight(600)
+//                    )
+//                    Spacer(modifier = Modifier.height(9.dp))
+//                    SpacedEdgeTextsWithCenterVertically(
+//                        leftText = "이번 주 공부 시간", leftTextSize = 14.sp, leftTextColor = colorResource(id = R.color.white), leftTextWeight = FontWeight(400),
+//                        rightText = TimeUtils.convertSecondsToTime(totalStudyTime.toInt()), rightTextSize = 14.sp, rightTextColor = colorResource(id = R.color.white), rightTextWeight = FontWeight(400)
+//                    )
+//                }
+//            }
+//        }
+//    }
+//}
 
-    val rankingViewModel: RankingViewModel = viewModel()
-    rankingViewModel.updateRankUserList()
+//@Composable
+//fun TitleThisWeekTop5() {
+//    Row(
+//        modifier = Modifier
+//            .fillMaxWidth()
+//            .wrapContentHeight()
+//            .padding(bottom = 17.dp)
+//    ) {
+//        Spacer(modifier = Modifier.width(37.dp))
+//        Text(
+//            text = "이번 주 Top 5",
+//            color = colorResource(id = R.color.main_gray),
+//            fontSize = 18.sp,
+//            fontWeight = FontWeight(700),
+//        )
+//    }
+//}
 
-    val rankUserList by rankingViewModel.rankUserList.observeAsState(initial = emptyList())
-
-    if (rankUserList.isNotEmpty()) {
-        rankingViewModel.setUserRank(user.email ?: "")
-        val userRank = rankingViewModel.getUserRank()
-        val totalStudyTime = (user.timerStudyTime!! + user.stopwatchStudyTime!!).toString()
-
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(193.dp)
-        ) {
-            Card(modifier = Modifier
-                .fillMaxWidth()
-                .fillMaxHeight()
-                .padding(horizontal = 22.dp, vertical = 30.dp)
-                .background(colorResource(id = R.color.white)),
-                colors = CardDefaults.cardColors(
-                    containerColor = colorResource(id = R.color.main_gray)
-                ),
-                elevation = CardDefaults.cardElevation(defaultElevation = 10.dp)
-            ) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxHeight()
-                        .fillMaxWidth(),
-                    verticalArrangement = Arrangement.Center
-                ) {
-                    SpacedEdgeTextsWithCenterVertically(
-                        leftText = "나의 등수", leftTextSize = 17.sp, leftTextColor = colorResource(id = R.color.white), leftTextWeight = FontWeight(400),
-                        rightText = userRank, rightTextSize = 32.sp, rightTextColor = colorResource(id = R.color.white), rightTextWeight = FontWeight(600)
-                    )
-                    Spacer(modifier = Modifier.height(9.dp))
-                    SpacedEdgeTextsWithCenterVertically(
-                        leftText = "이번 주 공부 시간", leftTextSize = 14.sp, leftTextColor = colorResource(id = R.color.white), leftTextWeight = FontWeight(400),
-                        rightText = TimeUtils.convertSecondsToTime(totalStudyTime.toInt()), rightTextSize = 14.sp, rightTextColor = colorResource(id = R.color.white), rightTextWeight = FontWeight(400)
-                    )
-                }
-            }
-        }
-    }
-}
-
-@Composable
-fun TitleThisWeekTop5() {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .wrapContentHeight()
-            .padding(bottom = 17.dp)
-    ) {
-        Spacer(modifier = Modifier.width(37.dp))
-        Text(
-            text = "이번 주 Top 5",
-            color = colorResource(id = R.color.main_gray),
-            fontSize = 18.sp,
-            fontWeight = FontWeight(700),
-        )
-    }
-}
-
-@Composable
-fun RankingCards() {
-    val rankingViewModel: RankingViewModel = viewModel()
-    val rankUserList by rankingViewModel.rankUserList.observeAsState(initial = emptyList())
-
-    if (rankUserList.isNotEmpty()) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .wrapContentHeight()
-        ) {
-            rankUserList.forEachIndexed { index, user ->
-                if (index < 5) {
-                    RankingUserCard(grade = index + 1, profileImgUrl = user.profileImageURL ?: "", name = user.name ?: "", studyTime = user.totalStudyTime ?: 0)
-                    Spacer(modifier = Modifier.height(8.dp))
-                }
-            }
-        }
-    }
-}
-
-@Composable
-fun RankingUserCard(grade: Int, profileImgUrl: String, name: String, studyTime: Int) {
-    val heightVal: Int = when (grade) {
-        1 -> 88
-        2, 3 -> 66
-        4, 5 -> 49
-        else -> 0
-    }
-
-    val paddingHorizontalVal: Int = when (grade) {
-        1 -> 38
-        2, 3 -> 42
-        else -> 47
-    }
-
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .wrapContentHeight()
-            .padding(vertical = 4.dp, horizontal = paddingHorizontalVal.dp)
-    ) {
-        Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(heightVal.dp),
-            colors = CardDefaults.cardColors(containerColor = colorResource(id = R.color.white)),
-            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
-        ) {
-            RankingCardContent(grade = grade, profileImgUrl = profileImgUrl, name = name, studyTime = studyTime)
-        }
-    }
-}
-
-@Composable
-fun RankingCardContent(grade: Int, profileImgUrl: String, name: String, studyTime: Int) {
-    val startImgPaddingVal: Int = when (grade) {
-        1, 2, 3 -> 22
-        else -> 18
-    }
-    val endGradePaddingVal: Int = when (grade) {
-        1 -> 21
-        2, 3 -> 20
-        else -> 18
-    }
-    val profileImgSize: Int = when (grade) {
-        1 -> 50
-        2, 3 -> 40
-        else -> 30
-    }
-    val startTextPaddingVal: Int = when (grade) {
-        1 -> 10
-        2, 3 -> 15
-        else -> 20
-    }
-    val gradeText: String = when (grade) {
-        1 -> "1st"
-        2 -> "2nd"
-        3 -> "3rd"
-        4 -> "4th"
-        else -> "5th"
-    }
-    val gradeTextSize: Int = when (grade) {
-        1 -> 20
-        2, 3 -> 16
-        else -> 15
-    }
-
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .fillMaxHeight()
-            .padding(start = startImgPaddingVal.dp, end = endGradePaddingVal.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        AsyncImage(
-            model = profileImgUrl,
-            placeholder = debugPlaceHolder(debugPreview = R.drawable.img_test_profile),
-            contentDescription = "profile Img",
-            contentScale = ContentScale.Fit,
-            modifier = Modifier
-                .width(profileImgSize.dp)
-                .height(profileImgSize.dp)
-                .clip(shape = CircleShape),
-        )
-        Spacer(Modifier.width(startTextPaddingVal.dp))
-        CardText(grade = grade, name = name, studyTime = studyTime)
-        Spacer(Modifier.weight(1f))
-        Text(text = gradeText, fontSize = gradeTextSize.sp, fontWeight = FontWeight(700), color = colorResource(
-            id = R.color.main_gray
-        ))
-    }
-}
-
-@Composable
-fun CardText(grade: Int, name: String, studyTime: Int) {
-    when (grade) {
-        1, 2, 3 -> {
-            // 2줄
-            Column {
-                Text(text = name, fontSize = 15.sp, fontWeight = FontWeight(400), color = colorResource(
-                    id = R.color.main_gray))
-                Text(text = TimeUtils.convertSecondsToTime(studyTime), fontSize = 15.sp, fontWeight = FontWeight(400), color = colorResource(
-                    id = R.color.main_gray))
-            }
-        }
-        else -> {
-            // 1줄
-            Row {
-                Text(text = name, fontSize = 15.sp, fontWeight = FontWeight(400), color = colorResource(
-                    id = R.color.main_gray))
-                Spacer(modifier = Modifier.width(10.dp))
-                Text(text = TimeUtils.convertSecondsToTime(studyTime), fontSize = 15.sp, fontWeight = FontWeight(400), color = colorResource(
-                    id = R.color.main_gray))
-            }
-        }
-    }
-}
+//@Composable
+//fun RankingCards() {
+//    val rankingViewModel: RankingViewModel = viewModel()
+//    val rankUserList by rankingViewModel.rankUserList.observeAsState(initial = emptyList())
+//
+//    if (rankUserList.isNotEmpty()) {
+//        Column(
+//            modifier = Modifier
+//                .fillMaxWidth()
+//                .wrapContentHeight()
+//        ) {
+//            rankUserList.forEachIndexed { index, user ->
+//                if (index < 5) {
+//                    RankingUserCard(grade = index + 1, profileImgUrl = user.profileImageURL ?: "", name = user.name ?: "", studyTime = user.totalStudyTime ?: 0)
+//                    Spacer(modifier = Modifier.height(8.dp))
+//                }
+//            }
+//        }
+//    }
+//}
+//
+//@Composable
+//fun RankingUserCard(grade: Int, profileImgUrl: String, name: String, studyTime: Int) {
+//    val heightVal: Int = when (grade) {
+//        1 -> 88
+//        2, 3 -> 66
+//        4, 5 -> 49
+//        else -> 0
+//    }
+//
+//    val paddingHorizontalVal: Int = when (grade) {
+//        1 -> 38
+//        2, 3 -> 42
+//        else -> 47
+//    }
+//
+//    Row(
+//        modifier = Modifier
+//            .fillMaxWidth()
+//            .wrapContentHeight()
+//            .padding(vertical = 4.dp, horizontal = paddingHorizontalVal.dp)
+//    ) {
+//        Card(
+//            modifier = Modifier
+//                .fillMaxWidth()
+//                .height(heightVal.dp),
+//            colors = CardDefaults.cardColors(containerColor = colorResource(id = R.color.white)),
+//            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+//        ) {
+//            RankingCardContent(grade = grade, profileImgUrl = profileImgUrl, name = name, studyTime = studyTime)
+//        }
+//    }
+//}
+//
+//@Composable
+//fun RankingCardContent(grade: Int, profileImgUrl: String, name: String, studyTime: Int) {
+//    val startImgPaddingVal: Int = when (grade) {
+//        1, 2, 3 -> 22
+//        else -> 18
+//    }
+//    val endGradePaddingVal: Int = when (grade) {
+//        1 -> 21
+//        2, 3 -> 20
+//        else -> 18
+//    }
+//    val profileImgSize: Int = when (grade) {
+//        1 -> 50
+//        2, 3 -> 40
+//        else -> 30
+//    }
+//    val startTextPaddingVal: Int = when (grade) {
+//        1 -> 10
+//        2, 3 -> 15
+//        else -> 20
+//    }
+//    val gradeText: String = when (grade) {
+//        1 -> "1st"
+//        2 -> "2nd"
+//        3 -> "3rd"
+//        4 -> "4th"
+//        else -> "5th"
+//    }
+//    val gradeTextSize: Int = when (grade) {
+//        1 -> 20
+//        2, 3 -> 16
+//        else -> 15
+//    }
+//
+//    Row(
+//        modifier = Modifier
+//            .fillMaxWidth()
+//            .fillMaxHeight()
+//            .padding(start = startImgPaddingVal.dp, end = endGradePaddingVal.dp),
+//        verticalAlignment = Alignment.CenterVertically
+//    ) {
+//        AsyncImage(
+//            model = profileImgUrl,
+//            placeholder = debugPlaceHolder(debugPreview = R.drawable.img_test_profile),
+//            contentDescription = "profile Img",
+//            contentScale = ContentScale.Fit,
+//            modifier = Modifier
+//                .width(profileImgSize.dp)
+//                .height(profileImgSize.dp)
+//                .clip(shape = CircleShape),
+//        )
+//        Spacer(Modifier.width(startTextPaddingVal.dp))
+//        CardText(grade = grade, name = name, studyTime = studyTime)
+//        Spacer(Modifier.weight(1f))
+//        Text(text = gradeText, fontSize = gradeTextSize.sp, fontWeight = FontWeight(700), color = colorResource(
+//            id = R.color.main_gray
+//        ))
+//    }
+//}
+//
+//@Composable
+//fun CardText(grade: Int, name: String, studyTime: Int) {
+//    when (grade) {
+//        1, 2, 3 -> {
+//            // 2줄
+//            Column {
+//                Text(text = name, fontSize = 15.sp, fontWeight = FontWeight(400), color = colorResource(
+//                    id = R.color.main_gray))
+//                Text(text = TimeUtils.convertSecondsToTime(studyTime), fontSize = 15.sp, fontWeight = FontWeight(400), color = colorResource(
+//                    id = R.color.main_gray))
+//            }
+//        }
+//        else -> {
+//            // 1줄
+//            Row {
+//                Text(text = name, fontSize = 15.sp, fontWeight = FontWeight(400), color = colorResource(
+//                    id = R.color.main_gray))
+//                Spacer(modifier = Modifier.width(10.dp))
+//                Text(text = TimeUtils.convertSecondsToTime(studyTime), fontSize = 15.sp, fontWeight = FontWeight(400), color = colorResource(
+//                    id = R.color.main_gray))
+//            }
+//        }
+//    }
+//}
 
 // ------------------------------------ Previews ------------------------------------
 

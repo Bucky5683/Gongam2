@@ -21,12 +21,14 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.cono.gongam.R
+import com.cono.gongam.data.TodoScreen
 import com.cono.gongam.ui.myreport.MyReportActivity
 import com.cono.gongam.ui.ranking.RankingActivity
 
 @Composable
-fun ContentsTitleView(title: String, showMoreButton: Boolean, context: Context? = null) {
+fun ContentsTitleView(title: String, showMoreButton: Boolean, context: Context? = null, navController: NavController? = null) {
     Surface(
         modifier = Modifier
             .fillMaxWidth(),
@@ -53,13 +55,10 @@ fun ContentsTitleView(title: String, showMoreButton: Boolean, context: Context? 
                             interactionSource = remember{ MutableInteractionSource() },
                             indication = null
                         )  {
-                            val intent: Intent
                             if (title == "랭킹") {
-                                intent = Intent(context, RankingActivity::class.java)
-                                context!!.startActivity(intent)
+                                navController?.navigate(TodoScreen.Ranking.name)
                             } else if (title == "마이 리포트"){
-                                intent = Intent(context, MyReportActivity::class.java)
-                                context!!.startActivity(intent)
+                                navController?.navigate(TodoScreen.MyReport.name)
                             }
                         },
                     fontSize = 12.sp,

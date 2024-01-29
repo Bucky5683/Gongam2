@@ -33,9 +33,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.cono.gongam.R
 import com.cono.gongam.data.RankUser
 import com.cono.gongam.data.RankingViewModel
+import com.cono.gongam.data.TodoScreen
 import com.cono.gongam.data.User
 import com.cono.gongam.data.UserViewModel
 import com.cono.gongam.ui.ranking.RankingActivity
@@ -45,6 +47,7 @@ import com.cono.gongam.utils.TimeUtils
 // TODO : 유저의 평균값 -> 주 단위의 값으로 변경 필요
 @Composable
 fun RankingView(
+    navController: NavController,
     context: Context,
     user: User,
     rankUserList: List<RankUser>,
@@ -57,9 +60,9 @@ fun RankingView(
             .fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        ContentsTitleView("랭킹", true, context = context)
+        ContentsTitleView("랭킹", true, context = context, navController = navController)
         Spacer(modifier = Modifier.height(37.dp))
-        VerticalGraph(user, rankUserList, userRank, studyTimeAverage)
+        VerticalGraph(user, rankUserList, userRank, studyTimeAverage, navController = navController)
         Spacer(modifier = Modifier.height(12.dp))
         SetCompareAverageText(user, rankingViewModel.getStudyTimeAverage())
         Spacer(modifier = Modifier.height(31.dp))
@@ -71,7 +74,8 @@ private fun VerticalGraph(
     user: User,
     rankUserList: List<RankUser>,
     userRank: String,
-    studyTimeAverage: Int
+    studyTimeAverage: Int,
+    navController: NavController,
 ) {
     val isBelowAverage = user.timerStudyTime!! + user.stopwatchStudyTime!! < studyTimeAverage
 
@@ -82,9 +86,7 @@ private fun VerticalGraph(
                 interactionSource = remember { MutableInteractionSource() },
                 indication = null
             ) {
-//                val intent = Intent(context, RankingActivity::class.java)
-//                context.startActivity(intent)
-                // TODO :: RankingScreen 으로 이동
+                navController.navigate(TodoScreen.Ranking.name)
             }
     ){
         DrawGrayGraph()
