@@ -58,11 +58,12 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
 @Composable
-fun LoginScreen(navController: NavController) {
-    val userViewModel: UserViewModel = viewModel()
-    val rankingViewModel: RankingViewModel = viewModel()
-    val studyDatesViewModel: StudyDatesViewModel = viewModel()
-
+fun LoginScreen(
+    navController: NavController,
+    userViewModel: UserViewModel,
+    rankingViewModel: RankingViewModel,
+    studyDatesViewModel: StudyDatesViewModel
+) {
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -131,7 +132,6 @@ fun GoogleLoginButton(
 
             currentUser?.let {
                 scope.launch {
-//                    val currentUser = FirebaseAuth.getInstance().currentUser
                     currentUser.let { it ->
                         val uid = it.uid // used as a key
                         val email = it.email
@@ -161,6 +161,7 @@ fun GoogleLoginButton(
                                     Log.d("[LoginScreen]", "Rank 추가 실패: ${it.message}")
                                 }
 
+                            userViewModel.setCurrentUser(user)
                             onRegisterSuccess(user, uid)
                         } else { // 이미 존재하는 유저
                             val dataSnapshot = Firebase.database.getReference("Users").child(uid).get().await()
@@ -170,10 +171,9 @@ fun GoogleLoginButton(
                             user.todayStudyTime = userData?.timerStudyTime!! + userData.stopwatchStudyTime!!
                             user.goalStudyTime = userData.goalStudyTime
 
+                            userViewModel.setCurrentUser(user)
                             onLoginSuccess(user, uid)
                         }
-
-                        initViewModels(userViewModel, rankingViewModel, studyDatesViewModel, user, lifeCycleOwner, uid)
                     }
                 }
             }
@@ -231,25 +231,6 @@ fun GoogleLoginButton(
         }
     }
 
-}
-
-
-private fun initViewModels(
-    userViewModel: UserViewModel,
-    rankingViewModel: RankingViewModel,
-    studyDatesViewModel: StudyDatesViewModel,
-    user: User, lifeCycleOwner: LifecycleOwner,
-    uid: String
-)
-{
-    userViewModel.setCurrentUser(user)
-    rankingViewModel.updateRankUserList()
-
-    rankingViewModel.rankUserList.observe(lifeCycleOwner) {
-        rankingViewModel.setUserRank(user.email ?: "")
-        rankingViewModel.setStudyTimeAverage()
-        studyDatesViewModel.updateStudyDates(uid)
-    }
 }
 
 suspend fun isNewUser(uid: String): Boolean {

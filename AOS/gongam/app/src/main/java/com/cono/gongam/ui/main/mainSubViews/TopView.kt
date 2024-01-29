@@ -42,17 +42,16 @@ import androidx.compose.ui.window.PopupProperties
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.cono.gongam.R
+import com.cono.gongam.data.User
 import com.cono.gongam.data.UserViewModel
 import com.cono.gongam.ui.ButtonWithQuestionMark
 import com.cono.gongam.ui.register.debugPlaceHolder
 import com.cono.gongam.utils.TimeUtils
 
 @Composable
-fun TopView(profileImgUrl: String) {
-    val userViewModel: UserViewModel = viewModel()
-    val user = userViewModel.getCurrentUser()
-    val studyTime = user?.todayStudyTime ?: 0
-    val goalTime = user?.goalStudyTime ?: 0
+fun TopView(user: User) {
+    val studyTime = user.todayStudyTime ?: 0
+    val goalTime = user.goalStudyTime ?: 0
     val diffTime = goalTime - studyTime
     val studiedThanGoal: Boolean = goalTime - studyTime < 0
 
@@ -72,7 +71,7 @@ fun TopView(profileImgUrl: String) {
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.End
             ) {
-                ProfileImage(profileImgUrl = profileImgUrl)
+                ProfileImage(profileImgUrl = user.profileImageURL ?: "")
                 Spacer(modifier = Modifier.width(15.dp))
             }
             Text(
@@ -166,7 +165,6 @@ fun ProfileImage(profileImgUrl: String) {
                 .width(30.dp)
                 .height(30.dp)
                 .clickable {
-//                     TODO :: clickable setting(popup)
                     showPopup = true
                 }
         )
@@ -379,11 +377,11 @@ fun PreviewPopup() {
     ProfileEditPopup()
 }
 
-@Preview
-@Composable
-fun PreviewTopView() {
-    TopView(profileImgUrl = "")
-}
+//@Preview
+//@Composable
+//fun PreviewTopView() {
+//    TopView(profileImgUrl = "")
+//}
 
 @Preview
 @Composable

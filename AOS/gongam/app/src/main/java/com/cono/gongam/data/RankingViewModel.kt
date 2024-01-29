@@ -17,9 +17,13 @@ import kotlin.coroutines.suspendCoroutine
 
 class RankingViewModel : ViewModel() {
     private val _rankUserList = MutableLiveData<List<RankUser>>()
-    private var userRank: String = ""
-    private var studyTimeAverage: Int = 0
+//    private var userRank: String = ""
+    private val _userRank = MutableLiveData<String>()
+//    private var studyTimeAverage: Int = 0
+    private val _studyTimeAverage = MutableLiveData<Int>()
     val rankUserList: LiveData<List<RankUser>> get() = _rankUserList
+    val userRank: LiveData<String> get() = _userRank
+    val studyTimeAverage: LiveData<Int> get() = _studyTimeAverage
 
     fun updateRankUserList() {
         viewModelScope.launch {
@@ -31,10 +35,12 @@ class RankingViewModel : ViewModel() {
     }
 
     fun setUserRank(email: String) {
+        Log.d("TestRankingViewModel", "setUserRank ->>")
         val rankIndex = rankUserList.value?.indexOfFirst { it.email == email }
-        userRank = if (rankIndex != null) {
+        _userRank.value = if (rankIndex != null) {
             (rankIndex + 1).toString()
         } else ""
+        Log.d("TestRankingViewModel", "setUserRank ->> $rankIndex")
     }
 
     fun setStudyTimeAverage() {
@@ -47,16 +53,16 @@ class RankingViewModel : ViewModel() {
             val average =
                 if (users.isNotEmpty()) totalStudyTimeSum.toDouble() / users.size
                 else 0.0
-            studyTimeAverage = average.toInt()
+            _studyTimeAverage.value = average.toInt()
         }
     }
 
     fun getUserRank(): String {
-        return userRank
+        return userRank.value ?: ""
     }
 
     fun getStudyTimeAverage(): Int {
-        return studyTimeAverage
+        return studyTimeAverage.value ?: 0
     }
 
     private suspend fun getRankingDataFromFirebaseDB(): List<RankUser> {

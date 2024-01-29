@@ -34,6 +34,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.cono.gongam.R
+import com.cono.gongam.data.RankUser
 import com.cono.gongam.data.RankingViewModel
 import com.cono.gongam.data.User
 import com.cono.gongam.data.UserViewModel
@@ -43,7 +44,14 @@ import com.cono.gongam.utils.TimeUtils
 
 // TODO : 유저의 평균값 -> 주 단위의 값으로 변경 필요
 @Composable
-fun RankingView(context: Context) {
+fun RankingView(
+    context: Context,
+    user: User,
+    rankUserList: List<RankUser>,
+    rankingViewModel: RankingViewModel,
+    userRank: String,
+    studyTimeAverage: Int
+) {
     Column(
         modifier = Modifier
             .fillMaxWidth(),
@@ -51,20 +59,21 @@ fun RankingView(context: Context) {
     ) {
         ContentsTitleView("랭킹", true, context = context)
         Spacer(modifier = Modifier.height(37.dp))
-        VerticalGraph(context)
+        VerticalGraph(user, rankUserList, userRank, studyTimeAverage)
         Spacer(modifier = Modifier.height(12.dp))
-        SetCompareAverageText()
+        SetCompareAverageText(user, rankingViewModel.getStudyTimeAverage())
         Spacer(modifier = Modifier.height(31.dp))
     }
 }
 
 @Composable
-private fun VerticalGraph(context: Context) {
-    val userViewModel: UserViewModel = viewModel()
-    val rankingViewModel: RankingViewModel = viewModel()
-    val user: User? = userViewModel.getCurrentUser()
-    val rankUserList by rankingViewModel.rankUserList.observeAsState(initial = emptyList())
-    val isBelowAverage = user?.timerStudyTime!! + user.stopwatchStudyTime!! < rankingViewModel.getStudyTimeAverage()
+private fun VerticalGraph(
+    user: User,
+    rankUserList: List<RankUser>,
+    userRank: String,
+    studyTimeAverage: Int
+) {
+    val isBelowAverage = user.timerStudyTime!! + user.stopwatchStudyTime!! < studyTimeAverage
 
     Box(
         modifier = Modifier
@@ -73,8 +82,9 @@ private fun VerticalGraph(context: Context) {
                 interactionSource = remember { MutableInteractionSource() },
                 indication = null
             ) {
-                val intent = Intent(context, RankingActivity::class.java)
-                context.startActivity(intent)
+//                val intent = Intent(context, RankingActivity::class.java)
+//                context.startActivity(intent)
+                // TODO :: RankingScreen 으로 이동
             }
     ){
         DrawGrayGraph()
@@ -84,12 +94,12 @@ private fun VerticalGraph(context: Context) {
             if (rankUserList.isNotEmpty()) {
                 if (isBelowAverage) {
                     Spacer(modifier = Modifier.weight(1f))
-                    DrawAverageStudyTimes()
+                    DrawAverageStudyTimes(studyTimeAverage)
                     Column(
                         modifier = Modifier.weight(1f)
                     ) {
                         Spacer(modifier = Modifier.weight(1f))
-                        DrawUserStudyTimes(isBelowAverage = true)
+                        DrawUserStudyTimes(isBelowAverage = true, user = user, userRank = userRank)
                         Spacer(modifier = Modifier.weight(5f))
                     }
                 }
@@ -98,10 +108,10 @@ private fun VerticalGraph(context: Context) {
                         modifier = Modifier.weight(1f)
                     ) {
                         Spacer(modifier = Modifier.weight(1f))
-                        DrawUserStudyTimes(isBelowAverage = false)
+                        DrawUserStudyTimes(isBelowAverage = false, user = user, userRank = userRank)
                         Spacer(modifier = Modifier.weight(5f))
                     }
-                    DrawAverageStudyTimes()
+                    DrawAverageStudyTimes(studyTimeAverage)
                     Spacer(modifier = Modifier.weight(1f))
                 }
             }
@@ -131,9 +141,7 @@ private fun DrawGrayGraph() {
 }
 
 @Composable
-private fun DrawAverageStudyTimes() {
-    val rankingViewModel: RankingViewModel = viewModel()
-
+private fun DrawAverageStudyTimes(studyTimeAverage: Int) {
     Row(
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -187,7 +195,7 @@ private fun DrawAverageStudyTimes() {
                         textAlign = TextAlign.Center,
                     )
                     Text(
-                        text = TimeUtils.convertSecondsToTime(rankingViewModel.getStudyTimeAverage()),
+                        text = TimeUtils.convertSecondsToTime(studyTimeAverage),
                         color = Color.White,
                         fontWeight = FontWeight(700),
                         fontSize = 10.sp,
@@ -200,12 +208,7 @@ private fun DrawAverageStudyTimes() {
 }
 
 @Composable
-private fun DrawUserStudyTimes(isBelowAverage: Boolean) {
-    val userViewModel: UserViewModel = viewModel()
-    val rankingViewModel: RankingViewModel = viewModel()
-    val user: User? = userViewModel.getCurrentUser()
-    val userRank = rankingViewModel.getUserRank()
-
+private fun DrawUserStudyTimes(isBelowAverage: Boolean, user: User, userRank: String) {
     val boxColor = if (isBelowAverage) colorResource(id = R.color.blue_scale1) else colorResource(id = R.color.red_scale1)
 
     Row(
@@ -252,7 +255,7 @@ private fun DrawUserStudyTimes(isBelowAverage: Boolean) {
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = "${user?.name}님의 등수",
+                        text = "${user.name}님의 등수",
                         color = colorResource(id = R.color.main_gray),
                         fontWeight = FontWeight(400),
                         fontSize = 12.sp,
@@ -273,11 +276,8 @@ private fun DrawUserStudyTimes(isBelowAverage: Boolean) {
 }
 
 @Composable
-private fun SetCompareAverageText() {
-    val userViewModel: UserViewModel = viewModel()
-    val rankingViewModel: RankingViewModel = viewModel()
-    val user = userViewModel.getCurrentUser()
-    val diffFromAverage = (user?.timerStudyTime!! + user.stopwatchStudyTime!!) - rankingViewModel.getStudyTimeAverage()
+private fun SetCompareAverageText(user: User, studyTimeAverage: Int) {
+    val diffFromAverage = (user.timerStudyTime!! + user.stopwatchStudyTime!!) - studyTimeAverage
     val less: Boolean = diffFromAverage < 0
     if (diffFromAverage < 0) diffFromAverage * (-1)
 
@@ -310,19 +310,19 @@ private fun SetCompareAverageText() {
 @Preview
 @Composable
 private fun PreviewDrawUserStudyTimes() {
-    DrawUserStudyTimes(isBelowAverage = true)
+//    DrawUserStudyTimes(isBelowAverage = true)
 }
 
 @Preview(showBackground = true)
 @Composable
 private fun PreviewRankingViewUnderAverage() {
-    RankingView(context = LocalContext.current)
+//    RankingView(context = LocalContext.current)
 }
 
 @Preview(showBackground = true)
 @Composable
 private fun PreviewRankingViewAboveAverage() {
-    RankingView(context = LocalContext.current)
+//    RankingView(context = LocalContext.current)
 }
 
 //@Preview(showBackground = true)
