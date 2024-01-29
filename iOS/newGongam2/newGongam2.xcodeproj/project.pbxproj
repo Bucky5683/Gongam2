@@ -53,7 +53,11 @@
 		EB86AF7C2B47F962005A15A5 /* KakaoSDKAuth in Frameworks */ = {isa = PBXBuildFile; productRef = EB86AF7B2B47F962005A15A5 /* KakaoSDKAuth */; };
 		EB86AF7E2B47F962005A15A5 /* KakaoSDKCommon in Frameworks */ = {isa = PBXBuildFile; productRef = EB86AF7D2B47F962005A15A5 /* KakaoSDKCommon */; };
 		EB86AF802B47F962005A15A5 /* KakaoSDKUser in Frameworks */ = {isa = PBXBuildFile; productRef = EB86AF7F2B47F962005A15A5 /* KakaoSDKUser */; };
-		EB9D05742B672D0800478CCD /* YOLOv3FP16.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = EB9D05732B672D0800478CCD /* YOLOv3FP16.mlmodel */; };
+		EB9D05772B673E5C00478CCD /* AITimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB9D05762B673E5C00478CCD /* AITimerView.swift */; };
+		EB9D057B2B6741E400478CCD /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB9D057A2B6741E400478CCD /* ViewController.swift */; };
+		EB9D057D2B67420800478CCD /* VisionObjectRecognitionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB9D057C2B67420800478CCD /* VisionObjectRecognitionViewController.swift */; };
+		EB9D057F2B67599E00478CCD /* AITimer.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EB9D057E2B67599E00478CCD /* AITimer.storyboard */; };
+		EB9D05812B675AF100478CCD /* ObjectDetector.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = EB9D05802B675AF100478CCD /* ObjectDetector.mlmodel */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -109,7 +113,11 @@
 		EB86AF632B47DC44005A15A5 /* UserTimeData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserTimeData.swift; sourceTree = "<group>"; };
 		EB86AF672B47DD5E005A15A5 /* TimerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerView.swift; sourceTree = "<group>"; };
 		EB86AF812B47F9C6005A15A5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
-		EB9D05732B672D0800478CCD /* YOLOv3FP16.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = YOLOv3FP16.mlmodel; sourceTree = "<group>"; };
+		EB9D05762B673E5C00478CCD /* AITimerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AITimerView.swift; sourceTree = "<group>"; };
+		EB9D057A2B6741E400478CCD /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		EB9D057C2B67420800478CCD /* VisionObjectRecognitionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisionObjectRecognitionViewController.swift; sourceTree = "<group>"; };
+		EB9D057E2B67599E00478CCD /* AITimer.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = AITimer.storyboard; sourceTree = "<group>"; };
+		EB9D05802B675AF100478CCD /* ObjectDetector.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = ObjectDetector.mlmodel; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -165,6 +173,7 @@
 		EB692A5D2B4E5CFB00901457 /* Timer */ = {
 			isa = PBXGroup;
 			children = (
+				EB9D05752B673E4B00478CCD /* AITimerView */,
 				EB86AF672B47DD5E005A15A5 /* TimerView.swift */,
 				EB697FF02B4FD9100011EA58 /* StopwatchView.swift */,
 			);
@@ -244,8 +253,8 @@
 		EB86AF302B47B7F0005A15A5 /* newGongam2 */ = {
 			isa = PBXGroup;
 			children = (
-				EB9D05732B672D0800478CCD /* YOLOv3FP16.mlmodel */,
 				EB152A462B4BCDB2004A0679 /* newGongam2.entitlements */,
+				EB9D05802B675AF100478CCD /* ObjectDetector.mlmodel */,
 				EB86AF812B47F9C6005A15A5 /* Info.plist */,
 				EB86AF312B47B7F0005A15A5 /* newGongam2App.swift */,
 				EB54A0472B4BF04C0074C13B /* Utilities.swift */,
@@ -313,6 +322,17 @@
 				EB692A612B4E5D3200901457 /* Rank */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		EB9D05752B673E4B00478CCD /* AITimerView */ = {
+			isa = PBXGroup;
+			children = (
+				EB9D05762B673E5C00478CCD /* AITimerView.swift */,
+				EB9D057A2B6741E400478CCD /* ViewController.swift */,
+				EB9D057C2B67420800478CCD /* VisionObjectRecognitionViewController.swift */,
+				EB9D057E2B67599E00478CCD /* AITimer.storyboard */,
+			);
+			path = AITimerView;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -443,6 +463,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EB9D057F2B67599E00478CCD /* AITimer.storyboard in Resources */,
 				EB692A792B4E813200901457 /* Launch Screen.storyboard in Resources */,
 				EB86AF392B47B7F2005A15A5 /* Preview Assets.xcassets in Resources */,
 				EB54A0462B4BE9170074C13B /* credentials.plist in Resources */,
@@ -479,14 +500,17 @@
 				EB41CDA52B4CC3600007E938 /* LoginModel.swift in Sources */,
 				EB697FF12B4FD9100011EA58 /* StopwatchView.swift in Sources */,
 				EB41CDAB2B4CDD700007E938 /* FirebassDataManager.swift in Sources */,
+				EB9D057B2B6741E400478CCD /* ViewController.swift in Sources */,
 				EB692A722B4E6FA700901457 /* RankView.swift in Sources */,
 				EB86AF5C2B47B8B3005A15A5 /* MainView.swift in Sources */,
+				EB9D057D2B67420800478CCD /* VisionObjectRecognitionViewController.swift in Sources */,
 				EB86AF5E2B47B966005A15A5 /* MainHeaderView.swift in Sources */,
 				EB86AF642B47DC44005A15A5 /* UserTimeData.swift in Sources */,
 				EB692A6E2B4E65D000901457 /* MainMyReportGridView.swift in Sources */,
-				EB9D05742B672D0800478CCD /* YOLOv3FP16.mlmodel in Sources */,
+				EB9D05772B673E5C00478CCD /* AITimerView.swift in Sources */,
 				EB41CDA72B4CC7280007E938 /* AuthenticationManager.swift in Sources */,
 				EB692A762B4E6FD600901457 /* ReportView.swift in Sources */,
+				EB9D05812B675AF100478CCD /* ObjectDetector.mlmodel in Sources */,
 				EB5DCAEC2B5104B9003E23AB /* RankModel.swift in Sources */,
 				EB86AF602B47BA72005A15A5 /* UserData.swift in Sources */,
 				EB54A03F2B4BD8320074C13B /* SetProfileView.swift in Sources */,
@@ -665,6 +689,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = newGongam2/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "공감; 공부감시자";
+				INFOPLIST_KEY_NSCameraUsageDescription = "A message that tells the user why the app is requesting access to the device’s camera.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = "Launch Screen.storyboard";
@@ -700,6 +725,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = newGongam2/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "공감; 공부감시자";
+				INFOPLIST_KEY_NSCameraUsageDescription = "A message that tells the user why the app is requesting access to the device’s camera.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = "Launch Screen.storyboard";

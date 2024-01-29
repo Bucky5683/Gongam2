@@ -16,6 +16,7 @@ enum Screens {
     case stopwatch
     case rank
     case myReport
+    case aiTimer
 }
 
 @Observable
@@ -40,6 +41,8 @@ class NavigationCoordinator {
                 RankView()
             case .myReport:
                 ReportView()
+            case .aiTimer:
+                AITimerView()
             }
         }
     
