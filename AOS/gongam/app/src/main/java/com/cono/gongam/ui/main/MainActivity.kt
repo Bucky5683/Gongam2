@@ -44,6 +44,7 @@ import com.cono.gongam.ui.main.mainSubViews.TimerView
 import com.cono.gongam.ui.main.mainSubViews.TopView
 import com.cono.gongam.ui.myreport.MyReportScreen
 import com.cono.gongam.ui.ranking.RankingScreen
+import com.cono.gongam.ui.register.RegisterScreen
 import com.cono.gongam.ui.splash.SplashScreen
 import com.cono.gongam.ui.theme.GongamTheme
 import com.cono.gongam.ui.timer.TimerScreen
@@ -102,9 +103,9 @@ fun MyApp() {
         composable(TodoScreen.Timer.name) {
             TimerScreen(userViewModel)
         }
-//        composable("Register") {
-//            RegisterScreen(navController)
-//        }
+        composable("Register") {
+            RegisterScreen(navController, userViewModel)
+        }
     }
 }
 

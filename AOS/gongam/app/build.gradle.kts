@@ -74,6 +74,7 @@ dependencies {
     implementation(platform("androidx.compose:compose-bom:2023.03.00"))
     implementation(libs.coil.compose)
     implementation(platform("androidx.compose:compose-bom:2023.08.00"))
+    implementation(libs.firebase.storage.ktx)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
