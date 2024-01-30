@@ -58,6 +58,7 @@
 		EB9D057D2B67420800478CCD /* VisionObjectRecognitionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB9D057C2B67420800478CCD /* VisionObjectRecognitionViewController.swift */; };
 		EB9D057F2B67599E00478CCD /* AITimer.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EB9D057E2B67599E00478CCD /* AITimer.storyboard */; };
 		EB9D05812B675AF100478CCD /* ObjectDetector.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = EB9D05802B675AF100478CCD /* ObjectDetector.mlmodel */; };
+		EBD8ACD22B68C23100332C67 /* AITimerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBD8ACD12B68C23100332C67 /* AITimerViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -118,6 +119,7 @@
 		EB9D057C2B67420800478CCD /* VisionObjectRecognitionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisionObjectRecognitionViewController.swift; sourceTree = "<group>"; };
 		EB9D057E2B67599E00478CCD /* AITimer.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = AITimer.storyboard; sourceTree = "<group>"; };
 		EB9D05802B675AF100478CCD /* ObjectDetector.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = ObjectDetector.mlmodel; sourceTree = "<group>"; };
+		EBD8ACD12B68C23100332C67 /* AITimerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AITimerViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -331,6 +333,7 @@
 				EB9D057A2B6741E400478CCD /* ViewController.swift */,
 				EB9D057C2B67420800478CCD /* VisionObjectRecognitionViewController.swift */,
 				EB9D057E2B67599E00478CCD /* AITimer.storyboard */,
+				EBD8ACD12B68C23100332C67 /* AITimerViewModel.swift */,
 			);
 			path = AITimerView;
 			sourceTree = "<group>";
@@ -500,6 +503,7 @@
 				EB41CDA52B4CC3600007E938 /* LoginModel.swift in Sources */,
 				EB697FF12B4FD9100011EA58 /* StopwatchView.swift in Sources */,
 				EB41CDAB2B4CDD700007E938 /* FirebassDataManager.swift in Sources */,
+				EBD8ACD22B68C23100332C67 /* AITimerViewModel.swift in Sources */,
 				EB9D057B2B6741E400478CCD /* ViewController.swift in Sources */,
 				EB692A722B4E6FA700901457 /* RankView.swift in Sources */,
 				EB86AF5C2B47B8B3005A15A5 /* MainView.swift in Sources */,

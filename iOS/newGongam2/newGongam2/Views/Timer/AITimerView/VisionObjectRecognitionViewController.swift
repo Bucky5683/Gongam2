@@ -31,7 +31,11 @@ class VisionObjectRecognitionViewController: ViewController {
                 DispatchQueue.main.async(execute: {
                     // perform all the UI updates on the main queue
                     if let results = request.results {
-                        self.drawVisionRequestResults(results)
+                        if self.viewModel?.isStarted == false {
+                            self.drawVisionRequestResults(results)
+                        }
+                    } else if self.viewModel?.isPaused == false{
+                        self.viewModel?.pausedTimer()
                     }
                 })
             })
@@ -53,6 +57,7 @@ class VisionObjectRecognitionViewController: ViewController {
             }
             // Select only the label with the highest confidence.
             let topLabelObservation = objectObservation.labels[0]
+            
             let objectBounds = VNImageRectForNormalizedRect(objectObservation.boundingBox, Int(bufferSize.width), Int(bufferSize.height))
             
             let shapeLayer = self.createRoundedRectLayerWithBounds(objectBounds)
@@ -60,6 +65,20 @@ class VisionObjectRecognitionViewController: ViewController {
             let textLayer = self.createTextSubLayerInBounds(objectBounds,
                                                             identifier: topLabelObservation.identifier,
                                                             confidence: topLabelObservation.confidence)
+            print("timer is Running \(String(describing: self.viewModel?.timerFinished))")
+            print("timer is Paused \(String(describing: self.viewModel?.isPaused))")
+            if topLabelObservation.identifier == "person" {
+                if self.viewModel?.timerFinished == true {
+                    self.viewModel?.startTimer()
+                } else if self.viewModel?.isPaused == true{
+                    self.viewModel?.pausedTimer()
+                }
+            } else {
+                if self.viewModel?.isPaused == false{
+                    self.viewModel?.pausedTimer()
+                }
+            }
+            
             shapeLayer.addSublayer(textLayer)
             detectionOverlay.addSublayer(shapeLayer)
         }
