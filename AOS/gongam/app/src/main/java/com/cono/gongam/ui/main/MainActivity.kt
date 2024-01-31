@@ -67,7 +67,7 @@ class MainActivity : ComponentActivity() {
                         .fillMaxSize(),
                     color = Color.White
                 ) {
-                    MyApp()
+                    MyApp(sharedPreferencesUtil)
                 }
             }
         }
@@ -77,12 +77,14 @@ class MainActivity : ComponentActivity() {
 
 @RequiresApi(Build.VERSION_CODES.Q)
 @Composable
-fun MyApp() {
+fun MyApp(sharedPreferencesUtil: SharedPreferencesUtil) {
     val navController = rememberNavController()
 
     val userViewModel: UserViewModel = viewModel()
     val rankingViewModel: RankingViewModel = viewModel()
     val studyDatesViewModel: StudyDatesViewModel = viewModel()
+
+    val uid = sharedPreferencesUtil.getUid()
 
     NavHost(navController, startDestination = TodoScreen.Splash.name) {
         composable(route = TodoScreen.Splash.name) {
@@ -92,7 +94,7 @@ fun MyApp() {
             LoginScreen(navController, userViewModel, rankingViewModel, studyDatesViewModel)
         }
         composable(TodoScreen.Main.name) {
-            MainScreen(navController, userViewModel, rankingViewModel, studyDatesViewModel)
+            MainScreen(navController, userViewModel, rankingViewModel, studyDatesViewModel, uid)
         }
         composable(TodoScreen.Ranking.name) {
             RankingScreen(userViewModel, rankingViewModel)
@@ -104,7 +106,7 @@ fun MyApp() {
             TimerScreen(userViewModel)
         }
         composable("Register") {
-            RegisterScreen(navController, userViewModel)
+            RegisterScreen(navController, userViewModel, uid)
         }
     }
 }
@@ -114,7 +116,8 @@ fun MainScreen(
     navController: NavController,
     userViewModel: UserViewModel,
     rankingViewModel: RankingViewModel,
-    studyDatesViewModel: StudyDatesViewModel
+    studyDatesViewModel: StudyDatesViewModel,
+    uid: String
 ) {
     val context: Context = LocalContext.current
     val sharedPreferences = SharedPreferencesUtil(context)
@@ -141,7 +144,7 @@ fun MainScreen(
             .verticalScroll(rememberScrollState())
     ) {
         currentUser?.let {
-            TopView(user = it)
+            TopView(userViewModel = userViewModel, uid)
         }
         Spacer(modifier = Modifier.height(15.dp))
         TimerView(navController = navController)

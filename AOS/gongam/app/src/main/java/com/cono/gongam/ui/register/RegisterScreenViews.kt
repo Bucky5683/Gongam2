@@ -26,6 +26,7 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -50,7 +51,8 @@ import com.cono.gongam.ui.CircleTextButton
 import kotlinx.coroutines.launch
 
 @Composable
-fun RegisterScreen(navController: NavController, userViewModel: UserViewModel) {
+fun RegisterScreen(navController: NavController, userViewModel: UserViewModel, uid: String) {
+
     Column(
         modifier = Modifier.fillMaxSize(),
     ) {
@@ -60,7 +62,7 @@ fun RegisterScreen(navController: NavController, userViewModel: UserViewModel) {
                 .fillMaxWidth()
                 .wrapContentHeight()
         ) {
-            EditableProfileImage(userViewModel)
+            EditableProfileImage(userViewModel, uid)
             Spacer(modifier = Modifier.height(12.dp))
             InputTextTitle("닉네임")
             CustomTextField(onValueChange = {}, defaultText = userViewModel.getCurrentUser()?.name ?: "")
@@ -86,15 +88,14 @@ fun RegisterScreen(navController: NavController, userViewModel: UserViewModel) {
 }
 
 @Composable
-fun EditableProfileImage(userViewModel: UserViewModel) {
-    var currentProfileImageUrl by remember { mutableStateOf(userViewModel.getProfileImageURL()) }
+fun EditableProfileImage(userViewModel: UserViewModel, uid: String) {
+    val userProfileURL by userViewModel.userProfileURL.observeAsState(initial = "")
 
-    var imageUri by remember { mutableStateOf(currentProfileImageUrl) }
     val getContent = rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri: Uri? ->
         uri?.let { selectedImageUri ->
-            imageUri = selectedImageUri.toString()
             userViewModel.viewModelScope.launch {
-                currentProfileImageUrl = userViewModel.uploadImageToFirebase(selectedImageUri)
+                userViewModel.uploadImageToFirebase(selectedImageUri)
+                userViewModel.setProfileImageURLToFirebase(uid = uid, selectedImageUrl = selectedImageUri.toString())
             }
         }
     }
@@ -108,7 +109,7 @@ fun EditableProfileImage(userViewModel: UserViewModel) {
         contentAlignment = Alignment.BottomEnd
     ) {
         AsyncImage(
-            model = currentProfileImageUrl,
+            model = userProfileURL,
             placeholder = debugPlaceHolder(R.drawable.img_test_profile),
             contentDescription = "profile_Img",
             contentScale = ContentScale.Crop,

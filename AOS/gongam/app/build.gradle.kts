@@ -119,6 +119,9 @@ dependencies {
     implementation(libs.vico.compose.m3)
     implementation(libs.vico.core)
     implementation(libs.vico.views)
+
+    // Image loading library
+    implementation(libs.coil)
 }
 
 kapt {

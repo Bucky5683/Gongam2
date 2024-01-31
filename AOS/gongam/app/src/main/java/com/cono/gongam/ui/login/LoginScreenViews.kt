@@ -170,8 +170,9 @@ fun GoogleLoginButton(
                             user.stopwatchStudyTime = userData?.stopwatchStudyTime
                             user.todayStudyTime = userData?.timerStudyTime!! + userData.stopwatchStudyTime!!
                             user.goalStudyTime = userData.goalStudyTime
-
+//                            user.profileImageURL = userData.profileImageURL
                             userViewModel.setCurrentUser(user)
+                            userViewModel.setProfileImageURL(userData.profileImageURL ?: "")
                             onLoginSuccess(user, uid)
                         }
                     }

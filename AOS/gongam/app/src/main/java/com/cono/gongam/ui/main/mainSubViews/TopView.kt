@@ -1,5 +1,9 @@
 package com.cono.gongam.ui.main.mainSubViews
 
+import android.net.Uri
+import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -20,6 +24,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -28,6 +33,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
@@ -39,19 +45,23 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.lifecycle.viewModelScope
+import coil.ImageLoader
 import coil.compose.AsyncImage
+import coil.compose.rememberAsyncImagePainter
+import coil.request.ImageRequest
 import com.cono.gongam.R
-import com.cono.gongam.data.User
 import com.cono.gongam.data.UserViewModel
 import com.cono.gongam.ui.ButtonWithQuestionMark
 import com.cono.gongam.ui.register.debugPlaceHolder
 import com.cono.gongam.utils.TimeUtils
+import kotlinx.coroutines.launch
 
 @Composable
-fun TopView(user: User) {
-    val studyTime = user.todayStudyTime ?: 0
-    val goalTime = user.goalStudyTime ?: 0
+fun TopView(userViewModel: UserViewModel, uid: String) {
+    val user = userViewModel.getCurrentUser()
+    val studyTime = user?.todayStudyTime ?: 0
+    val goalTime = user?.goalStudyTime ?: 0
     val diffTime = goalTime - studyTime
     val studiedThanGoal: Boolean = goalTime - studyTime < 0
 
@@ -71,7 +81,7 @@ fun TopView(user: User) {
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.End
             ) {
-                ProfileImage(profileImgUrl = user.profileImageURL ?: "")
+                ProfileImage(userViewModel = userViewModel, uid)
                 Spacer(modifier = Modifier.width(15.dp))
             }
             Text(
@@ -151,19 +161,42 @@ fun GoalText(studiedThanGoal: Boolean, diffTime: Int) {
 }
 
 @Composable
-fun ProfileImage(profileImgUrl: String) {
+fun ProfileImage(userViewModel: UserViewModel, uid: String) {
     var showPopup by remember { mutableStateOf(false) }
+    val userProfileURLState = remember { mutableStateOf("") }
+    val userProfileURL by userViewModel.userProfileURL.observeAsState(initial = "")
+    userProfileURLState.value = userProfileURL
+
+    val getContent = rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri: Uri? ->
+        uri?.let { selectedImageUri ->
+            userViewModel.viewModelScope.launch {
+                userViewModel.uploadImageToFirebase(selectedImageUri)
+                Log.d("ImageUrlTest", "currentProfileImageUrl : $userProfileURL")
+                userProfileURLState.value = userViewModel.getProfileImageURL() ?: ""
+                userViewModel.setProfileImageURLToFirebase(uid = uid, selectedImageUrl = selectedImageUri.toString())
+            }
+        }
+    }
 
     Column {
-        AsyncImage(
-            model = profileImgUrl,
-            placeholder = debugPlaceHolder(R.drawable.img_test_profile),
-            contentDescription = "profileImage",
-            contentScale = ContentScale.Crop,
+//        AsyncImage(
+//            model = userProfileURLState.value,
+//            placeholder = debugPlaceHolder(R.drawable.img_test_profile),
+//            contentDescription = "profileImage",
+//            contentScale = ContentScale.Crop,
+//            modifier = Modifier
+//                .clip(CircleShape)
+//                .width(30.dp)
+//                .height(30.dp)
+//                .clickable {
+//                    showPopup = true
+//                }
+//        )
+        CoilImage(
+            model = userProfileURLState.value,
             modifier = Modifier
                 .clip(CircleShape)
-                .width(30.dp)
-                .height(30.dp)
+                .width(30.dp).height(30.dp)
                 .clickable {
                     showPopup = true
                 }
@@ -186,7 +219,7 @@ fun ProfileImage(profileImgUrl: String) {
                             verticalArrangement = Arrangement.Bottom
                         ) {
                             Text(
-                                text = "유저닉네임",
+                                text = userViewModel.getCurrentUser()?.name ?: "",
                                 style = TextStyle(
                                     fontSize = 15.sp,
                                     fontWeight = FontWeight(700),
@@ -194,7 +227,7 @@ fun ProfileImage(profileImgUrl: String) {
                                 )
                             )
                             Text(
-                                text = "gjgj3686@gmail.com",
+                                text = userViewModel.getCurrentUser()?.email ?: "",
                                 style = TextStyle(
                                     fontSize = 12.sp,
                                     fontWeight = FontWeight(400),
@@ -217,17 +250,26 @@ fun ProfileImage(profileImgUrl: String) {
                                 .width(83.dp),
                             contentAlignment = Alignment.BottomStart
                         ) {
-                            AsyncImage(
-                                model = "profileImgUrl",
-                                placeholder = debugPlaceHolder(R.drawable.img_test_profile),
-                                contentDescription = "profileImage",
-                                contentScale = ContentScale.Crop,
+//                            AsyncImage(
+//                                model = userProfileURLState.value,
+//                                placeholder = debugPlaceHolder(R.drawable.img_test_profile),
+//                                contentDescription = "profileImage",
+//                                contentScale = ContentScale.Crop,
+//                                modifier = Modifier
+//                                    .clip(CircleShape)
+//                                    .width(80.dp)
+//                                    .height(80.dp)
+//                                    .clickable {
+//                                        getContent.launch("image/*")
+//                                    }
+//                            )
+                            CoilImage(
+                                model = userProfileURLState.value,
                                 modifier = Modifier
                                     .clip(CircleShape)
-                                    .width(80.dp)
-                                    .height(80.dp)
+                                    .width(80.dp).height(80.dp)
                                     .clickable {
-                                        // TODO :: 갤러리 연결 및 이미지 변경
+                                        getContent.launch("image/*")
                                     }
                             )
                             Row(
@@ -269,9 +311,10 @@ fun ProfileImage(profileImgUrl: String) {
 }
 
 @Composable
-fun ProfileEditPopup(showPopup: Boolean = true) {
+fun ProfileEditPopup(showPopup: Boolean = true, userViewModel: UserViewModel) {
     var show = showPopup
 
+    var currentProfileImageUrl by remember { mutableStateOf(userViewModel.getProfileImageURL()) }
     Popup(
         onDismissRequest = { show = false },
         properties = PopupProperties(focusable = true),
@@ -321,7 +364,7 @@ fun ProfileEditPopup(showPopup: Boolean = true) {
                     contentAlignment = Alignment.BottomStart
                 ) {
                     AsyncImage(
-                        model = "profileImgUrl",
+                        model = currentProfileImageUrl,
                         placeholder = debugPlaceHolder(R.drawable.img_test_profile),
                         contentDescription = "profileImage",
                         contentScale = ContentScale.Crop,
@@ -369,12 +412,43 @@ fun ProfileEditPopup(showPopup: Boolean = true) {
     }
 }
 
+@Composable
+fun CoilImage(
+    model: String,
+    modifier: Modifier = Modifier
+) {
+    val context = LocalContext.current
+    val imageLoader = ImageLoader.Builder(context)
+        .build()
+    val request = ImageRequest.Builder(context)
+        .data(model).build()
+    val painter = rememberAsyncImagePainter(request, imageLoader)
+
+    Image(
+        painter = painter,
+        contentDescription = null,
+        modifier = modifier
+    )
+}
+
+//@Composable
+//fun ViewImageFromDatabase(imageUrl: String) {
+//    val painter: Painter? = imageUrl.let {
+//        val storageRef = FirebaseStorage.getInstance().reference.child(it)
+//        val downloadUrl = storageRef.downloadUrl.await()
+//        ImagePainter(downloadUrl)
+//    }
+//    painter?.let {
+//        Image(painter = it, contentDescription = null)
+//    }
+//}
+
 // ------------------------------------ Previews ------------------------------------
 
 @Preview
 @Composable
 fun PreviewPopup() {
-    ProfileEditPopup()
+    ProfileEditPopup(userViewModel = UserViewModel())
 }
 
 //@Preview
@@ -386,5 +460,5 @@ fun PreviewPopup() {
 @Preview
 @Composable
 fun PreviewProfileImage() {
-    ProfileImage(profileImgUrl = "")
+//    ProfileImage(userViewModel = UserViewModel())
 }

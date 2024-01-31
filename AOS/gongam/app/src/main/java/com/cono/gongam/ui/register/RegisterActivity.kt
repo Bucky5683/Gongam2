@@ -271,7 +271,7 @@ class RegisterActivity : ComponentActivity() {
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun PreviewRegisterScreen() {
-    RegisterScreen(navController = rememberNavController(), userViewModel = UserViewModel())
+    RegisterScreen(navController = rememberNavController(), userViewModel = UserViewModel(), uid = "")
 }
 
 @Preview
