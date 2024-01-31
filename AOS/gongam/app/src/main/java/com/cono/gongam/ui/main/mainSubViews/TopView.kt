@@ -93,7 +93,7 @@ fun TopView(userViewModel: UserViewModel, uid: String) {
                 textDecoration = TextDecoration.Underline,
             )
             Text(
-                text = TimeUtils.convertSecondsToTime(studyTime),
+                text = TimeUtils.convertSecondsToTimeInString(studyTime),
                 color = Color.White,
                 fontSize = 30.sp,
                 modifier = Modifier.padding(top = 15.dp, bottom = 15.dp),
@@ -140,7 +140,7 @@ fun GoalText(studiedThanGoal: Boolean, diffTime: Int) {
             )
             if (!studiedThanGoal) {
                 Text(
-                    text = TimeUtils.convertSecondsToTime(diffTime),
+                    text = TimeUtils.convertSecondsToTimeInString(diffTime),
                     color = colorResource(id = R.color.main_gray),
                     modifier = Modifier
                         .padding(start = 5.dp, top = 6.dp, bottom = 6.dp),

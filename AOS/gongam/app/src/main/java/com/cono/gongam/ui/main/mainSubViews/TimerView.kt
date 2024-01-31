@@ -55,7 +55,11 @@ fun TimerButton(icon: String, title: String, navController: NavController) {
                 .fillMaxWidth()
                 .background(color = Color.White, shape = RoundedCornerShape(size = 10.dp))
                 .clickable {
-                    navController.navigate(TodoScreen.Timer.name)
+                    if (title == "타이머") {
+                        navController.navigate(TodoScreen.Timer.name)
+                    } else if (title == "스톱워치") {
+                        navController.navigate(TodoScreen.StopWatch.name)
+                    }
                 }
         ) {
             Row {

@@ -47,6 +47,7 @@ import com.cono.gongam.ui.ranking.RankingScreen
 import com.cono.gongam.ui.register.RegisterScreen
 import com.cono.gongam.ui.splash.SplashScreen
 import com.cono.gongam.ui.theme.GongamTheme
+import com.cono.gongam.ui.timer.StopWatchScreen
 import com.cono.gongam.ui.timer.TimerScreen
 import com.cono.gongam.utils.SharedPreferencesUtil
 
@@ -104,6 +105,9 @@ fun MyApp(sharedPreferencesUtil: SharedPreferencesUtil) {
         }
         composable(TodoScreen.Timer.name) {
             TimerScreen(userViewModel)
+        }
+        composable(TodoScreen.StopWatch.name) {
+            StopWatchScreen(userViewModel)
         }
         composable("Register") {
             RegisterScreen(navController, userViewModel, uid)

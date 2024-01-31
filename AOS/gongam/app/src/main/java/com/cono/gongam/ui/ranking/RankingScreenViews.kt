@@ -27,18 +27,15 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.cono.gongam.R
 import com.cono.gongam.data.RankUser
 import com.cono.gongam.data.RankingViewModel
-import com.cono.gongam.data.StudyDatesViewModel
 import com.cono.gongam.data.User
 import com.cono.gongam.data.UserViewModel
 import com.cono.gongam.ui.SpacedEdgeTextsWithCenterVertically
 import com.cono.gongam.ui.TopTitle
 import com.cono.gongam.ui.register.debugPlaceHolder
-import com.cono.gongam.utils.SharedPreferencesUtil
 import com.cono.gongam.utils.TimeUtils
 
 @Composable
@@ -98,7 +95,7 @@ fun MyGradeView(user: User, userRank: String) {
                 Spacer(modifier = Modifier.height(9.dp))
                 SpacedEdgeTextsWithCenterVertically(
                     leftText = "이번 주 공부 시간", leftTextSize = 14.sp, leftTextColor = colorResource(id = R.color.white), leftTextWeight = FontWeight(400),
-                    rightText = TimeUtils.convertSecondsToTime(totalStudyTime.toInt()), rightTextSize = 14.sp, rightTextColor = colorResource(id = R.color.white), rightTextWeight = FontWeight(400)
+                    rightText = TimeUtils.convertSecondsToTimeInString(totalStudyTime.toInt()), rightTextSize = 14.sp, rightTextColor = colorResource(id = R.color.white), rightTextWeight = FontWeight(400)
                 )
             }
         }
@@ -240,7 +237,7 @@ fun CardText(grade: Int, name: String, studyTime: Int) {
             Column {
                 Text(text = name, fontSize = 15.sp, fontWeight = FontWeight(400), color = colorResource(
                     id = R.color.main_gray))
-                Text(text = TimeUtils.convertSecondsToTime(studyTime), fontSize = 15.sp, fontWeight = FontWeight(400), color = colorResource(
+                Text(text = TimeUtils.convertSecondsToTimeInString(studyTime), fontSize = 15.sp, fontWeight = FontWeight(400), color = colorResource(
                     id = R.color.main_gray))
             }
         }
@@ -250,7 +247,7 @@ fun CardText(grade: Int, name: String, studyTime: Int) {
                 Text(text = name, fontSize = 15.sp, fontWeight = FontWeight(400), color = colorResource(
                     id = R.color.main_gray))
                 Spacer(modifier = Modifier.width(10.dp))
-                Text(text = TimeUtils.convertSecondsToTime(studyTime), fontSize = 15.sp, fontWeight = FontWeight(400), color = colorResource(
+                Text(text = TimeUtils.convertSecondsToTimeInString(studyTime), fontSize = 15.sp, fontWeight = FontWeight(400), color = colorResource(
                     id = R.color.main_gray))
             }
         }
