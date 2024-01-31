@@ -1,5 +1,6 @@
 package com.cono.gongam.ui.main
 
+import android.app.Activity
 import android.content.Context
 import android.os.Build
 import android.os.Bundle
@@ -16,10 +17,12 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -59,7 +62,7 @@ class MainActivity : ComponentActivity() {
 
         sharedPreferencesUtil = SharedPreferencesUtil(this)
 
-        WindowCompat.setDecorFitsSystemWindows(window, false)
+//        WindowCompat.setDecorFitsSystemWindows(window, false)
         setContent {
             GongamTheme {
                 // A surface container using the 'background' color from the theme
@@ -115,6 +118,11 @@ fun MyApp(sharedPreferencesUtil: SharedPreferencesUtil) {
     }
 }
 
+fun setStatusBarColor(context: Context, color: Color) {
+    val window = (context as Activity).window
+    window.statusBarColor = color.toArgb()
+}
+
 @Composable
 fun MainScreen(
     navController: NavController,
@@ -132,6 +140,11 @@ fun MainScreen(
     val rankUserList by rankingViewModel.rankUserList.observeAsState(initial = emptyList())
     val userRank by rankingViewModel.userRank.observeAsState(initial = "")
     val studyTimeAverage by rankingViewModel.studyTimeAverage.observeAsState(initial = 0)
+
+    val statusBarColor = colorResource(id = R.color.main_gray)
+    SideEffect {
+        setStatusBarColor(context, statusBarColor)
+    }
 
     rankingViewModel.updateRankUserList()
     if (rankUserList.isNotEmpty() && currentUser != null) {

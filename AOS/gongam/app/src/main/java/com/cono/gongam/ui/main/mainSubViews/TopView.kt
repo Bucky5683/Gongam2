@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -68,14 +69,15 @@ fun TopView(userViewModel: UserViewModel, uid: String) {
     Surface(
         modifier = Modifier
             .fillMaxWidth()
-            .height(290.dp),
+            .wrapContentHeight(),
+//            .height(290.dp),
         color = colorResource(id = R.color.main_gray)
     ) {
         Column(
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Spacer(modifier = Modifier.height(45.dp)) // 상태바로 잘리는 부분을 위한 spacer
+//            Spacer(modifier = Modifier.height(45.dp)) // 상태바로 잘리는 부분을 위한 spacer
             Spacer(modifier = Modifier.height(13.7.dp))
             Row(
                 modifier = Modifier.fillMaxWidth(),
