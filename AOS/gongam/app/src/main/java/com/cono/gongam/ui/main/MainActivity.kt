@@ -53,6 +53,7 @@ import com.cono.gongam.ui.theme.GongamTheme
 import com.cono.gongam.ui.timer.StopWatchScreen
 import com.cono.gongam.ui.timer.TimerScreen
 import com.cono.gongam.utils.SharedPreferencesUtil
+import org.opencv.android.OpenCVLoader
 
 class MainActivity : ComponentActivity() {
     private lateinit var sharedPreferencesUtil : SharedPreferencesUtil
@@ -76,6 +77,11 @@ class MainActivity : ComponentActivity() {
             }
         }
 
+        if (!OpenCVLoader.initDebug()) {
+            Log.d("OpenCVLoader", "OpenCV 초기화 실패")
+        } else {
+            Log.d("OpenCVLoader", "OpenCV 초기화 성공")
+        }
     }
 }
 

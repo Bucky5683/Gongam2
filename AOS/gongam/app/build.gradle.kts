@@ -75,6 +75,7 @@ dependencies {
     implementation(libs.coil.compose)
     implementation(platform("androidx.compose:compose-bom:2023.08.00"))
     implementation(libs.firebase.storage.ktx)
+    implementation(project(":openCV"))
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
