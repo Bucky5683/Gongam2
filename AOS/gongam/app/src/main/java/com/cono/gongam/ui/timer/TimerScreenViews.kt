@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -39,7 +38,6 @@ import com.cono.gongam.data.User
 import com.cono.gongam.data.UserViewModel
 import com.cono.gongam.ui.SpacedEdgeTextsWithCenterVertically
 import com.cono.gongam.ui.TopTitle
-import com.cono.gongam.utils.SharedPreferencesUtil
 import com.cono.gongam.utils.TimeUtils
 
 @RequiresApi(Build.VERSION_CODES.Q)
@@ -74,7 +72,7 @@ fun Timer(
         timerViewModel.setIsStopped(true)
     }
 
-    val remainGoalTime = if (goalStudyTime == 0) 0 else if (goalStudyTime - sumSeconds < 0) 0 else goalStudyTime - sumSeconds
+    val remainGoalTime = if (goalStudyTime == 0 || goalStudyTime - sumSeconds < 0) 0 else goalStudyTime - sumSeconds
 
     Column(
         modifier = Modifier
@@ -106,7 +104,7 @@ fun Timer(
         ) {
             SpacedEdgeTextsWithCenterVertically(
                 leftText = "오늘 목표", leftTextSize = 18.sp, leftTextColor = Color.White, leftTextWeight = FontWeight(700), setLeftUnderLine = true,
-                rightText = TimeUtils.convertSecondsToTime(goalStudyTime), rightTextSize = 18.sp, rightTextColor = Color.White, rightTextWeight = FontWeight(400),
+                rightText = TimeUtils.convertSecondsToTimeInString(goalStudyTime), rightTextSize = 18.sp, rightTextColor = Color.White, rightTextWeight = FontWeight(400),
                 horizontalPaddingVal = 0.dp
             )
             Spacer(modifier = Modifier.height(10.dp))
@@ -285,27 +283,9 @@ fun TimerTickingText(
         horizontalArrangement = Arrangement.Center
     ) {
         TickingHMS(time = remainingTime.first, timeText = "시간")
-        Text(
-            text = ":",
-            color = Color.White,
-            fontSize = 48.sp,
-            fontWeight = FontWeight(700),
-            textAlign = TextAlign.Center,
-            modifier = Modifier
-                .padding(bottom = 22.dp)
-                .width(35.dp)
-        )
+        TimeColonText()
         TickingHMS(time = remainingTime.second, timeText = "분")
-        Text(
-            text = ":",
-            color = Color.White,
-            fontSize = 48.sp,
-            fontWeight = FontWeight(700),
-            textAlign = TextAlign.Center,
-            modifier = Modifier
-                .padding(bottom = 22.dp)
-                .width(35.dp)
-        )
+        TimeColonText()
         TickingHMS(time = remainingTime.third, timeText = "초")
     }
 }
@@ -334,9 +314,23 @@ fun TickingHMS(time: Int, timeText: String) {
 }
 
 @Composable
+fun TimeColonText() {
+    Text(
+        text = ":",
+        color = Color.White,
+        fontSize = 48.sp,
+        fontWeight = FontWeight(700),
+        textAlign = TextAlign.Center,
+        modifier = Modifier
+            .padding(bottom = 22.dp)
+            .width(35.dp)
+    )
+}
+
+@Composable
 fun RemainingTimeText(remainGoalTime: Int) {
     Text(
-        text = "목표까지 ${TimeUtils.convertSecondsToTime(remainGoalTime)} 남았어요",
+        text = "목표까지 ${TimeUtils.convertSecondsToTimeInString(remainGoalTime)} 남았어요",
         color = colorResource(id = R.color.gray_scale1),
         fontWeight = FontWeight(700),
         textDecoration = TextDecoration.Underline

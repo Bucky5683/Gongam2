@@ -1,5 +1,6 @@
 package com.cono.gongam.ui.ranking
 
+import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -17,28 +18,28 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.cono.gongam.R
 import com.cono.gongam.data.RankUser
 import com.cono.gongam.data.RankingViewModel
-import com.cono.gongam.data.StudyDatesViewModel
 import com.cono.gongam.data.User
 import com.cono.gongam.data.UserViewModel
 import com.cono.gongam.ui.SpacedEdgeTextsWithCenterVertically
 import com.cono.gongam.ui.TopTitle
+import com.cono.gongam.ui.main.setStatusBarColor
 import com.cono.gongam.ui.register.debugPlaceHolder
-import com.cono.gongam.utils.SharedPreferencesUtil
 import com.cono.gongam.utils.TimeUtils
 
 @Composable
@@ -47,6 +48,11 @@ fun RankingScreen(
     rankingViewModel: RankingViewModel,
 ) {
     val rankUserList by rankingViewModel.rankUserList.observeAsState(initial = emptyList())
+    val context: Context = LocalContext.current
+    val statusBarColor = colorResource(id = R.color.white)
+    SideEffect {
+        setStatusBarColor(context, statusBarColor)
+    }
 
     Column(
         modifier = Modifier
@@ -98,7 +104,7 @@ fun MyGradeView(user: User, userRank: String) {
                 Spacer(modifier = Modifier.height(9.dp))
                 SpacedEdgeTextsWithCenterVertically(
                     leftText = "이번 주 공부 시간", leftTextSize = 14.sp, leftTextColor = colorResource(id = R.color.white), leftTextWeight = FontWeight(400),
-                    rightText = TimeUtils.convertSecondsToTime(totalStudyTime.toInt()), rightTextSize = 14.sp, rightTextColor = colorResource(id = R.color.white), rightTextWeight = FontWeight(400)
+                    rightText = TimeUtils.convertSecondsToTimeInString(totalStudyTime.toInt()), rightTextSize = 14.sp, rightTextColor = colorResource(id = R.color.white), rightTextWeight = FontWeight(400)
                 )
             }
         }
@@ -240,7 +246,7 @@ fun CardText(grade: Int, name: String, studyTime: Int) {
             Column {
                 Text(text = name, fontSize = 15.sp, fontWeight = FontWeight(400), color = colorResource(
                     id = R.color.main_gray))
-                Text(text = TimeUtils.convertSecondsToTime(studyTime), fontSize = 15.sp, fontWeight = FontWeight(400), color = colorResource(
+                Text(text = TimeUtils.convertSecondsToTimeInString(studyTime), fontSize = 15.sp, fontWeight = FontWeight(400), color = colorResource(
                     id = R.color.main_gray))
             }
         }
@@ -250,7 +256,7 @@ fun CardText(grade: Int, name: String, studyTime: Int) {
                 Text(text = name, fontSize = 15.sp, fontWeight = FontWeight(400), color = colorResource(
                     id = R.color.main_gray))
                 Spacer(modifier = Modifier.width(10.dp))
-                Text(text = TimeUtils.convertSecondsToTime(studyTime), fontSize = 15.sp, fontWeight = FontWeight(400), color = colorResource(
+                Text(text = TimeUtils.convertSecondsToTimeInString(studyTime), fontSize = 15.sp, fontWeight = FontWeight(400), color = colorResource(
                     id = R.color.main_gray))
             }
         }

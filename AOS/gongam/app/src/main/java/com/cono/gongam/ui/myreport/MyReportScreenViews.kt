@@ -1,5 +1,6 @@
 package com.cono.gongam.ui.myreport
 
+import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -16,6 +17,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
@@ -28,12 +30,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.cono.gongam.R
 import com.cono.gongam.data.StudyDates
 import com.cono.gongam.data.StudyDatesViewModel
 import com.cono.gongam.ui.TopTitle
-import com.cono.gongam.utils.SharedPreferencesUtil
+import com.cono.gongam.ui.main.setStatusBarColor
 import com.cono.gongam.utils.TimeUtils
 import com.patrykandpatrick.vico.compose.axis.horizontal.rememberBottomAxis
 import com.patrykandpatrick.vico.compose.chart.Chart
@@ -50,6 +51,11 @@ fun MyReportScreen(
 //    val studyDatesViewModel: StudyDatesViewModel = viewModel()
 //    studyDatesViewModel.updateStudyDates(sharedPreferencesUtil.getUid())
     val thisWeekStudyDate by studyDatesViewModel.thisWeekStudyDate.observeAsState()
+    val context: Context = LocalContext.current
+    val statusBarColor = colorResource(id = R.color.white)
+    SideEffect {
+        setStatusBarColor(context, statusBarColor)
+    }
 
     Column (
         modifier = Modifier
@@ -190,11 +196,11 @@ fun DayBlocks(thisWeekStudyDataWithDay: MutableList<Pair<Int, StudyDates>>) {
 
     thisWeekStudyDataWithDay.forEach {
         val dayInt = it.first
-        val totalStudyHours = TimeUtils.convertSecondsToTime(it.second.totalStudyTime)
+        val totalStudyHours = TimeUtils.convertSecondsToTimeInString(it.second.totalStudyTime)
         totalStudyHoursArray[dayInt] = totalStudyHours
-        val timerStudyHours = TimeUtils.convertSecondsToTime(it.second.timerStudyTime)
+        val timerStudyHours = TimeUtils.convertSecondsToTimeInString(it.second.timerStudyTime)
         timerStudyHoursArray[dayInt] = timerStudyHours
-        val stopWatchStudyHours = TimeUtils.convertSecondsToTime(it.second.stopwatchStudyTime)
+        val stopWatchStudyHours = TimeUtils.convertSecondsToTimeInString(it.second.stopwatchStudyTime)
         stopWatchStudyHoursArray[dayInt] = stopWatchStudyHours
     }
 
