@@ -213,6 +213,7 @@ struct MainView: View {
                         .padding(.leading, 15)
                         Button {
                             coordinator.isProfileEdit = true
+                            self.showingPopup = false
                             coordinator.push(.setProfile)
                         } label: {
                             AsyncImage(url: URL(string: userData.profileImageURL)){ image in
@@ -281,8 +282,6 @@ struct MainView: View {
                     .closeOnTapOutside(true)
                     .backgroundColor(.black.opacity(0.5))
                     .isOpaque(true)
-            }.onChange(of: coordinator.isProfileEdit){
-                showingPopup = !coordinator.isProfileEdit
             }
             .navigationBarTitle("",displayMode: .inline)
             .navigationBarBackButtonHidden(true)

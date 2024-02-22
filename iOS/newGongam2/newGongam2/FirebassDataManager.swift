@@ -142,8 +142,10 @@ extension FirebassDataManager {
             var sum = 0
             var idx = 0
             var top5User: [String : [String:Any]] = [:]
-            
-            for (key, value) in dataDict {
+            let sortDataDict = dataDict.sorted(by: {
+                ($0.value["totalStudyTime"] as? Int ?? 0) > ($1.value["totalStudyTime"] as? Int ?? 0)
+            })
+            for (key, value) in sortDataDict {
                 print("Rank Data value: \(value)")
                 
                 sum += value["totalStudyTime"] as! Int
@@ -160,6 +162,9 @@ extension FirebassDataManager {
                 }
                 if idx < 6 {
                     top5User[key] = value
+                }
+                if findMyData == true && idx >= 6 {
+                    break
                 }
                 idx += 1
             }
