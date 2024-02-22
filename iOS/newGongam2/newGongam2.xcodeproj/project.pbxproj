@@ -693,7 +693,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = newGongam2/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "공감; 공부감시자";
-				INFOPLIST_KEY_NSCameraUsageDescription = "A message that tells the user why the app is requesting access to the device’s camera.";
+				INFOPLIST_KEY_NSCameraUsageDescription = "AI 타이머는 사람을 인식하기 위해 카메라가 필요합니다.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = "Launch Screen.storyboard";
@@ -732,7 +732,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = newGongam2/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "공감; 공부감시자";
-				INFOPLIST_KEY_NSCameraUsageDescription = "A message that tells the user why the app is requesting access to the device’s camera.";
+				INFOPLIST_KEY_NSCameraUsageDescription = "AI 타이머는 사람을 인식하기 위해 카메라가 필요합니다.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = "Launch Screen.storyboard";
