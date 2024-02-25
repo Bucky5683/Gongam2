@@ -22,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -29,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.cono.gongam.R
 import com.cono.gongam.data.TodoScreen
+import com.cono.gongam.ui.timer.AIStopWatchActivity
 
 @Composable
 fun TimerView(navController: NavController) {
@@ -36,10 +38,13 @@ fun TimerView(navController: NavController) {
     Spacer(modifier = Modifier.height(13.5.dp))
     TimerButton(icon = "⏰", title = "타이머", navController = navController)
     TimerButton(icon = "⏱️", title = "스톱워치", navController = navController)
+    TimerButton(icon = "⏱️", title = "AI 스톱워치", navController = navController)
 }
 
 @Composable
 fun TimerButton(icon: String, title: String, navController: NavController) {
+    val context = LocalContext.current
+
     Row(
         modifier = Modifier.padding(top = 7.5.dp, bottom = 7.5.dp, start = 40.dp, end = 40.dp)
     ) {
@@ -59,6 +64,8 @@ fun TimerButton(icon: String, title: String, navController: NavController) {
                         navController.navigate(TodoScreen.Timer.name)
                     } else if (title == "스톱워치") {
                         navController.navigate(TodoScreen.StopWatch.name)
+                    } else {
+                        context.startActivity(Intent(context, AIStopWatchActivity::class.java))
                     }
                 }
         ) {
