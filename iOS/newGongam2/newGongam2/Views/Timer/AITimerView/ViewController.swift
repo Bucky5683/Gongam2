@@ -28,6 +28,8 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.cameraView.frame.size.height = 480
+        self.cameraView.backgroundColor = .black
         setupAVCapture()
     }
     
@@ -41,6 +43,9 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         
         // Select a video device, make an input
         let videoDevice = AVCaptureDevice.DiscoverySession(deviceTypes: [.builtInWideAngleCamera], mediaType: .video, position: .front).devices.first
+        if videoDevice == nil {
+            return
+        }
         do {
             deviceInput = try AVCaptureDeviceInput(device: videoDevice!)
         } catch {
@@ -90,7 +95,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     }
     
     func startCaptureSession() {
-        let dispatchSemaphore = DispatchSemaphore(value: 0)
+        _ = DispatchSemaphore(value: 0)
         let backgroundQueue = DispatchQueue(label: "background_queue",
                                                 qos: .background)
         backgroundQueue.async {

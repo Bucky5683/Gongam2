@@ -19,7 +19,6 @@ struct AITimerView: View {
     var body: some View {
         VStack(spacing: 20){
             MySwiftUIView(viewModel: viewModel)
-                .frame(height: 480)
             HStack {
                 VStack{
                     Text("\(String(format: "%02d", self.viewModel.hours/3600))")
@@ -112,9 +111,12 @@ struct MySwiftUIView: UIViewControllerRepresentable {
     @ObservedObject var viewModel: AITimerViewModel
     func makeUIViewController(context: Context) -> VisionObjectRecognitionViewController {
         let storyboard = UIStoryboard(name: "AITimer", bundle: nil)
-        let vc = storyboard.instantiateViewController(withIdentifier: "VisionObjectRecognitionViewController") as! VisionObjectRecognitionViewController
-        vc.viewModel = viewModel
-        return vc
+        if let vc = storyboard.instantiateViewController(withIdentifier: "VisionObjectRecognitionViewController") as? VisionObjectRecognitionViewController {
+            vc.viewModel = viewModel
+            return vc
+        } else {
+            fatalError("Failed to instantiate VisionObjectRecognitionViewController")
+        }
     }
     
     func updateUIViewController(_ uiViewController: VisionObjectRecognitionViewController, context: Context) {
