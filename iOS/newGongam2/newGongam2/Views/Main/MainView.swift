@@ -250,6 +250,10 @@ struct MainView: View {
                             .padding(.trailing, 15)
                         Button {
                             print("Clicked 이용약관!!")
+                            // 버튼이 눌렸을 때 Safari로 이동하는 액션
+                            if let url = URL(string: "https://generated-ambert-9f2.notion.site/fe6da7f2876f4dabb7913697ee616fc8") {
+                                UIApplication.shared.open(url)
+                            }
                         } label: {
                             HStack(spacing: 7){
                                 Image("HelperImage")
