@@ -34,6 +34,8 @@
 		EB697FED2B4F8A3F0011EA58 /* NavigationCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB697FEC2B4F8A3F0011EA58 /* NavigationCoordinator.swift */; };
 		EB697FF12B4FD9100011EA58 /* StopwatchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB697FF02B4FD9100011EA58 /* StopwatchView.swift */; };
 		EB6F22372B8D8D0D00294AF6 /* AppAppearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB6F22362B8D8D0D00294AF6 /* AppAppearance.swift */; };
+		EB6F22392B8DA61B00294AF6 /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB6F22382B8DA61B00294AF6 /* LoginViewModel.swift */; };
+		EB6F223D2B8DC1B800294AF6 /* UserDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB6F223C2B8DC1B800294AF6 /* UserDataManager.swift */; };
 		EB86AF322B47B7F0005A15A5 /* newGongam2App.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB86AF312B47B7F0005A15A5 /* newGongam2App.swift */; };
 		EB86AF362B47B7F2005A15A5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EB86AF352B47B7F2005A15A5 /* Assets.xcassets */; };
 		EB86AF392B47B7F2005A15A5 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EB86AF382B47B7F2005A15A5 /* Preview Assets.xcassets */; };
@@ -101,6 +103,8 @@
 		EB697FEC2B4F8A3F0011EA58 /* NavigationCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationCoordinator.swift; sourceTree = "<group>"; };
 		EB697FF02B4FD9100011EA58 /* StopwatchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StopwatchView.swift; sourceTree = "<group>"; };
 		EB6F22362B8D8D0D00294AF6 /* AppAppearance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppAppearance.swift; sourceTree = "<group>"; };
+		EB6F22382B8DA61B00294AF6 /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
+		EB6F223C2B8DC1B800294AF6 /* UserDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDataManager.swift; sourceTree = "<group>"; };
 		EB86AF2E2B47B7F0005A15A5 /* newGongam2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = newGongam2.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EB86AF312B47B7F0005A15A5 /* newGongam2App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = newGongam2App.swift; sourceTree = "<group>"; };
 		EB86AF352B47B7F2005A15A5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -188,6 +192,7 @@
 			isa = PBXGroup;
 			children = (
 				EB152A372B4B7549004A0679 /* LoginView.swift */,
+				EB6F22382B8DA61B00294AF6 /* LoginViewModel.swift */,
 			);
 			path = Login;
 			sourceTree = "<group>";
@@ -268,6 +273,7 @@
 				EB5DCAE82B50C470003E23AB /* NotificationService.swift */,
 				EB41CDA62B4CC7280007E938 /* AuthenticationManager.swift */,
 				EB41CDAA2B4CDD700007E938 /* FirebassDataManager.swift */,
+				EB6F223C2B8DC1B800294AF6 /* UserDataManager.swift */,
 				EB86AF662B47DD1E005A15A5 /* Views */,
 				EB86AF652B47DD05005A15A5 /* Model */,
 				EB86AF352B47B7F2005A15A5 /* Assets.xcassets */,
@@ -502,6 +508,7 @@
 			files = (
 				EB697FE92B4F739A0011EA58 /* Extenstiones.swift in Sources */,
 				EB692A702B4E6A2A00901457 /* MainRankChartView.swift in Sources */,
+				EB6F223D2B8DC1B800294AF6 /* UserDataManager.swift in Sources */,
 				EB86AF682B47DD5E005A15A5 /* TimerView.swift in Sources */,
 				EB6F22372B8D8D0D00294AF6 /* AppAppearance.swift in Sources */,
 				EB41CDA52B4CC3600007E938 /* LoginModel.swift in Sources */,
@@ -520,6 +527,7 @@
 				EB692A762B4E6FD600901457 /* ReportView.swift in Sources */,
 				EB9D05812B675AF100478CCD /* ObjectDetector.mlmodel in Sources */,
 				EB5DCAEC2B5104B9003E23AB /* RankModel.swift in Sources */,
+				EB6F22392B8DA61B00294AF6 /* LoginViewModel.swift in Sources */,
 				EB86AF602B47BA72005A15A5 /* UserData.swift in Sources */,
 				EB54A03F2B4BD8320074C13B /* SetProfileView.swift in Sources */,
 				EB152A382B4B7549004A0679 /* LoginView.swift in Sources */,

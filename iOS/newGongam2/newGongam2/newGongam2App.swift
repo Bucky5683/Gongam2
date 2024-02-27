@@ -41,8 +41,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 @main
 struct newGongam2App: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
-    @StateObject var userData = UserData()
-    @StateObject var userTimeData = UserTimeData()
+    @StateObject var userDataManager = UserDataManager()
     @State private var coordinator = NavigationCoordinator()
     
     init() {
@@ -72,8 +71,7 @@ struct newGongam2App: App {
 //                            // Check if `user` exists; otherwise, do something with `error`
 //                        }
 //                    }
-            }.environmentObject(userData)
-                .environmentObject(userTimeData)
+            }.environmentObject(userDataManager)
                 .environment(coordinator)
         }
     }
