@@ -68,6 +68,7 @@ struct SetProfileView: View {
     @EnvironmentObject var userData: UserData
     @EnvironmentObject var userTimeData: UserTimeData
     @Environment(NavigationCoordinator.self) var coordinator: NavigationCoordinator
+    @State private var isDragging = false
     @State var name: String = ""
     @State var email: String = ""
     @State var goalTime: String = ""
@@ -183,6 +184,7 @@ struct SetProfileView: View {
                                     .gesture(
                                         DragGesture()
                                             .onChanged { value in
+                                                self.isDragging = true
                                                 let translation = value.translation.height
                                                 // 드래그 방향에 따라 숫자를 증가 또는 감소
                                                 if self.previousTranslation - translation > 10{
@@ -192,6 +194,9 @@ struct SetProfileView: View {
                                                     self.viewModel.upGestureTime(type: .hour)
                                                     self.previousTranslation = translation
                                                 }
+                                            }
+                                            .onEnded { _ in
+                                                self.isDragging = false
                                             }
                                     )
                                 Text("시간")
@@ -209,6 +214,7 @@ struct SetProfileView: View {
                                     .gesture(
                                         DragGesture()
                                             .onChanged { value in
+                                                self.isDragging = true
                                                 let translation = value.translation.height
                                                 print("translation: \(translation), previousTranslation: \(self.previousTranslation)")
                                                 // 드래그 방향에 따라 숫자를 증가 또는 감소
@@ -220,6 +226,9 @@ struct SetProfileView: View {
                                                     self.previousTranslation = translation
                                                 }
                                                 
+                                            }
+                                            .onEnded { _ in
+                                                self.isDragging = false
                                             }
                                     )
                                 Text("분")
@@ -237,6 +246,7 @@ struct SetProfileView: View {
                                     .gesture(
                                         DragGesture()
                                             .onChanged { value in
+                                                self.isDragging = true
                                                 let translation = value.translation.height
                                                 print("translation: \(translation), previousTranslation: \(self.previousTranslation)")
                                                 // 드래그 방향에 따라 숫자를 증가 또는 감소
@@ -248,6 +258,9 @@ struct SetProfileView: View {
                                                     self.previousTranslation = translation
                                                 }
                                                 
+                                            }
+                                            .onEnded { _ in
+                                                self.isDragging = false
                                             }
                                     )
                                 Text("초")
@@ -300,6 +313,7 @@ struct SetProfileView: View {
                     Spacer()
                 }
             }
+            .scrollDisabled(self.isDragging)
             .background(.whiteFFFFFF, ignoresSafeAreaEdges: .all)
             .navigationBarHidden(true)
             .onAppear(){
