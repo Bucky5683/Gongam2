@@ -203,7 +203,7 @@ struct MainView: View {
                             HStack{
                                 Text("목표 공부시간")
                                     .font(Font.system(size: 12).weight(.medium))
-                                    .underline(true, color: .black)
+                                    .underline(true, color: .gray)
                                     .foregroundColor(.black)
                                 Text(userData.goalStudyTime.timeToText())
                                     .font(Font.system(size: 12).weight(.medium))

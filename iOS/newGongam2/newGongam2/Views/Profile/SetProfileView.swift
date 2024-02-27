@@ -41,6 +41,7 @@ class SetProfileViewModel : ObservableObject{
             }
         }
         self.goalTime = self.hours + self.minutes + self.seconds
+        print(self.goalTime)
     }
     
     func upGestureTime(type: timeType){
@@ -61,6 +62,8 @@ class SetProfileViewModel : ObservableObject{
                 self.seconds = 59
             }
         }
+        self.goalTime = self.hours + self.minutes + self.seconds
+        print(self.goalTime)
     }
 }
 
@@ -75,7 +78,7 @@ struct SetProfileView: View {
     @State var gotoMainView: Bool = false
     @State private var previousTranslation: CGFloat = 0
     @ObservedObject var viewModel: SetProfileViewModel = SetProfileViewModel()
-    var isEditProfile: Bool
+    @State var isEditProfile: Bool = false
     
     var body: some View {
             ScrollView{
@@ -315,7 +318,17 @@ struct SetProfileView: View {
             }
             .scrollDisabled(self.isDragging)
             .background(.whiteFFFFFF, ignoresSafeAreaEdges: .all)
-            .navigationBarHidden(true)
+            .navigationBarHidden(!isEditProfile)
+            .navigationBarTitle("프로필 수정",displayMode: .inline)
+            .navigationBarBackButtonHidden(true)
+            .navigationBarItems(leading:
+                Button{
+                    self.coordinator.pop()
+                } label: {
+                    Text("Main")
+                    .foregroundColor(.black)
+                }
+            )
             .onAppear(){
                 self.viewModel.initGoalTime(goalTime: self.userData.goalStudyTime)
             }

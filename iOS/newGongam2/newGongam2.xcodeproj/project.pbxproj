@@ -33,6 +33,7 @@
 		EB697FE92B4F739A0011EA58 /* Extenstiones.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB697FE82B4F739A0011EA58 /* Extenstiones.swift */; };
 		EB697FED2B4F8A3F0011EA58 /* NavigationCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB697FEC2B4F8A3F0011EA58 /* NavigationCoordinator.swift */; };
 		EB697FF12B4FD9100011EA58 /* StopwatchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB697FF02B4FD9100011EA58 /* StopwatchView.swift */; };
+		EB6F22372B8D8D0D00294AF6 /* AppAppearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB6F22362B8D8D0D00294AF6 /* AppAppearance.swift */; };
 		EB86AF322B47B7F0005A15A5 /* newGongam2App.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB86AF312B47B7F0005A15A5 /* newGongam2App.swift */; };
 		EB86AF362B47B7F2005A15A5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EB86AF352B47B7F2005A15A5 /* Assets.xcassets */; };
 		EB86AF392B47B7F2005A15A5 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EB86AF382B47B7F2005A15A5 /* Preview Assets.xcassets */; };
@@ -99,6 +100,7 @@
 		EB697FE82B4F739A0011EA58 /* Extenstiones.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extenstiones.swift; sourceTree = "<group>"; };
 		EB697FEC2B4F8A3F0011EA58 /* NavigationCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationCoordinator.swift; sourceTree = "<group>"; };
 		EB697FF02B4FD9100011EA58 /* StopwatchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StopwatchView.swift; sourceTree = "<group>"; };
+		EB6F22362B8D8D0D00294AF6 /* AppAppearance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppAppearance.swift; sourceTree = "<group>"; };
 		EB86AF2E2B47B7F0005A15A5 /* newGongam2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = newGongam2.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EB86AF312B47B7F0005A15A5 /* newGongam2App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = newGongam2App.swift; sourceTree = "<group>"; };
 		EB86AF352B47B7F2005A15A5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -261,6 +263,7 @@
 				EB86AF312B47B7F0005A15A5 /* newGongam2App.swift */,
 				EB54A0472B4BF04C0074C13B /* Utilities.swift */,
 				EB697FE82B4F739A0011EA58 /* Extenstiones.swift */,
+				EB6F22362B8D8D0D00294AF6 /* AppAppearance.swift */,
 				EB697FEC2B4F8A3F0011EA58 /* NavigationCoordinator.swift */,
 				EB5DCAE82B50C470003E23AB /* NotificationService.swift */,
 				EB41CDA62B4CC7280007E938 /* AuthenticationManager.swift */,
@@ -500,6 +503,7 @@
 				EB697FE92B4F739A0011EA58 /* Extenstiones.swift in Sources */,
 				EB692A702B4E6A2A00901457 /* MainRankChartView.swift in Sources */,
 				EB86AF682B47DD5E005A15A5 /* TimerView.swift in Sources */,
+				EB6F22372B8D8D0D00294AF6 /* AppAppearance.swift in Sources */,
 				EB41CDA52B4CC3600007E938 /* LoginModel.swift in Sources */,
 				EB697FF12B4FD9100011EA58 /* StopwatchView.swift in Sources */,
 				EB41CDAB2B4CDD700007E938 /* FirebassDataManager.swift in Sources */,
