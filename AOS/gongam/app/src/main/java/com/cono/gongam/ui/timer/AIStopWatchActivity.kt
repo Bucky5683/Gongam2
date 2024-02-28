@@ -1,148 +1,130 @@
 package com.cono.gongam.ui.timer
 
 import android.Manifest
+import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Rect
+import android.graphics.SurfaceTexture
 import android.graphics.drawable.ColorDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.util.Size
+import android.view.SurfaceHolder
+import android.view.SurfaceView
+import android.view.TextureView
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.annotation.OptIn
 import androidx.appcompat.app.AlertDialog
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ExperimentalGetImage
 import androidx.camera.core.ImageAnalysis
-import androidx.camera.core.ImageCapture
-import androidx.camera.core.ImageCaptureException
 import androidx.camera.core.ImageProxy
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
+
 import androidx.compose.ui.graphics.Color
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
 import com.cono.gongam.R
 import com.cono.gongam.data.InferenceResult
-import com.cono.gongam.model.TensorFlowLiteModelRunner
 import com.cono.gongam.ui.OverlayView
 import com.google.common.util.concurrent.ListenableFuture
 import com.google.mlkit.vision.common.InputImage
-import com.google.mlkit.vision.objects.DetectedObject
-import com.google.mlkit.vision.objects.ObjectDetection
-import com.google.mlkit.vision.objects.ObjectDetector
-import com.google.mlkit.vision.objects.defaults.ObjectDetectorOptions
+import com.google.mlkit.vision.face.FaceDetection
+
+import java.io.File
+import java.io.IOException
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
 class AIStopWatchActivity : AppCompatActivity() {
     private val TAG = "AIActivity"
-    private lateinit var cameraView: PreviewView
 
-    private lateinit var objectDetector: ObjectDetector
+    private lateinit var cameraProviderFuture: ListenableFuture<ProcessCameraProvider>
 
-    companion object {
-        private const val CAMERA_PERMISSION_REQUEST_CODE = 1001
-    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_aistop_watch)
 
-        cameraView = findViewById(R.id.cameraView)
-
-        // 카메라 권한 요청
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.CAMERA), CAMERA_PERMISSION_REQUEST_CODE)
-        } else {
-            initializeCamera()
-        }
-    }
-
-    @OptIn(ExperimentalGetImage::class) private fun processCameraFrame(imageProxy: ImageProxy) {
-        val mediaImage = imageProxy.image
-        if (mediaImage != null) {
-            val inputImage = InputImage.fromMediaImage(mediaImage, imageProxy.imageInfo.rotationDegrees)
-
-            // TensorFLow Lite 모델을 사용하여 객체 감지 수행
-            objectDetector.process(inputImage)
-                .addOnSuccessListener { detectedObjects ->
-                    displayDetectedObjects(detectedObjects)
-                }
-                .addOnFailureListener { e ->
-                    // 객체 감지 실패 시 처리
-                }
-                .addOnCompleteListener {
-                    imageProxy.close()
-                }
-        }
-    }
-
-    private fun initializeCamera() {
-        // TensorFlow Lite 모델 로드
-        objectDetector = ObjectDetection.getClient(ObjectDetectorOptions.DEFAULT_OPTIONS)
-
-        // CameraX 초기화
-        val cameraProviderFuture = ProcessCameraProvider.getInstance(this)
-        cameraProviderFuture.addListener({
+        cameraProviderFuture = ProcessCameraProvider.getInstance(this)
+        cameraProviderFuture.addListener(Runnable {
             val cameraProvider = cameraProviderFuture.get()
-
-            // 카메라 미리 보기 설정
-            val preview = Preview.Builder().build()
-            preview.setSurfaceProvider(cameraView.surfaceProvider)
-
-            // 카메라 선택 및 분석기 설정
-            val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
-            val imageAnalyzer = ImageAnalysis.Builder()
-                .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
-                .build()
-
-            imageAnalyzer.setAnalyzer(ContextCompat.getMainExecutor(this)) { imageProxy ->
-                // 카메라 프레임 처리
-                processCameraFrame(imageProxy)
-            }
-
-            // 카메라에 미리 보기 및 분석기 바인딩
-            cameraProvider.bindToLifecycle(this, cameraSelector, preview, imageAnalyzer)
+            bindPreview(cameraProvider)
         }, ContextCompat.getMainExecutor(this))
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == CAMERA_PERMISSION_REQUEST_CODE) {
-            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // 권한이 부여되었을 때 카메라 초기화
-                initializeCamera()
-            } else {
-                // 권한이 거부되었을 때 사용자에게 설명을 제공하거나 다시 요청할 수 있습니다.
-                // 이 예시에서는 간단히 권한이 필요한 이유를 설명하는 다이얼로그를 표시합니다.
-                AlertDialog.Builder(this)
-                    .setMessage("카메라 액세스 권한이 필요합니다.")
-                    .setPositiveButton("확인") { dialog, _ -> dialog.dismiss() }
-                    .show()
-            }
-        }
-    }
+    @OptIn(ExperimentalGetImage::class)
+    private fun bindPreview(cameraProvider: ProcessCameraProvider) {
+        val preview: Preview = Preview.Builder()
+            .build()
 
-    private fun displayDetectedObjects(detectedObjects: List<DetectedObject>) {
-//        val overlay = cameraView.overlay
-//        overlay.clear()
+        val cameraSelector: CameraSelector = CameraSelector.Builder()
+            .requireLensFacing(CameraSelector.LENS_FACING_FRONT)
+            .build()
 
-        for (detectedObject in detectedObjects) {
-            val boundingBox = detectedObject.boundingBox
-            val labels = detectedObject.labels
-            Log.d(TAG, "- 바운딩 박스: $boundingBox, labels : $labels")
-            for (label in labels) {
-                val text = label.text
-                val confidence = label.confidence
-                Log.d(TAG, "- 레이블: $text, 신뢰도: $confidence")
+        preview.setSurfaceProvider(findViewById<PreviewView>(R.id.preview_view).surfaceProvider)
+
+        // ImageAnalysis : 카메라 스트림에서 이미지를 가져와 사용자가 지정한 분석 작업을 수행할 수 있도록 해 줌
+        // setAnalyzer를 통해 분석기를 설정(분석기는 각 프레임에 대해 호출될 분석 작업을 정의)
+        // 카메라에 바인딩: bindToLifecycle 메서드를 통해 ImageAnalysis를 카메라 lifecycle과 바인딩
+        // 그 후에 analyzer로 객체를 감지하고 처리하는 로직 구현 후 UI에 표시 작업
+        val imageAnalysis = ImageAnalysis.Builder()
+            .build()
+            .also {
+                it.setAnalyzer(ContextCompat.getMainExecutor(this)) { imageProxy ->
+                    // ML Kit 얼굴 감지와 통합
+                    val mediaImage = imageProxy.image
+//                    val planes = imageProxy.planes
+//                    val buffer = planes[0].buffer
+//                    Log.d(TAG, "bufferSize : ${buffer.remaining()}")
+//                    val pixelStride = planes[0].pixelStride
+//                    val rowStride = planes[0].rowStride
+//                    val width = imageProxy.width
+//                    val height = imageProxy.height
+//                    val yPlaneSize = width * height
+//                    val uvPlaneSize = (width / 2) * (height / 2)
+//                    val totalSize = yPlaneSize + (2 * uvPlaneSize)
+//                    Log.d(TAG, "Total Size: $totalSize")
+
+                    val inputImage = mediaImage?.let { it1 ->
+                        InputImage.fromMediaImage(
+                            it1,
+                            imageProxy.imageInfo.rotationDegrees
+                        )
+                    }
+//                    val inputImage = InputImage.fromByteBuffer(buffer, width, height, imageProxy.imageInfo.rotationDegrees, InputImage.IMAGE_FORMAT_NV21)
+                    val detector = FaceDetection.getClient()
+                    if (inputImage != null) {
+                        detector.process(inputImage)
+                            .addOnSuccessListener { faces ->
+                                // 얼굴 감지 관련 로직 처리(얼굴 주변에 사각형 그리기)
+                                val overlay = findViewById<OverlayView>(R.id.overlay_view)
+                                overlay.clear()
+                                for (face in faces) {
+                                    val bounds = face.boundingBox
+                                    overlay.addRect(bounds)
+                                }
+                            }
+                            .addOnFailureListener { e ->
+                                // 에러 처리
+                            }
+                            .addOnCompleteListener {
+                                imageProxy.close()
+                            }
+                    }
+                }
             }
-        }
+
+        cameraProvider.bindToLifecycle(this, cameraSelector, preview, imageAnalysis)
     }
 
 }

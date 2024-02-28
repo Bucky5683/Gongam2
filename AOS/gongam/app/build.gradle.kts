@@ -82,6 +82,7 @@ dependencies {
     implementation(libs.coil.compose)
     implementation(platform("androidx.compose:compose-bom:2023.08.00"))
     implementation(libs.firebase.storage.ktx)
+    implementation(libs.vision.common)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
@@ -130,16 +131,14 @@ dependencies {
     // Image loading library
     implementation(libs.coil)
 
-    // TensorFlow Lite
-    implementation("org.tensorflow:tensorflow-lite:2.7.0")
-    implementation("org.tensorflow:tensorflow-lite-support:0.3.0")
+    // ML Kit
+    implementation("com.google.mlkit:face-detection:16.1.6")
 
     // CameraX
     implementation("androidx.camera:camera-camera2:1.3.1")
     implementation("androidx.camera:camera-lifecycle:1.3.1")
+    implementation("androidx.camera:camera-core:1.3.1")
     implementation("androidx.camera:camera-view:1.3.1")
-
-    implementation("com.google.mlkit:object-detection:17.0.1")
 }
 
 kapt {

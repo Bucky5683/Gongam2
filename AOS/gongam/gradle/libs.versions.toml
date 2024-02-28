@@ -19,6 +19,7 @@ runtime-livedata = "1.5.4"
 vico = "1.13.1"
 firebase-storage-ktx = "20.3.0"
 kotlin = "1.8.10"
+vision-common = "17.3.0"
 
 [libraries]
 # For Jetpack Compose.
@@ -54,7 +55,7 @@ vico-core = { group = "com.patrykandpatrick.vico", name = "core", version.ref = 
 # For the view system.
 vico-views = { group = "com.patrykandpatrick.vico", name = "views", version.ref = "vico" }
 firebase-storage-ktx = { group = "com.google.firebase", name = "firebase-storage-ktx", version.ref = "firebase-storage-ktx" }
+vision-common = { group = "com.google.mlkit", name = "vision-common", version.ref = "vision-common" }
 
 [plugins]
 kotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
-
