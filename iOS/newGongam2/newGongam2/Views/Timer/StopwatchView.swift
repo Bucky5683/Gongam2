@@ -52,9 +52,10 @@ class StopwatchViewModel: ObservableObject {
             repeats: true
         ) { _ in
             self.timerTime += 1
+            self.hours = self.timerTime / 3600
+            self.minutes = (self.timerTime % 3600) / 60
             self.seconds = self.timerTime % 60
-            self.minutes = (self.timerTime - self.seconds) % 60
-            self.hours = (self.timerTime - self.seconds - (self.minutes * 60))
+            
             self.timerFinished = false
         }
     }
@@ -99,7 +100,7 @@ struct StopwatchView: View {
             }
             HStack {
                 VStack{
-                    Text("\(String(format: "%02d", self.viewModel.hours/3600))")
+                    Text("\(String(format: "%02d", self.viewModel.hours))")
                         .font(Font.system(size: 48).bold())
                         .foregroundColor(.whiteFFFFFF)
                     Text("시간")
@@ -108,7 +109,7 @@ struct StopwatchView: View {
                 }
                 Text(":")
                 VStack{
-                    Text("\(String(format: "%02d", self.viewModel.minutes/60))")
+                    Text("\(String(format: "%02d", self.viewModel.minutes))")
                         .font(Font.system(size: 48).bold())
                         .foregroundColor(.whiteFFFFFF)
                     Text("분")

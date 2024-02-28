@@ -20,7 +20,7 @@ struct AITimerView: View {
             MySwiftUIView(viewModel: viewModel)
             HStack {
                 VStack{
-                    Text("\(String(format: "%02d", self.viewModel.hours/3600))")
+                    Text("\(String(format: "%02d", self.viewModel.hours))")
                         .font(Font.system(size: 48).bold())
                         .foregroundColor(.whiteFFFFFF)
                     Text("시간")
@@ -29,7 +29,7 @@ struct AITimerView: View {
                 }
                 Text(":")
                 VStack{
-                    Text("\(String(format: "%02d", self.viewModel.minutes/60))")
+                    Text("\(String(format: "%02d", self.viewModel.minutes))")
                         .font(Font.system(size: 48).bold())
                         .foregroundColor(.whiteFFFFFF)
                     Text("분")
