@@ -5,4 +5,5 @@
     <string name="title_activity_ranking">RankingActivity</string>
     <string name="title_activity_register">RegisterActivity</string>
     <string name="title_activity_my_report">MyReportActivity</string>
+    <string name="alert_ai_stopwatch_face_detect">얼굴을 인식할 수 없습니다.</string>
 </resources>
