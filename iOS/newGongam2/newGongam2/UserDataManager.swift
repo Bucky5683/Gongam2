@@ -258,7 +258,7 @@ extension UserDataManager {
         let today = Date().getCurrentDateAsString()
         self.recordUserStudy.studyDataes[today]?.stopwatchStudyTime += stopwatch
         self.recordUserStudy.studyDataes[today]?.timerStudyTime += timer
-        self.recordUserStudy.studyDataes[today]?.totalStudyTime += stopwatch + timer
+        self.recordUserStudy.studyDataes[today]?.totalStudyTime = stopwatch + timer
         
         self.rankRecord.totalStudyTime 
     }

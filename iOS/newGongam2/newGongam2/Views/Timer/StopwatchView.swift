@@ -22,7 +22,6 @@ class StopwatchViewModel: ObservableObject {
         if isTimerFinished {
             userDataManager.userInfo.todayStudyTime += self.timerTime
             userDataManager.userInfo.stopwatchStudyTime += self.timerTime
-            userDataManager.userInfo.todayStudyTime += self.timerTime
             userDataManager.rankRecord.totalStudyTime += self.timerTime
             userDataManager.userInfo.lastUpdateDate = Date().getCurrentDateAsString()
             
