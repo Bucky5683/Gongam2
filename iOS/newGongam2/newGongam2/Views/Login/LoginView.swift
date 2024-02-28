@@ -15,8 +15,7 @@ import GoogleSignInSwift
 import GoogleSignIn
 
 struct LoginView: View {
-    @EnvironmentObject var userData: UserData
-    @EnvironmentObject var userTimeData: UserTimeData
+    @EnvironmentObject var userDataManager: UserDataManager
     @Environment(NavigationCoordinator.self) var coordinator: NavigationCoordinator
     @StateObject var viewModel = LoginViewModel()
     @State private var shouldNavigateToSetProfile = false
@@ -34,13 +33,12 @@ struct LoginView: View {
                     GoogleSignInButton(viewModel: GoogleSignInButtonViewModel(scheme: .dark, style: .standard, state: .normal)){
                         Task{
                             do{
-                                try await viewModel.googleLogin()
-                                let logined = await viewModel.setUserDataes(userData: userData, userTimeData: userTimeData)
-                                self.isNotlogined = !logined
-                                if logined {
-                                    await MainActor.run {
-                                        self.nextView(self.userData.isNewUser)
-                                    }
+                                try await viewModel.googleLogin(userDataManager: self.userDataManager)
+                                userDataManager.readUserInfo()
+                                userDataManager.readStudyData()
+                                userDataManager.readRankData()
+                                await MainActor.run {
+                                    self.nextView(self.userDataManager.isNewUser)
                                 }
                             } catch {
                                 print(error)
@@ -65,13 +63,12 @@ struct LoginView: View {
                                     return
                                 }
                                 do {
-                                    try await viewModel.appleLogin(credential: credential)
-                                    let logined = await viewModel.setUserDataes(userData: userData, userTimeData: userTimeData)
-                                    self.isNotlogined = !logined
-                                    if logined {
-                                        await MainActor.run {
-                                            self.nextView(self.userData.isNewUser)
-                                        }
+                                    try await viewModel.appleLogin(credential: credential, userDataManager: self.userDataManager)
+                                    userDataManager.readUserInfo()
+                                    userDataManager.readStudyData()
+                                    userDataManager.readRankData()
+                                    await MainActor.run {
+                                        self.nextView(self.userDataManager.isNewUser)
                                     }
                                 } catch {
                                     print(error)

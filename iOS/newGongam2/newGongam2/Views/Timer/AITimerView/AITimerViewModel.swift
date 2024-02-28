@@ -28,18 +28,19 @@ class AITimerViewModel: ObservableObject, Equatable {
     
     var notificationService: NotificationService = .init()
     
-    func updateFirebase(userData: UserData, userTimeData: UserTimeData, isTimerFinished: Bool){
+    func updateFirebase(userDataManager: UserDataManager, isTimerFinished: Bool){
         if isTimerFinished {
-            userData.todayStudyTime += self.timerTime
-            userData.stopwatchStudyTime += self.timerTime
-            userTimeData.totalStudyTime += self.timerTime
-            userData.lastUpdateDate = Date().getCurrentDateAsString()
-            userTimeData.updateTimeData(stopwatch: userData.stopwatchStudyTime, timer: userData.timerStudyTime)
-            userData.setUserDataPartly(type: .stopwatchStudyTime, data: userData.stopwatchStudyTime)
-            userData.setUserDataPartly(type: .todayStudyTime, data: userData.todayStudyTime)
-            userData.setUserDataPartly(type: .lastUpdateDate, data: userData.lastUpdateDate)
-            userTimeData.uploadTimeData(stopwatch: userData.stopwatchStudyTime, timer: userData.timerStudyTime)
-            userTimeData.uploadRankData()
+            userDataManager.userInfo.todayStudyTime += self.timerTime
+            userDataManager.userInfo.stopwatchStudyTime += self.timerTime
+            userDataManager.userInfo.todayStudyTime += self.timerTime
+            userDataManager.rankRecord.totalStudyTime += self.timerTime
+            userDataManager.userInfo.lastUpdateDate = Date().getCurrentDateAsString()
+            
+            userDataManager.updateTimeData(stopwatch: userDataManager.userInfo.stopwatchStudyTime, timer: userDataManager.userInfo.timerStudyTime)
+            
+            userDataManager.writeUserInfo()
+            userDataManager.writeStudyData()
+            userDataManager.writeRankData()
             self.isStarted = true
         }
     }

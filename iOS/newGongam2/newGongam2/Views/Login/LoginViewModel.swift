@@ -82,13 +82,19 @@ final class SignInGoogleHelper{
 final class LoginViewModel: ObservableObject {
     @Published var norce = ""
     
-    func googleLogin() async throws {
+    func googleLogin(userDataManager: UserDataManager) async throws {
         let helper = SignInGoogleHelper()
         let tokens = try await helper.signIn()
-        try await AuthenticationManager.shared.signInWithGoogle(tokens: tokens)
+        let userInfo = try await AuthenticationManager.shared.signInWithGoogle(tokens: tokens)
+        
+        DispatchQueue.main.async{
+            userDataManager.id = userInfo.uid
+            userDataManager.userInfo.email = userInfo.email ?? ""
+            userDataManager.userInfo.profileImageURL = userInfo.photoUrl ?? "https://firebasestorage.googleapis.com/v0/b/gongam2-ff081.appspot.com/o/example2.jpeg?alt=media&token=2b4bbe1f-9ba2-49a7-bf54-87b5ca70eddd"
+        }
     }
     
-    func appleLogin(credential: ASAuthorizationAppleIDCredential) async throws {
+    func appleLogin(credential: ASAuthorizationAppleIDCredential, userDataManager: UserDataManager) async throws {
         //getting token
         guard let token = credential.identityToken else {
             print("error with firebase")
@@ -99,16 +105,13 @@ final class LoginViewModel: ObservableObject {
             print("error with token")
             return
         }
-        try await AuthenticationManager.shared.signInWithApple(tokens: tokenString, norce: self.norce)
-    }
-    
-    @MainActor
-    func setUserDataes(userData: UserData, userTimeData: UserTimeData) async -> Bool{
-        Task{
-            userData.downloadUserData()
-            userTimeData.downloadUserTimeData()
+        let userInfo = try await AuthenticationManager.shared.signInWithApple(tokens: tokenString, norce: self.norce)
+        
+        DispatchQueue.main.async{
+            userDataManager.id = userInfo.uid
+            userDataManager.userInfo.email = userInfo.email ?? ""
+            userDataManager.userInfo.profileImageURL = userInfo.photoUrl ?? "https://firebasestorage.googleapis.com/v0/b/gongam2-ff081.appspot.com/o/example2.jpeg?alt=media&token=2b4bbe1f-9ba2-49a7-bf54-87b5ca70eddd"
         }
-        return true
     }
 }
 

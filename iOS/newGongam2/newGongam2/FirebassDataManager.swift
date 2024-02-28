@@ -9,6 +9,7 @@ import Foundation
 import Firebase
 import FirebaseDatabaseSwift
 import FirebaseAuth
+import FirebaseStorage
 
 class FirebassDataManager: ObservableObject{
     static let shared = FirebassDataManager()
@@ -18,9 +19,18 @@ class FirebassDataManager: ObservableObject{
     
     private let encoder = JSONEncoder() // (2)
     private let decoder = JSONDecoder() // (2)
+    private var storage = Storage.storage()
 }
 
 extension FirebassDataManager {
+    // MARK: - Auth Info
+    func deleteAuth(completion: @escaping (Error?) -> Void){
+        let user = Auth.auth().currentUser
+        user?.delete() { error in
+            completion(error)
+        }
+    }
+    
     // MARK: - Users CRUD
     func saveUserInfo(uid: String, userInfo: UserDataManager) {
         let userRef = database.child("Users").child(uid)
@@ -44,14 +54,21 @@ extension FirebassDataManager {
             }
         })
     }
-    // MARK: - StudyDataes CRUD
     
+    func deleteUserInfo(uid: String, completion: @escaping (Error?) -> Void) {
+        let userRef = database.child("Users").child(uid)
+        userRef.removeValue(completionBlock: { error, _ in
+            completion(error)
+        })
+    }
+    
+    // MARK: - StudyDataes CRUD
     func saveStudyData(uid: String, date: String, studyData: UserDataManager) {
         let studyDataRef = database.child("StudyDataes").child(uid).child(date)
         studyDataRef.setValue(studyData.dictionaryRepresentation(.StudyDataes))
     }
     
-    func getStudyData(uid: String, date: String, completion: @escaping (RecordUserStudy?) -> Void) {
+    func getStudyData(uid: String, completion: @escaping (RecordUserStudy?) -> Void) {
         let studyDataRef = database.child("StudyDataes").child(uid)
         studyDataRef.observeSingleEvent(of: .value, with: { snapshot in
             guard let dataDict = snapshot.value as? [String:[String:Int]] else {
@@ -70,8 +87,14 @@ extension FirebassDataManager {
         })
     }
     
-    // MARK: - Rank CRUD
+    func deleteStudyData(uid: String, completion: @escaping (Error?) -> Void) {
+        let studyDataRef = database.child("StudyDataes").child(uid)
+        studyDataRef.removeValue(completionBlock: { error, _ in
+            completion(error)
+        })
+    }
     
+    // MARK: - Rank CRUD
     func saveRank(uid: String, rank: UserDataManager) {
         let rankRef = database.child("Rank").child(uid)
         rankRef.setValue(rank.dictionaryRepresentation(.Rank))
@@ -99,6 +122,7 @@ extension FirebassDataManager {
               sum += value["totalStudyTime"] as! Int
             
               if key == uid {
+                  rank.totalStudyTime = value["totalStudyTime"] as! Int
                   findMyData = true
               }
               if findMyData == false {
@@ -119,6 +143,53 @@ extension FirebassDataManager {
             rank.top5User = top5User
             completion(rank)
         })
+    }
+    
+    func deleteRankData(uid: String, completion: @escaping (Error?) -> Void) {
+        let rankRef = database.child("Rank").child(uid)
+        rankRef.removeValue(completionBlock: { error, _ in
+            completion(error)
+        })
+    }
+}
+
+extension FirebassDataManager {
+    func writeImage(uid: String, image: UIImage, completion: @escaping (String?, Error?) -> Void) {
+        let imagesRef = storage.reference().child("images/\(uid)")
+        let data = image.jpegData(compressionQuality: 0.1)
+        let metadata = StorageMetadata()
+        metadata.contentType = "image/jpeg"
+            
+        imagesRef.putData(data!, metadata: metadata) { (metadata, error) in
+            if let error = error {
+                print("IMAGE WRITE ERROR : \(error)")
+                completion(nil, error)
+                return
+            }
+                
+            imagesRef.downloadURL { (url, error) in
+                if let error = error {
+                    print("ERROR! : CAN'T GET URL \(error)")
+                    completion(nil, error)
+                } else if let downloadURL = url {
+                    let imageURL = downloadURL.absoluteString
+                    completion(imageURL, nil)
+                }
+            }
+        }
+    }
+    
+    func deleteImage(uid: String, completion: @escaping (Error?) -> Void) {
+        let imagesRef = storage.reference().child("images/\(uid)")
+        imagesRef.delete { error in
+            if let error = error {
+                print("Error removing image from storage\n\(error.localizedDescription)")
+                completion(error)
+            } else {
+                print("IMAGE SUCCESS DELETE")
+                completion(nil)
+            }
+        }
     }
 }
 

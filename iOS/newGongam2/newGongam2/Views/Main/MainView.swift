@@ -50,14 +50,14 @@ class MainViewModel: ObservableObject {
         }
     }
     
-    func makeWeeklyChartReport(userTimeData: UserTimeData, userData: UserData){
-        let data = userTimeData.studyDataes
+    func makeWeeklyChartReport(_ userDataManager: UserDataManager){
+        let data = userDataManager.recordUserStudy.studyDataes
         let todayDate = Date().getCurrentDateAsString()
         let thisWeek = Date().getWeeksAgoSunday(week: 1)
         var sum = 0
-        for (_, value) in userTimeData.divideDataByWeeks(startDate: thisWeek?[0].getCurrentDateAsString() ?? Date().getCurrentDateAsString(), endDate: todayDate, data: data){
+        for (_, value) in userDataManager.divideDataByWeeks(startDate: thisWeek?[0].getCurrentDateAsString() ?? Date().getCurrentDateAsString(), endDate: todayDate, data: data){
             for (dKey, dValue) in value {
-                self.thisWeekDataes[dKey] = dValue.totalStudyTime - userData.goalStudyTime
+                self.thisWeekDataes[dKey] = dValue.totalStudyTime - userDataManager.userInfo.goalStudyTime
                 sum += dValue.totalStudyTime
             }
         }
@@ -74,8 +74,7 @@ class MainViewModel: ObservableObject {
 
 // MARK: 메인화면 뷰
 struct MainView: View {
-    @EnvironmentObject var userData: UserData
-    @EnvironmentObject var userTimeData: UserTimeData
+    @EnvironmentObject var userDataManager: UserDataManager
     @Environment(NavigationCoordinator.self) var coordinator: NavigationCoordinator
     @State var viewModel: MainViewModel = MainViewModel()
     @State var showingPopup = false
@@ -126,12 +125,12 @@ struct MainView: View {
                                 } label: {
                                     MainRankChartView()
                                 }
-                                if (userTimeData.averageTime - userTimeData.totalStudyTime) < 0 {
+                                if (userDataManager.rankRecord.averageTime - userDataManager.rankRecord.totalStudyTime) < 0 {
                                     HStack(alignment: .bottom){
                                         Text("평균보다")
                                             .font(Font.system(size: 12).weight(.medium))
                                             .foregroundColor(.darkBlue414756)
-                                        Text((userTimeData.totalStudyTime - userTimeData.averageTime).timeToText())
+                                        Text((userDataManager.rankRecord.totalStudyTime - userDataManager.rankRecord.averageTime).timeToText())
                                             .font(Font.system(size: 15))
                                             .bold()
                                             .foregroundColor(.redFF0000)
@@ -141,12 +140,12 @@ struct MainView: View {
                                     }.padding(.bottom, 30)
                                         .padding(.leading, 40)
                                         .padding(.trailing, 40)
-                                } else if (userTimeData.averageTime - userTimeData.totalStudyTime) > 0 {
+                                } else if (userDataManager.rankRecord.averageTime - userDataManager.rankRecord.totalStudyTime) > 0 {
                                     HStack(alignment: .bottom){
                                         Text("평균보다")
                                             .font(Font.system(size: 12).weight(.medium))
                                             .foregroundColor(.darkBlue414756)
-                                        Text((userTimeData.averageTime - userTimeData.totalStudyTime).timeToText())
+                                        Text((userDataManager.rankRecord.averageTime - userDataManager.rankRecord.totalStudyTime).timeToText())
                                             .font(Font.system(size: 15))
                                             .bold()
                                             .foregroundColor(.blue5C84FF)
@@ -176,8 +175,8 @@ struct MainView: View {
                                 } label: {
                                     MainMyReportGridView(viewModel: $viewModel)
                                         .onAppear(){
-                                            self.userTimeData.downloadData()
-                                            self.viewModel.makeWeeklyChartReport(userTimeData: self.userTimeData, userData: self.userData)
+                                            self.userDataManager.readStudyData()
+                                            self.viewModel.makeWeeklyChartReport(userDataManager)
                                         }
                                 }.padding(.bottom, 20)
                             }.padding(.leading, 40)
@@ -192,10 +191,10 @@ struct MainView: View {
                 VStack(spacing: 20){
                     HStack(alignment: .bottom, spacing: 12){
                         VStack(alignment: .leading, spacing: 5){
-                            Text(userData.name)
+                            Text(userDataManager.userInfo.name)
                                 .font(Font.system(size: 15).weight(.bold))
                                 .foregroundColor(.black)
-                            Text(userData.email)
+                            Text(userDataManager.userInfo.email)
                                 .lineLimit(1)
                                 .truncationMode(.tail)
                                 .font(Font.system(size: 12).weight(.medium))
@@ -205,7 +204,7 @@ struct MainView: View {
                                     .font(Font.system(size: 12).weight(.medium))
                                     .underline(true, color: .gray)
                                     .foregroundColor(.black)
-                                Text(userData.goalStudyTime.timeToText())
+                                Text(userDataManager.userInfo.goalStudyTime.timeToText())
                                     .font(Font.system(size: 12).weight(.medium))
                                     .foregroundColor(.black)
                             }
@@ -216,7 +215,7 @@ struct MainView: View {
                             self.showingPopup = false
                             coordinator.push(.setProfile)
                         } label: {
-                            AsyncImage(url: URL(string: userData.profileImageURL)){ image in
+                            AsyncImage(url: URL(string: userDataManager.userInfo.profileImageURL)){ image in
                                 image.resizable()
                             } placeholder: {
                                 ProgressView()
@@ -293,7 +292,7 @@ struct MainView: View {
                 print("MainHeader Profile Image Clicked!")
                 showingPopup = true
             }label: {
-                AsyncImage(url: URL(string: userData.profileImageURL)){ image in
+                AsyncImage(url: URL(string: userDataManager.userInfo.profileImageURL)){ image in
                     image.resizable()
                 } placeholder: {
                     ProgressView()

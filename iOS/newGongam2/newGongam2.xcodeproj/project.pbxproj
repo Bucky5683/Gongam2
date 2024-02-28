@@ -44,8 +44,6 @@
 		EB86AF4F2B47B7F2005A15A5 /* newGongam2UITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB86AF4E2B47B7F2005A15A5 /* newGongam2UITestsLaunchTests.swift */; };
 		EB86AF5C2B47B8B3005A15A5 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB86AF5B2B47B8B3005A15A5 /* MainView.swift */; };
 		EB86AF5E2B47B966005A15A5 /* MainHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB86AF5D2B47B966005A15A5 /* MainHeaderView.swift */; };
-		EB86AF602B47BA72005A15A5 /* UserData.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB86AF5F2B47BA72005A15A5 /* UserData.swift */; };
-		EB86AF642B47DC44005A15A5 /* UserTimeData.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB86AF632B47DC44005A15A5 /* UserTimeData.swift */; };
 		EB86AF682B47DD5E005A15A5 /* TimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB86AF672B47DD5E005A15A5 /* TimerView.swift */; };
 		EB86AF6D2B47E11A005A15A5 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = EB86AF6C2B47E11A005A15A5 /* FirebaseAnalytics */; };
 		EB86AF6F2B47E11A005A15A5 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = EB86AF6E2B47E11A005A15A5 /* FirebaseAuth */; };
@@ -116,8 +114,6 @@
 		EB86AF4E2B47B7F2005A15A5 /* newGongam2UITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = newGongam2UITestsLaunchTests.swift; sourceTree = "<group>"; };
 		EB86AF5B2B47B8B3005A15A5 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
 		EB86AF5D2B47B966005A15A5 /* MainHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainHeaderView.swift; sourceTree = "<group>"; };
-		EB86AF5F2B47BA72005A15A5 /* UserData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserData.swift; sourceTree = "<group>"; };
-		EB86AF632B47DC44005A15A5 /* UserTimeData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserTimeData.swift; sourceTree = "<group>"; };
 		EB86AF672B47DD5E005A15A5 /* TimerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerView.swift; sourceTree = "<group>"; };
 		EB86AF812B47F9C6005A15A5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		EB9D05762B673E5C00478CCD /* AITimerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AITimerView.swift; sourceTree = "<group>"; };
@@ -313,8 +309,6 @@
 		EB86AF652B47DD05005A15A5 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				EB86AF5F2B47BA72005A15A5 /* UserData.swift */,
-				EB86AF632B47DC44005A15A5 /* UserTimeData.swift */,
 				EB41CDA42B4CC3600007E938 /* LoginModel.swift */,
 				EB5DCAEB2B5104B9003E23AB /* RankModel.swift */,
 			);
@@ -520,7 +514,6 @@
 				EB86AF5C2B47B8B3005A15A5 /* MainView.swift in Sources */,
 				EB9D057D2B67420800478CCD /* VisionObjectRecognitionViewController.swift in Sources */,
 				EB86AF5E2B47B966005A15A5 /* MainHeaderView.swift in Sources */,
-				EB86AF642B47DC44005A15A5 /* UserTimeData.swift in Sources */,
 				EB692A6E2B4E65D000901457 /* MainMyReportGridView.swift in Sources */,
 				EB9D05772B673E5C00478CCD /* AITimerView.swift in Sources */,
 				EB41CDA72B4CC7280007E938 /* AuthenticationManager.swift in Sources */,
@@ -528,7 +521,6 @@
 				EB9D05812B675AF100478CCD /* ObjectDetector.mlmodel in Sources */,
 				EB5DCAEC2B5104B9003E23AB /* RankModel.swift in Sources */,
 				EB6F22392B8DA61B00294AF6 /* LoginViewModel.swift in Sources */,
-				EB86AF602B47BA72005A15A5 /* UserData.swift in Sources */,
 				EB54A03F2B4BD8320074C13B /* SetProfileView.swift in Sources */,
 				EB152A382B4B7549004A0679 /* LoginView.swift in Sources */,
 				EB5DCAE92B50C470003E23AB /* NotificationService.swift in Sources */,
@@ -623,6 +615,9 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_KEY_NSCameraUsageDescription = "AI 타이머는 사람을 인식하기 위해 카메라가 필요합니다.";
+				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "프로필 사진 업로드를 위해 갤러리 접근 권한이 필요합니다.";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "프로필 사진 업로드를 위해 갤러리 접근 권한이 필요합니다.";
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
@@ -680,6 +675,9 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_KEY_NSCameraUsageDescription = "AI 타이머는 사람을 인식하기 위해 카메라가 필요합니다.";
+				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "프로필 사진 업로드를 위해 갤러리 접근 권한이 필요합니다.";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "프로필 사진 업로드를 위해 갤러리 접근 권한이 필요합니다.";
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = NO;
@@ -706,6 +704,7 @@
 				INFOPLIST_FILE = newGongam2/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "공감; 공부감시자";
 				INFOPLIST_KEY_NSCameraUsageDescription = "AI 타이머는 사람을 인식하기 위해 카메라가 필요합니다.";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "프로필 사진 업로드를 위해 갤러리 접근 권한이 필요합니다.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = "Launch Screen.storyboard";
@@ -745,6 +744,7 @@
 				INFOPLIST_FILE = newGongam2/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "공감; 공부감시자";
 				INFOPLIST_KEY_NSCameraUsageDescription = "AI 타이머는 사람을 인식하기 위해 카메라가 필요합니다.";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "프로필 사진 업로드를 위해 갤러리 접근 권한이 필요합니다.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = "Launch Screen.storyboard";

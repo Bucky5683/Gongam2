@@ -11,8 +11,7 @@ import AVFoundation
 import Vision
 
 struct AITimerView: View {
-    @EnvironmentObject var userData: UserData
-    @EnvironmentObject var userTimeData: UserTimeData
+    @EnvironmentObject var userDataManager: UserDataManager
     @Environment(NavigationCoordinator.self) var coordinator: NavigationCoordinator
     @ObservedObject private var viewModel = AITimerViewModel()
     
@@ -53,7 +52,7 @@ struct AITimerView: View {
                     .underline()
                     .foregroundColor(.white)
                 Spacer()
-                Text("\(self.userData.goalStudyTime.timeToText())")
+                Text("\(self.userDataManager.userInfo.goalStudyTime.timeToText())")
                     .font(Font.system(size: 18))
                     .multilineTextAlignment(.trailing)
                     .foregroundColor(.white)
@@ -78,7 +77,7 @@ struct AITimerView: View {
                     Button {
                         self.viewModel.stopTimer()
                         self.viewModel.timerFinished = true
-                        self.viewModel.updateFirebase(userData: self.userData, userTimeData: self.userTimeData, isTimerFinished: self.viewModel.timerFinished)
+                        self.viewModel.updateFirebase(userDataManager: self.userDataManager, isTimerFinished: self.viewModel.timerFinished)
                         self.viewModel.isStarted = true
                     } label: {
                         Text("STOP")

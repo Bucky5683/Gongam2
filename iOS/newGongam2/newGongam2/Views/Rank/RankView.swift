@@ -9,7 +9,7 @@ import SwiftUI
 
 struct RankView: View {
     @Environment(NavigationCoordinator.self) var coordinator: NavigationCoordinator
-    @EnvironmentObject var userTimeData: UserTimeData
+    @EnvironmentObject var userDataManager: UserDataManager
     @State var top5UsersArray: [RankerUser] = []
     
     init() {
@@ -29,7 +29,7 @@ struct RankView: View {
                         .font(Font.system(size: 17))
                         .foregroundColor(.white)
                     Spacer()
-                    Text("\(self.userTimeData.myRank)")
+                    Text("\(self.userDataManager.rankRecord.myRank)")
                         .font(Font.system(size: 32).weight(.semibold))
                         .multilineTextAlignment(.trailing)
                         .foregroundColor(.white)
@@ -41,7 +41,7 @@ struct RankView: View {
                         .font(Font.system(size: 14))
                         .foregroundColor(.white)
                     Spacer()
-                    Text("\(self.userTimeData.totalStudyTime.timeToText())")
+                    Text("\(self.userDataManager.rankRecord.totalStudyTime.timeToText())")
                         .font(Font.system(size: 14))
                         .multilineTextAlignment(.trailing)
                         .foregroundColor(.white)
@@ -91,8 +91,8 @@ struct RankView: View {
     }
     
     private func loadData(){
-        self.userTimeData.downloadRankData()
-        self.makeTop5Users(rankers: userTimeData.top10User)
+        self.userDataManager.readRankData()
+        self.makeTop5Users(rankers: userDataManager.rankRecord.top5User)
         print(self.top5UsersArray)
     }
     
