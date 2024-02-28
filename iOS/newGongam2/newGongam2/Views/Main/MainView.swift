@@ -229,6 +229,9 @@ struct MainView: View {
                     VStack(spacing: 8){
                         Button {
                             print("Clicked Helper!!")
+                            if let url = URL(string: "https://generated-ambert-9f2.notion.site/6bf6e5145c344a8d96d99c635864bd1d?v=73a86a97a8014e309003edbd67ebc7fa") {
+                                UIApplication.shared.open(url)
+                            }
                         } label: {
                             HStack(spacing: 7){
                                 Image("HelperImage")
