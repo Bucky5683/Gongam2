@@ -8,8 +8,7 @@
 import SwiftUI
 
 struct MainRankChartView: View {
-    @EnvironmentObject var userTimeData: UserTimeData
-    @EnvironmentObject var userData: UserData
+    @EnvironmentObject var userDataManager: UserDataManager
     var body: some View {
         ZStack{
             HStack{
@@ -29,18 +28,18 @@ struct MainRankChartView: View {
                 Spacer()
             }
             VStack(spacing: 10){
-                if (self.userTimeData.totalStudyTime - self.userTimeData.averageTime)>0 {
+                if (self.userDataManager.rankRecord.totalStudyTime - self.userDataManager.rankRecord.averageTime)>0 {
                     HStack{
                         Rectangle().frame(width: 67, height: 11)
                             .foregroundColor(.pinkECB9C2)
                             .cornerRadius(10)
                             .padding(.leading, 72)
                         HStack{
-                            Text("\(self.userTimeData.name)님의 등수")
+                            Text("\(self.userDataManager.userInfo.name)님의 등수")
                                 .font(Font.system(size: 12))
                                 .foregroundColor(.darkBlue414756)
                                 .padding(.leading, 15)
-                            if self.userTimeData.myRank > 999 {
+                            if self.userDataManager.rankRecord.myRank > 999 {
                                 Text("999+")
                                     .font(
                                         Font.system(size: 20)
@@ -51,7 +50,7 @@ struct MainRankChartView: View {
                                     .padding(.top, 11)
                                     .padding(.bottom, 11)
                             } else {
-                                Text("\(self.userTimeData.myRank)")
+                                Text("\(self.userDataManager.rankRecord.myRank)")
                                     .font(
                                         Font.system(size: 20)
                                             .weight(.bold)
@@ -72,7 +71,7 @@ struct MainRankChartView: View {
                             .cornerRadius(10)
                             .padding(.leading, 72)
                         HStack{
-                            Text("평균 공부시간 : \(self.userTimeData.averageTime.timeToTextForWeekly())")
+                            Text("평균 공부시간 : \(self.userDataManager.rankRecord.averageTime.timeToTextForWeekly())")
                                 .font(
                                     Font.system(size: 10)
                                         .weight(.medium)
@@ -94,7 +93,7 @@ struct MainRankChartView: View {
                             .cornerRadius(10)
                             .padding(.leading, 72)
                         HStack{
-                            Text("평균 공부시간 : \(self.userTimeData.averageTime.timeToTextForWeekly())")
+                            Text("평균 공부시간 : \(self.userDataManager.rankRecord.averageTime.timeToTextForWeekly())")
                                 .font(
                                     Font.system(size: 10)
                                         .weight(.medium)
@@ -116,11 +115,11 @@ struct MainRankChartView: View {
                             .cornerRadius(10)
                             .padding(.leading, 72)
                         HStack{
-                            Text("\(self.userTimeData.name)님의 등수")
+                            Text("\(self.userDataManager.userInfo.name)님의 등수")
                                 .font(Font.system(size: 12))
                                 .foregroundColor(.darkBlue414756)
                                 .padding(.leading, 15)
-                            if self.userTimeData.myRank > 999 {
+                            if self.userDataManager.rankRecord.myRank > 999 {
                                 Text("999+")
                                     .font(
                                         Font.system(size: 20)
@@ -131,7 +130,7 @@ struct MainRankChartView: View {
                                     .padding(.top, 11)
                                     .padding(.bottom, 11)
                             } else {
-                                Text("\(String(format: "%03d", self.userTimeData.myRank))")
+                                Text("\(String(format: "%03d", self.userDataManager.rankRecord.myRank))")
                                     .font(
                                         Font.system(size: 20)
                                             .weight(.bold)

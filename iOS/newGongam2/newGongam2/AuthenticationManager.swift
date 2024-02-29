@@ -50,4 +50,16 @@ final class AuthenticationManager {
     func signOut() throws {
         try Auth.auth().signOut()
     }
+    
+    func deleteUser() throws {
+        Auth.auth().currentUser?.delete() { error in
+            if let error = error {
+                // An error happened.
+                print("ERROR USER DELETE : \(error)")
+            } else {
+                // Account deleted.
+                print("Account deleted Success")
+            }
+        }
+    }
 }

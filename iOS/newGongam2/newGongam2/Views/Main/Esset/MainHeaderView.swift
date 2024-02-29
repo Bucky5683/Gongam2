@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct MainHeaderView: View {
-    @EnvironmentObject var userData: UserData
+    @EnvironmentObject var userDataManager: UserDataManager
     @Environment(NavigationCoordinator.self) var coordinator: NavigationCoordinator
     @Binding var viewModel: MainViewModel
     
@@ -22,13 +22,13 @@ struct MainHeaderView: View {
                         .font(Font.system(size: 12).weight(.regular))
                         .underline(true, color: .whiteFFFFFF)
                         .foregroundColor(.whiteFFFFFF)
-                    Text(userData.todayStudyTime.timeToText())
+                    Text(userDataManager.userInfo.todayStudyTime.timeToText())
                         .font(Font.system(size: 30))
                         .bold()
                         .foregroundColor(.whiteFFFFFF)
                     HStack(){
-                        if viewModel.calculateReMainTime(goalTime: userData.goalStudyTime, todayStudyTime: userData.todayStudyTime) > 0{
-                            let remaintime = viewModel.calculateReMainTime(goalTime: userData.goalStudyTime, todayStudyTime: userData.todayStudyTime)
+                        if viewModel.calculateReMainTime(goalTime: userDataManager.userInfo.goalStudyTime, todayStudyTime: userDataManager.userInfo.todayStudyTime) > 0{
+                            let remaintime = viewModel.calculateReMainTime(goalTime: userDataManager.userInfo.goalStudyTime, todayStudyTime: userDataManager.userInfo.todayStudyTime)
                             Text("🔥").font(Font.system(size: 12))
                                 .padding(.leading, 30)
                                 .padding(.top, 5)

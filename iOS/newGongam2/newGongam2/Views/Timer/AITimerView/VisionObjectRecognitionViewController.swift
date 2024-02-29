@@ -16,6 +16,7 @@ class VisionObjectRecognitionViewController: ViewController {
     var viewModel: AITimerViewModel?
     // Vision parts
     private var requests = [VNRequest]()
+    var isPersonDetected: Bool = false
     
     @discardableResult
     func setupVision() -> NSError? {
@@ -30,6 +31,7 @@ class VisionObjectRecognitionViewController: ViewController {
             let objectRecognition = VNCoreMLRequest(model: visionModel, completionHandler: { (request, error) in
                 DispatchQueue.main.async(execute: {
                     // perform all the UI updates on the main queue
+                    self.detectionOverlay.sublayers = nil
                     if let results = request.results {
                         if self.viewModel?.isStarted == false {
                              self.drawVisionRequestResults(results)
@@ -65,30 +67,19 @@ class VisionObjectRecognitionViewController: ViewController {
                 }
                 // Select only the label with the highest confidence.
                 let topLabelObservation = objectObservation.labels[0]
+                // Check if the observation is a person
+                let isPerson = objectObservation.labels.contains { $0.identifier == "person" }
+                if isPerson {
+                    self.isPersonDetected = true // Person detected
+                }
                 
                 let objectBounds = VNImageRectForNormalizedRect(objectObservation.boundingBox, Int(bufferSize.width), Int(bufferSize.height))
                 
-                let shapeLayer = self.createRoundedRectLayerWithBounds(objectBounds)
+                let shapeLayer = self.createRoundedRectLayerWithBounds(objectBounds, identifier: topLabelObservation.identifier)
                 
                 let textLayer = self.createTextSubLayerInBounds(objectBounds,
                                                                 identifier: topLabelObservation.identifier,
                                                                 confidence: topLabelObservation.confidence)
-                
-                let objectObservationWidth = objectObservation.boundingBox.size.width
-                print("objectObservationWidth : \(objectObservation.boundingBox.size.width)")
-                let objectObservationHeight = objectObservation.boundingBox.size.height
-
-                if topLabelObservation.identifier == "person" && objectObservationWidth > 0 && objectObservationHeight > 0{
-                    if self.viewModel?.timerFinished == true {
-                        self.viewModel?.startTimer()
-                    } else if self.viewModel?.isPaused == true{
-                        self.viewModel?.pausedTimer()
-                    }
-                } else {
-                    if self.viewModel?.isPaused == false{
-                        self.viewModel?.pausedTimer()
-                    }
-                }
                 
                 shapeLayer.addSublayer(textLayer)
                 detectionOverlay.addSublayer(shapeLayer)
@@ -108,6 +99,22 @@ class VisionObjectRecognitionViewController: ViewController {
         let imageRequestHandler = VNImageRequestHandler(cvPixelBuffer: pixelBuffer, orientation: exifOrientation, options: [:])
         do {
             try imageRequestHandler.perform(self.requests)
+            // Check if person is detected and start or pause timer accordingly
+            DispatchQueue.main.async {
+                if self.isPersonDetected && ((self.detectionOverlay.sublayers?.contains { $0.name == "person Found Object" }) ?? false ){
+                    if self.viewModel?.timerFinished == true {
+                        self.viewModel?.startTimer()
+                    } else if self.viewModel?.isPaused == true{
+                        self.viewModel?.pausedTimer()
+                    }
+                } else {
+                    if self.viewModel?.isPaused == false {
+                        self.viewModel?.pausedTimer()
+                    }
+                }
+                
+                self.isPersonDetected = false
+            }
         } catch {
             print(error)
         }
@@ -162,7 +169,7 @@ class VisionObjectRecognitionViewController: ViewController {
     
     func createTextSubLayerInBounds(_ bounds: CGRect, identifier: String, confidence: VNConfidence) -> CATextLayer {
         let textLayer = CATextLayer()
-        textLayer.name = "Object Label"
+        textLayer.name = "\(identifier) Object Label"
         let formattedString = NSMutableAttributedString(string: String(format: "\(identifier)\nConfidence:  %.2f", confidence))
         let largeFont = UIFont(name: "Helvetica", size: 24.0)!
         formattedString.addAttributes([NSAttributedString.Key.font: largeFont], range: NSRange(location: 0, length: identifier.count))
@@ -178,11 +185,11 @@ class VisionObjectRecognitionViewController: ViewController {
         return textLayer
     }
     
-    func createRoundedRectLayerWithBounds(_ bounds: CGRect) -> CALayer {
+    func createRoundedRectLayerWithBounds(_ bounds: CGRect, identifier: String) -> CALayer {
         let shapeLayer = CALayer()
         shapeLayer.bounds = bounds
         shapeLayer.position = CGPoint(x: bounds.midX, y: bounds.midY)
-        shapeLayer.name = "Found Object"
+        shapeLayer.name = "\(identifier) Found Object"
         shapeLayer.backgroundColor = CGColor(colorSpace: CGColorSpaceCreateDeviceRGB(), components: [1.0, 1.0, 0.2, 0.4])
         shapeLayer.cornerRadius = 7
         return shapeLayer

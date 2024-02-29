@@ -9,7 +9,7 @@ import SwiftUI
 
 struct RankView: View {
     @Environment(NavigationCoordinator.self) var coordinator: NavigationCoordinator
-    @EnvironmentObject var userTimeData: UserTimeData
+    @EnvironmentObject var userDataManager: UserDataManager
     @State var top5UsersArray: [RankerUser] = []
     
     init() {
@@ -29,7 +29,7 @@ struct RankView: View {
                         .font(Font.system(size: 17))
                         .foregroundColor(.white)
                     Spacer()
-                    Text("\(self.userTimeData.myRank)")
+                    Text("\(self.userDataManager.rankRecord.myRank)")
                         .font(Font.system(size: 32).weight(.semibold))
                         .multilineTextAlignment(.trailing)
                         .foregroundColor(.white)
@@ -41,7 +41,7 @@ struct RankView: View {
                         .font(Font.system(size: 14))
                         .foregroundColor(.white)
                     Spacer()
-                    Text("\(self.userTimeData.totalStudyTime.timeToText())")
+                    Text("\(self.userDataManager.rankRecord.totalStudyTime.timeToText())")
                         .font(Font.system(size: 14))
                         .multilineTextAlignment(.trailing)
                         .foregroundColor(.white)
@@ -77,6 +77,8 @@ struct RankView: View {
         .padding(.trailing, 22)
         .onAppear(){
             self.loadData()
+            self.makeTop5Users(rankers: self.userDataManager.rankRecord.top5User)
+            print(self.top5UsersArray)
         }.background(.white)
         .navigationBarTitle("랭킹",displayMode: .inline)
         .foregroundColor(.black)
@@ -91,9 +93,8 @@ struct RankView: View {
     }
     
     private func loadData(){
-        self.userTimeData.downloadRankData()
-        self.makeTop5Users(rankers: userTimeData.top10User)
-        print(self.top5UsersArray)
+        self.userDataManager.writeRankData()
+        self.userDataManager.readRankData()
     }
     
     private func makeTop5Users(rankers: [String:[String:Any]]){
@@ -115,9 +116,7 @@ struct RankView: View {
             }
         }
         
-        if self.top5UsersArray.elementsEqual(top5){
-            return
-        } else {
+        if self.top5UsersArray != top5 { // Check if top5UsersArray is different from top5
             self.top5UsersArray = top5
         }
     }

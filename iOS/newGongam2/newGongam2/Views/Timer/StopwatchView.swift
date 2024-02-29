@@ -18,18 +18,18 @@ class StopwatchViewModel: ObservableObject {
     
     var notificationService: NotificationService = .init()
     
-    func updateFirebase(userData: UserData, userTimeData: UserTimeData, isTimerFinished: Bool){
+    func updateFirebase(userDataManager: UserDataManager, isTimerFinished: Bool){
         if isTimerFinished {
-            userData.todayStudyTime += self.timerTime
-            userData.stopwatchStudyTime += self.timerTime
-            userTimeData.totalStudyTime += self.timerTime
-            userData.lastUpdateDate = Date().getCurrentDateAsString()
-            userTimeData.updateTimeData(stopwatch: userData.stopwatchStudyTime, timer: userData.timerStudyTime)
-            userData.setUserDataPartly(type: .stopwatchStudyTime, data: userData.stopwatchStudyTime)
-            userData.setUserDataPartly(type: .todayStudyTime, data: userData.todayStudyTime)
-            userData.setUserDataPartly(type: .lastUpdateDate, data: userData.lastUpdateDate)
-            userTimeData.uploadTimeData(stopwatch: userData.stopwatchStudyTime, timer: userData.timerStudyTime)
-            userTimeData.uploadRankData()
+            userDataManager.userInfo.todayStudyTime += self.timerTime
+            userDataManager.userInfo.stopwatchStudyTime += self.timerTime
+            userDataManager.rankRecord.totalStudyTime += self.timerTime
+            userDataManager.userInfo.lastUpdateDate = Date().getCurrentDateAsString()
+            
+            userDataManager.updateTimeData(stopwatch: userDataManager.userInfo.stopwatchStudyTime, timer: userDataManager.userInfo.timerStudyTime)
+            
+            userDataManager.writeUserInfo()
+            userDataManager.writeStudyData()
+            userDataManager.writeRankData()
             self.isStarted = true
         }
     }
@@ -43,7 +43,7 @@ class StopwatchViewModel: ObservableObject {
         }
     }
     
-    func startTimer(userData: UserData, userTimeData: UserTimeData){
+    func startTimer(userDataManager: UserDataManager){
         guard timer == nil else {return}
         
         timer = Timer.scheduledTimer(
@@ -51,9 +51,10 @@ class StopwatchViewModel: ObservableObject {
             repeats: true
         ) { _ in
             self.timerTime += 1
+            self.hours = self.timerTime / 3600
+            self.minutes = (self.timerTime % 3600) / 60
             self.seconds = self.timerTime % 60
-            self.minutes = (self.timerTime - self.seconds) % 60
-            self.hours = (self.timerTime - self.seconds - (self.minutes * 60))
+            
             self.timerFinished = false
         }
     }
@@ -66,8 +67,7 @@ class StopwatchViewModel: ObservableObject {
 }
 
 struct StopwatchView: View {
-    @EnvironmentObject var userData: UserData
-    @EnvironmentObject var userTimeData: UserTimeData
+    @EnvironmentObject var userDataManager: UserDataManager
     @Environment(NavigationCoordinator.self) var coordinator: NavigationCoordinator
     @ObservedObject var viewModel: StopwatchViewModel = StopwatchViewModel()
     
@@ -99,7 +99,7 @@ struct StopwatchView: View {
             }
             HStack {
                 VStack{
-                    Text("\(String(format: "%02d", self.viewModel.hours/3600))")
+                    Text("\(String(format: "%02d", self.viewModel.hours))")
                         .font(Font.system(size: 48).bold())
                         .foregroundColor(.whiteFFFFFF)
                     Text("시간")
@@ -108,7 +108,7 @@ struct StopwatchView: View {
                 }
                 Text(":")
                 VStack{
-                    Text("\(String(format: "%02d", self.viewModel.minutes/60))")
+                    Text("\(String(format: "%02d", self.viewModel.minutes))")
                         .font(Font.system(size: 48).bold())
                         .foregroundColor(.whiteFFFFFF)
                     Text("분")
@@ -131,7 +131,7 @@ struct StopwatchView: View {
                     .underline()
                     .foregroundColor(.white)
                 Spacer()
-                Text("\(self.userData.goalStudyTime.timeToText())")
+                Text("\(self.userDataManager.userInfo.goalStudyTime.timeToText())")
                     .font(Font.system(size: 18))
                     .multilineTextAlignment(.trailing)
                     .foregroundColor(.white)
@@ -145,7 +145,7 @@ struct StopwatchView: View {
                         .font(Font.system(size: 12).bold())
                         .multilineTextAlignment(.trailing)
                         .foregroundColor(.lightGrayA5ABBD)
-                    let remainTime = viewModel.calculateReMainTime(goalTime: self.userData.goalStudyTime, todayStudyTime: self.userData.todayStudyTime)
+                    let remainTime = viewModel.calculateReMainTime(goalTime: self.userDataManager.userInfo.goalStudyTime, todayStudyTime: self.userDataManager.userInfo.todayStudyTime)
                     if remainTime > 0{
                         Text("\(remainTime.timeToText())")
                             .font(Font.system(size: 12).bold())
@@ -168,7 +168,7 @@ struct StopwatchView: View {
             ZStack {
                 if self.viewModel.isStarted {
                     Button {
-                        self.viewModel.startTimer(userData: self.userData, userTimeData: self.userTimeData)
+                        self.viewModel.startTimer(userDataManager: self.userDataManager)
                         self.viewModel.isStarted = false
                     } label: {
                         Text("START")
@@ -183,7 +183,7 @@ struct StopwatchView: View {
                 } else {
                     Button {
                         self.viewModel.stopTimer()
-                        self.viewModel.updateFirebase(userData: self.userData, userTimeData: self.userTimeData, isTimerFinished: self.viewModel.timerFinished)
+                        self.viewModel.updateFirebase(userDataManager: self.userDataManager, isTimerFinished: self.viewModel.timerFinished)
                         self.viewModel.isStarted = true
                     } label: {
                         Text("STOP")
