@@ -15,4 +15,3 @@ dependencyResolutionManagement {
 
 rootProject.name = "gongam"
 include(":app")
-include(":openCV")
