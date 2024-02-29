@@ -1,4 +1,0 @@
-/Users/kimgayeong/Library/Android/sdk/cmake/3.22.1/bin/ninja \
-  -C \
-  /Users/kimgayeong/AndroidStudioProjects/Gongam2/AOS/gongam/openCV/.cxx/Debug/5i0414o4/arm64-v8a \
-  opencv_jni_shared
