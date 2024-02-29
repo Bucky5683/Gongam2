@@ -219,10 +219,11 @@
                 app:layout_constraintTop_toBottomOf="@id/tvSeconds" />
 
             <Button
+                android:id="@+id/btnStart"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:background="@drawable/round_timer_button"
+                android:background="@drawable/round_button_blue"
                 android:text="@string/start"
                 android:textColor="@color/white"
                 android:textStyle="bold"

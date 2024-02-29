@@ -7,5 +7,6 @@
     <string name="title_activity_my_report">MyReportActivity</string>
     <string name="alert_ai_stopwatch_face_detect">얼굴을 인식할 수 없습니다.</string>
     <string name="start">START</string>
+    <string name="stop">STOP</string>
     <string name="todayGoal"><u>오늘 목표</u></string>
 </resources>

@@ -28,6 +28,7 @@ import com.google.mlkit.vision.face.FaceDetection
 
 class AIStopWatchActivity : AppCompatActivity() {
     private val TAG = "AIActivity"
+    private var isStarted: Boolean = false
 
     private lateinit var binding: ActivityAistopWatchBinding
     private lateinit var viewModel: AIStopWatchViewModel
@@ -45,6 +46,16 @@ class AIStopWatchActivity : AppCompatActivity() {
 
         binding.tvMain.setOnClickListener {
             finish()
+        }
+        binding.btnStart.setOnClickListener {
+            if (isStarted) {
+                binding.btnStart.setBackgroundResource(R.drawable.round_button_blue)
+                binding.btnStart.text = getString(R.string.start)
+            } else {
+                binding.btnStart.setBackgroundResource(R.drawable.round_button_red)
+                binding.btnStart.text = getString(R.string.stop)
+            }
+            isStarted = !isStarted
         }
 
         cameraProviderFuture = ProcessCameraProvider.getInstance(this)
@@ -106,13 +117,15 @@ class AIStopWatchActivity : AppCompatActivity() {
                     if (inputImage != null) {
                         detector.process(inputImage)
                             .addOnSuccessListener { faces ->
-                                if (faces.isNotEmpty()) {
+                                if (faces.isNotEmpty() && isStarted) {
                                     binding.tvIsFaceDetected.text = "얼굴 인식중"
                                     binding.tvNoFaceDetected.visibility = View.GONE
                                     viewModel.setFaceDetected(true)
                                 } else {
-                                    binding.tvIsFaceDetected.text = "인식된 얼굴 없음"
-                                    binding.tvNoFaceDetected.visibility = View.VISIBLE
+                                    if (isStarted) {
+                                        binding.tvIsFaceDetected.text = "인식된 얼굴 없음"
+                                        binding.tvNoFaceDetected.visibility = View.VISIBLE
+                                    }
                                     viewModel.setFaceDetected(false)
                                 }
                             }
