@@ -696,7 +696,7 @@
 				CODE_SIGN_ENTITLEMENTS = newGongam2/newGongam2.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"newGongam2/Preview Content\"";
 				DEVELOPMENT_TEAM = QDTB4WL24B;
 				ENABLE_PREVIEWS = YES;
@@ -736,7 +736,7 @@
 				CODE_SIGN_ENTITLEMENTS = newGongam2/newGongam2.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"newGongam2/Preview Content\"";
 				DEVELOPMENT_TEAM = QDTB4WL24B;
 				ENABLE_PREVIEWS = YES;
