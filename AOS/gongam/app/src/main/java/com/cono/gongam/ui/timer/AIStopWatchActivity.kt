@@ -43,6 +43,10 @@ class AIStopWatchActivity : AppCompatActivity() {
         observeViewModel()
         setFadeAnimation()
 
+        binding.tvMain.setOnClickListener {
+            finish()
+        }
+
         cameraProviderFuture = ProcessCameraProvider.getInstance(this)
         cameraProviderFuture.addListener({
             val cameraProvider = cameraProviderFuture.get()

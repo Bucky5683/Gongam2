@@ -134,7 +134,6 @@ fun MainScreen(
     val context: Context = LocalContext.current
     val sharedPreferences = SharedPreferencesUtil(context)
     val currentUser by userViewModel.currentUser.observeAsState()
-    val studyDatesList by studyDatesViewModel.studyDatesList.observeAsState()
     val thisWeekData by studyDatesViewModel.thisWeekStudyDate.observeAsState()
     val averageThisWeek by studyDatesViewModel.averageThisWeek.observeAsState()
     val rankUserList by rankingViewModel.rankUserList.observeAsState(initial = emptyList())

@@ -18,7 +18,7 @@
         tools:targetApi="31">
         <activity
             android:name=".ui.timer.AIStopWatchActivity"
-            android:theme="@style/Theme.AppCompat"
+            android:theme="@style/Theme.AppCompat.NoActionBar"
             android:exported="false" />
         <activity
             android:name=".ui.register.RegisterActivity"
