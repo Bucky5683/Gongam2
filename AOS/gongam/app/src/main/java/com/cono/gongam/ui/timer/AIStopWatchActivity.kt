@@ -1,5 +1,6 @@
 package com.cono.gongam.ui.timer
 
+import android.animation.ValueAnimator
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -33,7 +34,6 @@ class AIStopWatchActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAistopWatchBinding
     private lateinit var viewModel: AIStopWatchViewModel
     private lateinit var cameraProviderFuture: ListenableFuture<ProcessCameraProvider>
-    private lateinit var fadeInAndOut: AlphaAnimation
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,7 +42,6 @@ class AIStopWatchActivity : AppCompatActivity() {
         viewModel = ViewModelProvider(this).get(AIStopWatchViewModel::class.java)
 
         observeViewModel()
-        setFadeAnimation()
 
         binding.tvMain.setOnClickListener {
             finish()
@@ -73,14 +72,6 @@ class AIStopWatchActivity : AppCompatActivity() {
             binding.tvMinutesCount.text = times.second
             binding.tvSecondsCount.text = times.third
         }
-    }
-
-    private fun setFadeAnimation() {
-        fadeInAndOut = AlphaAnimation(1.0f, 0.1f)
-        fadeInAndOut.duration = 1000
-        fadeInAndOut.repeatMode = Animation.REVERSE
-        fadeInAndOut.repeatCount = Animation.INFINITE
-        binding.tvNoFaceDetected.animation = fadeInAndOut
     }
 
     @OptIn(ExperimentalGetImage::class)
@@ -117,10 +108,12 @@ class AIStopWatchActivity : AppCompatActivity() {
                     if (inputImage != null) {
                         detector.process(inputImage)
                             .addOnSuccessListener { faces ->
-                                if (faces.isNotEmpty() && isStarted) {
+                                if (faces.isNotEmpty()) {
                                     binding.tvIsFaceDetected.text = "얼굴 인식중"
                                     binding.tvNoFaceDetected.visibility = View.GONE
-                                    viewModel.setFaceDetected(true)
+                                    if (isStarted) {
+                                        viewModel.setFaceDetected(true)
+                                    }
                                 } else {
                                     if (isStarted) {
                                         binding.tvIsFaceDetected.text = "인식된 얼굴 없음"
