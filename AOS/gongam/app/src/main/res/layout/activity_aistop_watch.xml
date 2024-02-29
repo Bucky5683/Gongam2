@@ -33,21 +33,146 @@
         android:layout_height="wrap_content"
         android:text=""
         android:textColor="@color/black"
-        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        />
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/tvCount"
-        android:layout_width="wrap_content"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@color/white"
-        android:textSize="40sp"
-        android:text=""
-        tools:text="00"
+        android:background="@color/main_gray"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        />
+        app:layout_constraintStart_toStartOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/tvHoursCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="00"
+                android:textColor="@color/white"
+                android:textSize="40sp"
+                app:layout_constraintEnd_toStartOf="@id/colon1"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/colon1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="10dp"
+                android:text=":"
+                android:textColor="@color/white"
+                android:textSize="40sp"
+                app:layout_constraintEnd_toEndOf="@id/tvMinutesCount"
+                app:layout_constraintStart_toStartOf="@id/tvHoursCount"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tvMinutesCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="00"
+                android:textColor="@color/white"
+                android:textSize="40sp"
+                app:layout_constraintEnd_toStartOf="@id/colon2"
+                app:layout_constraintStart_toEndOf="@id/colon1"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/colon2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="10dp"
+                android:text=":"
+                android:textColor="@color/white"
+                android:textSize="40sp"
+                app:layout_constraintEnd_toEndOf="@id/tvSecondsCount"
+                app:layout_constraintStart_toStartOf="@id/tvMinutesCount"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tvSecondsCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="00"
+                android:textColor="@color/white"
+                android:textSize="40sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/colon2"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tvHours"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="시간"
+                android:textColor="@color/white"
+                app:layout_constraintEnd_toEndOf="@id/tvHoursCount"
+                app:layout_constraintStart_toStartOf="@id/tvHoursCount"
+                app:layout_constraintTop_toBottomOf="@id/tvHoursCount" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="분"
+                android:textColor="@color/white"
+                app:layout_constraintEnd_toEndOf="@id/tvMinutesCount"
+                app:layout_constraintStart_toStartOf="@id/tvMinutesCount"
+                app:layout_constraintTop_toBottomOf="@id/tvMinutesCount" />
+
+            <TextView
+                android:id="@+id/tvSeconds"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="초"
+                android:textColor="@color/white"
+                app:layout_constraintEnd_toEndOf="@id/tvSecondsCount"
+                app:layout_constraintStart_toStartOf="@id/tvSecondsCount"
+                app:layout_constraintTop_toBottomOf="@id/tvSecondsCount" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="오늘 목표"
+                android:textColor="@color/white"
+                app:layout_constraintStart_toStartOf="@id/tvHoursCount"
+                app:layout_constraintTop_toBottomOf="@id/tvHours" />
+
+            <TextView
+                android:id="@+id/tvTodayGoal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="99:99:99"
+                android:textColor="@color/white"
+                app:layout_constraintEnd_toEndOf="@id/tvSecondsCount"
+                app:layout_constraintTop_toBottomOf="@id/tvSeconds" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/round_timer_button"
+                android:text="@string/start"
+                android:textColor="@color/white"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvTodayGoal" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
