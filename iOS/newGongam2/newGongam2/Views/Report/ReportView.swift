@@ -52,7 +52,7 @@ struct ReportView: View {
                                 let backgroundColor: Color = setBackgroundColor(totalStudyTime: weekly.totalStudyTime)
                                 BarMark(
                                     x: .value("date", date),
-                                    y: .value("time", weekly.totalStudyTime) 
+                                    y: .value("time", weekly.totalStudyTime)
                                 )
                                 .foregroundStyle(backgroundColor)
                             }

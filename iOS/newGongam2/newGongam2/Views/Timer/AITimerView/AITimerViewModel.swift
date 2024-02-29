@@ -74,9 +74,9 @@ class AITimerViewModel: ObservableObject, Equatable {
             DispatchQueue.main.async {
                 // @Published 속성 업데이트
                 self.timerTime += 1
+                self.hours = self.timerTime / 3600
+                self.minutes = (self.timerTime % 3600) / 60
                 self.seconds = self.timerTime % 60
-                self.minutes = (self.timerTime - self.seconds) % 60
-                self.hours = (self.timerTime - self.seconds - (self.minutes * 60))
                 self.timerFinished = false
             }
         }

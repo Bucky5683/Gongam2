@@ -77,6 +77,8 @@ struct RankView: View {
         .padding(.trailing, 22)
         .onAppear(){
             self.loadData()
+            self.makeTop5Users(rankers: self.userDataManager.rankRecord.top5User)
+            print(self.top5UsersArray)
         }.background(.white)
         .navigationBarTitle("랭킹",displayMode: .inline)
         .foregroundColor(.black)
@@ -91,9 +93,8 @@ struct RankView: View {
     }
     
     private func loadData(){
+        self.userDataManager.writeRankData()
         self.userDataManager.readRankData()
-        self.makeTop5Users(rankers: userDataManager.rankRecord.top5User)
-        print(self.top5UsersArray)
     }
     
     private func makeTop5Users(rankers: [String:[String:Any]]){
@@ -115,9 +116,7 @@ struct RankView: View {
             }
         }
         
-        if self.top5UsersArray.elementsEqual(top5){
-            return
-        } else {
+        if self.top5UsersArray != top5 { // Check if top5UsersArray is different from top5
             self.top5UsersArray = top5
         }
     }

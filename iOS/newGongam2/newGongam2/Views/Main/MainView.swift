@@ -302,6 +302,11 @@ struct MainView: View {
                 }.frame(width: 30, height: 30)
                     .cornerRadius(30)
             })
+            .onAppear(){
+                self.userDataManager.readRankData()
+                self.userDataManager.readStudyData()
+                self.userDataManager.readStudyData()
+            }
         }.edgesIgnoringSafeArea(.top)
     }
 }

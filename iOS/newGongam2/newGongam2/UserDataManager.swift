@@ -146,7 +146,7 @@ extension UserDataManager {
             if let url = url {
                 self.userInfo.profileImageURL = url
             } else {
-                guard let error = error else {
+                guard error != nil else {
                     print("PROFILE URL ERROR: \(String(describing: error))")
                     return
                 }
@@ -259,8 +259,6 @@ extension UserDataManager {
         self.recordUserStudy.studyDataes[today]?.stopwatchStudyTime += stopwatch
         self.recordUserStudy.studyDataes[today]?.timerStudyTime += timer
         self.recordUserStudy.studyDataes[today]?.totalStudyTime = stopwatch + timer
-        
-        self.rankRecord.totalStudyTime 
     }
     
     //한 주 데이터 기록 갱신
