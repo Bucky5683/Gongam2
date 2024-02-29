@@ -75,7 +75,7 @@ fun StopWatch(
                 fontSize = 48.sp)
         }
         Spacer(modifier = Modifier.height(25.dp))
-        StopWatchTickingText(stopWatchViewModel = stopWatchViewModel, sumSeconds)
+        StopWatchTickingText(sumSeconds)
         Spacer(modifier = Modifier.height(50.dp))
         Column(
             modifier = Modifier
@@ -99,7 +99,6 @@ fun StopWatch(
 
 @Composable
 fun StopWatchTickingText(
-    stopWatchViewModel: StopWatchViewModel,
     sumSeconds: Int,
 ) {
     val sumSecondsTriple = TimeUtils.convertSecondsToTimeInTriple(sumSeconds)

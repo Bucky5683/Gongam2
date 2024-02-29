@@ -54,9 +54,9 @@ class AIStopWatchActivity : AppCompatActivity() {
         viewModel.startCounting()
         viewModel.seconds.observe(this) { seconds ->
             val times = TimeUtils.convertSecondsToTimeInTriple(seconds)
-            binding.tvHoursCount.text = times.first.toString()
-            binding.tvMinutesCount.text = times.second.toString()
-            binding.tvSecondsCount.text = times.third.toString()
+            binding.tvHoursCount.text = times.first
+            binding.tvMinutesCount.text = times.second
+            binding.tvSecondsCount.text = times.third
         }
     }
 
