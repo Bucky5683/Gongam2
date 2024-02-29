@@ -1,1 +1,2 @@
 iOS/newGongam2/newGongam2/YOLOv3FP16.mlmodel filter=lfs diff=lfs merge=lfs -text
+iOS/newGongam2/newGongam2/ObjectDetector.mlmodel filter=lfs diff=lfs merge=lfs -text

@@ -25,6 +25,8 @@
 			</array>
 		</dict>
 	</array>
+	<key>Development localization</key>
+	<string>ko_KR</string>
 	<key>GIDClientID</key>
 	<string>480518054438-g5k6fuuod7p8258dfq182auesl42dg9i.apps.googleusercontent.com</string>
 	<key>KAKAO_APP_KEY</key>

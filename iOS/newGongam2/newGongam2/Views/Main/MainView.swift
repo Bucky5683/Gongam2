@@ -29,6 +29,12 @@ import PopupView
     - Popup의 프로필 사진 터치 시, 프로필 수정 화면으로 이동 ✅
     - 도움말, 이동약관은 Web브라우저로 이동하도록 설정
  */
+enum timerType {
+    case timer
+    case stopwatch
+    case AItimer
+}
+
 class MainViewModel: ObservableObject {
     @Published var thisWeekDataes : [String:Int] = [:]
     @Published var thisWeeks: [MyReportGridItem] = []
@@ -44,14 +50,14 @@ class MainViewModel: ObservableObject {
         }
     }
     
-    func makeWeeklyChartReport(userTimeData: UserTimeData, userData: UserData){
-        let data = userTimeData.studyDataes
+    func makeWeeklyChartReport(_ userDataManager: UserDataManager){
+        let data = userDataManager.recordUserStudy.studyDataes
         let todayDate = Date().getCurrentDateAsString()
         let thisWeek = Date().getWeeksAgoSunday(week: 1)
         var sum = 0
-        for (_, value) in userTimeData.divideDataByWeeks(startDate: thisWeek?[0].getCurrentDateAsString() ?? Date().getCurrentDateAsString(), endDate: todayDate, data: data){
+        for (_, value) in userDataManager.divideDataByWeeks(startDate: thisWeek?[0].getCurrentDateAsString() ?? Date().getCurrentDateAsString(), endDate: todayDate, data: data){
             for (dKey, dValue) in value {
-                self.thisWeekDataes[dKey] = dValue.totalStudyTime - userData.goalStudyTime
+                self.thisWeekDataes[dKey] = dValue.totalStudyTime - userDataManager.userInfo.goalStudyTime
                 sum += dValue.totalStudyTime
             }
         }
@@ -68,8 +74,7 @@ class MainViewModel: ObservableObject {
 
 // MARK: 메인화면 뷰
 struct MainView: View {
-    @EnvironmentObject var userData: UserData
-    @EnvironmentObject var userTimeData: UserTimeData
+    @EnvironmentObject var userDataManager: UserDataManager
     @Environment(NavigationCoordinator.self) var coordinator: NavigationCoordinator
     @State var viewModel: MainViewModel = MainViewModel()
     @State var showingPopup = false
@@ -100,8 +105,9 @@ struct MainView: View {
                                         .padding(.bottom, 8)
                                     Spacer()
                                 }
-                                TimersButtonView(isTimer: true)
-                                TimersButtonView(isTimer: false)
+                                TimersButtonView(isTimer: .timer)
+                                TimersButtonView(isTimer: .stopwatch)
+                                TimersButtonView(isTimer: .AItimer)
                                     .padding(.bottom, 35)
                             }
                             .padding(.leading, 40)
@@ -119,12 +125,12 @@ struct MainView: View {
                                 } label: {
                                     MainRankChartView()
                                 }
-                                if (userTimeData.averageTime - userTimeData.totalStudyTime) < 0 {
+                                if (userDataManager.rankRecord.averageTime - userDataManager.rankRecord.totalStudyTime) < 0 {
                                     HStack(alignment: .bottom){
                                         Text("평균보다")
                                             .font(Font.system(size: 12).weight(.medium))
                                             .foregroundColor(.darkBlue414756)
-                                        Text((userTimeData.totalStudyTime - userTimeData.averageTime).timeToText())
+                                        Text((userDataManager.rankRecord.totalStudyTime - userDataManager.rankRecord.averageTime).timeToText())
                                             .font(Font.system(size: 15))
                                             .bold()
                                             .foregroundColor(.redFF0000)
@@ -134,12 +140,12 @@ struct MainView: View {
                                     }.padding(.bottom, 30)
                                         .padding(.leading, 40)
                                         .padding(.trailing, 40)
-                                } else if (userTimeData.averageTime - userTimeData.totalStudyTime) > 0 {
+                                } else if (userDataManager.rankRecord.averageTime - userDataManager.rankRecord.totalStudyTime) > 0 {
                                     HStack(alignment: .bottom){
                                         Text("평균보다")
                                             .font(Font.system(size: 12).weight(.medium))
                                             .foregroundColor(.darkBlue414756)
-                                        Text((userTimeData.averageTime - userTimeData.totalStudyTime).timeToText())
+                                        Text((userDataManager.rankRecord.averageTime - userDataManager.rankRecord.totalStudyTime).timeToText())
                                             .font(Font.system(size: 15))
                                             .bold()
                                             .foregroundColor(.blue5C84FF)
@@ -169,8 +175,8 @@ struct MainView: View {
                                 } label: {
                                     MainMyReportGridView(viewModel: $viewModel)
                                         .onAppear(){
-                                            self.userTimeData.downloadData()
-                                            self.viewModel.makeWeeklyChartReport(userTimeData: self.userTimeData, userData: self.userData)
+                                            self.userDataManager.readStudyData()
+                                            self.viewModel.makeWeeklyChartReport(userDataManager)
                                         }
                                 }.padding(.bottom, 20)
                             }.padding(.leading, 40)
@@ -185,10 +191,10 @@ struct MainView: View {
                 VStack(spacing: 20){
                     HStack(alignment: .bottom, spacing: 12){
                         VStack(alignment: .leading, spacing: 5){
-                            Text(userData.name)
+                            Text(userDataManager.userInfo.name)
                                 .font(Font.system(size: 15).weight(.bold))
                                 .foregroundColor(.black)
-                            Text(userData.email)
+                            Text(userDataManager.userInfo.email)
                                 .lineLimit(1)
                                 .truncationMode(.tail)
                                 .font(Font.system(size: 12).weight(.medium))
@@ -196,9 +202,9 @@ struct MainView: View {
                             HStack{
                                 Text("목표 공부시간")
                                     .font(Font.system(size: 12).weight(.medium))
-                                    .underline(true, color: .black)
+                                    .underline(true, color: .gray)
                                     .foregroundColor(.black)
-                                Text(userData.goalStudyTime.timeToText())
+                                Text(userDataManager.userInfo.goalStudyTime.timeToText())
                                     .font(Font.system(size: 12).weight(.medium))
                                     .foregroundColor(.black)
                             }
@@ -206,9 +212,10 @@ struct MainView: View {
                         .padding(.leading, 15)
                         Button {
                             coordinator.isProfileEdit = true
+                            self.showingPopup = false
                             coordinator.push(.setProfile)
                         } label: {
-                            AsyncImage(url: URL(string: userData.profileImageURL)){ image in
+                            AsyncImage(url: URL(string: userDataManager.userInfo.profileImageURL)){ image in
                                 image.resizable()
                             } placeholder: {
                                 ProgressView()
@@ -222,6 +229,9 @@ struct MainView: View {
                     VStack(spacing: 8){
                         Button {
                             print("Clicked Helper!!")
+                            if let url = URL(string: "https://generated-ambert-9f2.notion.site/6bf6e5145c344a8d96d99c635864bd1d?v=73a86a97a8014e309003edbd67ebc7fa") {
+                                UIApplication.shared.open(url)
+                            }
                         } label: {
                             HStack(spacing: 7){
                                 Image("HelperImage")
@@ -242,6 +252,10 @@ struct MainView: View {
                             .padding(.trailing, 15)
                         Button {
                             print("Clicked 이용약관!!")
+                            // 버튼이 눌렸을 때 Safari로 이동하는 액션
+                            if let url = URL(string: "https://generated-ambert-9f2.notion.site/fe6da7f2876f4dabb7913697ee616fc8") {
+                                UIApplication.shared.open(url)
+                            }
                         } label: {
                             HStack(spacing: 7){
                                 Image("HelperImage")
@@ -274,8 +288,6 @@ struct MainView: View {
                     .closeOnTapOutside(true)
                     .backgroundColor(.black.opacity(0.5))
                     .isOpaque(true)
-            }.onChange(of: coordinator.isProfileEdit){
-                showingPopup = !coordinator.isProfileEdit
             }
             .navigationBarTitle("",displayMode: .inline)
             .navigationBarBackButtonHidden(true)
@@ -283,23 +295,29 @@ struct MainView: View {
                 print("MainHeader Profile Image Clicked!")
                 showingPopup = true
             }label: {
-                AsyncImage(url: URL(string: userData.profileImageURL)){ image in
+                AsyncImage(url: URL(string: userDataManager.userInfo.profileImageURL)){ image in
                     image.resizable()
                 } placeholder: {
                     ProgressView()
                 }.frame(width: 30, height: 30)
                     .cornerRadius(30)
             })
+            .onAppear(){
+                self.userDataManager.readRankData()
+                self.userDataManager.readStudyData()
+                self.userDataManager.readStudyData()
+            }
         }.edgesIgnoringSafeArea(.top)
     }
 }
 
 struct TimersButtonView: View {
     @Environment(NavigationCoordinator.self) var coordinator: NavigationCoordinator
-    var isTimer: Bool
+    var isTimer: timerType
     var body: some View {
         HStack{
-            if isTimer{
+            switch(isTimer){
+            case .timer:
                 Text("⏰")
                     .padding(.leading, 20)
                 Text("타이머")
@@ -324,7 +342,7 @@ struct TimersButtonView: View {
                     }
                 }.frame(width: 80, height: 48)
                 .background(.darkBlue414756)
-            } else {
+            case .stopwatch:
                 Text("⏱️")
                     .padding(.leading, 20)
                 Text("스톱워치")
@@ -337,6 +355,31 @@ struct TimersButtonView: View {
                 Spacer()
                 Button{
                     coordinator.push(.stopwatch)
+                } label: {
+                    HStack{
+                        Text("GO")
+                            .font(Font.system(size: 15))
+                            .fontWeight(.regular)
+                            .foregroundColor(.whiteFFFFFF)
+                        Image("goButtonIcon")
+                            .resizable()
+                            .frame(width: 15, height: 15)
+                    }
+                }.frame(width: 80, height: 48)
+                    .background(.darkBlue414756)
+            case .AItimer:
+                Text("👤")
+                    .padding(.leading, 20)
+                Text("AI 타이머")
+                    .font(Font.system(size: 15))
+                    .fontWeight(.regular)
+                    .foregroundColor(.darkBlue414756)
+                    .multilineTextAlignment(.leading)
+                    .frame(width: 60)
+                    .padding(.leading, 10)
+                Spacer()
+                Button{
+                    coordinator.push(.aiTimer)
                 } label: {
                     HStack{
                         Text("GO")

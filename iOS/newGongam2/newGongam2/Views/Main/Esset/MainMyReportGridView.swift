@@ -8,14 +8,13 @@
 import SwiftUI
 
 struct MainMyReportGridView: View {
-    @EnvironmentObject var userTimeData: UserTimeData
-    @EnvironmentObject var userData: UserData
+    @EnvironmentObject var userDataManger: UserDataManager
     @Binding var viewModel: MainViewModel
     
     private func colorSwitch() -> Color {
-        if self.userTimeData.averageTime < self.userTimeData.totalStudyTime{
+        if self.userDataManger.rankRecord.averageTime < self.userDataManger.rankRecord.totalStudyTime{
             return Color.redFF0000
-        } else if self.userTimeData.averageTime > self.userTimeData.totalStudyTime{
+        } else if self.userDataManger.rankRecord.averageTime > self.userDataManger.rankRecord.totalStudyTime{
             return Color.blue5C84FF
         } else {
             return Color.lightGrayA5ABBD
@@ -45,7 +44,7 @@ struct MainMyReportGridView: View {
                 Text("이번 주는 평균")
                     .font(Font.system(size: 12).weight(.medium))
                     .foregroundColor(.black)
-                Text(self.userTimeData.totalStudyTime.timeToTextForWeekly())
+                Text(self.userDataManger.rankRecord.totalStudyTime.timeToTextForWeekly())
                     .font(Font.system(size: 15).weight(.bold))
                     .foregroundColor(self.colorSwitch())
                 Text("만큼 공부했어요")
@@ -61,8 +60,7 @@ struct MyReportGridItem: View {
     var weeklys = ""
     var date = ""
     var studyTime = 0
-    @EnvironmentObject var userData: UserData
-    @EnvironmentObject var userTimeData: UserTimeData
+    @EnvironmentObject var userDataManager: UserDataManager
     static func == (lhs: MyReportGridItem, rhs: MyReportGridItem) -> Bool {
         // Implement your own equality check based on your requirements
         return lhs.weeklys == rhs.weeklys &&
@@ -85,7 +83,7 @@ struct MyReportGridItem: View {
             Text(self.weeklys)
                 .font(Font.system(size: 15).bold())
                 .foregroundColor(.black)
-            if self.userTimeData.studyDataes[date]?.totalStudyTime ?? 0 > 0{
+            if self.userDataManager.recordUserStudy.studyDataes[date]?.totalStudyTime ?? 0 > 0{
                 if Int(self.studyTime / 3600) != 0{
                     Text("\(self.studyTime/3600)h")
                         .font(Font.system(size: 10).weight(.regular))

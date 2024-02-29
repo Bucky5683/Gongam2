@@ -15,8 +15,7 @@ class ReportViewModel: ObservableObject {
 
 struct ReportView: View {
     @Environment(NavigationCoordinator.self) var coordinator: NavigationCoordinator
-    @EnvironmentObject var userData: UserData
-    @EnvironmentObject var userTimeData: UserTimeData
+    @EnvironmentObject var userDataManager: UserDataManager
     @State var weeklyChartReport: [String : [dailyChartReport]] = [:]
     @State var weeklyKeys: [String] = []
     @State var idx: Int = 0
@@ -53,16 +52,16 @@ struct ReportView: View {
                                 let backgroundColor: Color = setBackgroundColor(totalStudyTime: weekly.totalStudyTime)
                                 BarMark(
                                     x: .value("date", date),
-                                    y: .value("time", weekly.totalStudyTime) 
+                                    y: .value("time", weekly.totalStudyTime)
                                 )
                                 .foregroundStyle(backgroundColor)
                             }
                             RuleMark(
-                                y: .value("Goal", self.userData.goalStudyTime)
+                                y: .value("Goal", self.userDataManager.userInfo.goalStudyTime)
                             ).lineStyle(StrokeStyle(lineWidth: 3))
                                 .foregroundStyle(Color.blue5C84FF)
                             RuleMark(
-                                y: .value("Average", self.userTimeData.averageTime)
+                                y: .value("Average", self.userDataManager.rankRecord.averageTime)
                             ).lineStyle(StrokeStyle(lineWidth: 3))
                                 .foregroundStyle(Color.redFF0000)
                         }.chartYAxis(.hidden)
@@ -82,7 +81,7 @@ struct ReportView: View {
                     }
                     Spacer()
                     ForEach(weeklyChartReport[weeklyKeys[self.idx]] ?? [dailyChartReport(date: Date().getCurrentDateAsString(), totalStudyTime: 0)]) { weekly in
-                        let dailyReport = self.userTimeData.studyDataes[weekly.date]
+                        let dailyReport = self.userDataManager.recordUserStudy.studyDataes[weekly.date]
                         let backgroundColor = self.setBackgroundColor(totalStudyTime: dailyReport?.totalStudyTime ?? 0)
                         dailyReportView(day: weekly.date.getDaysFromString(), totalStudyTime: dailyReport?.totalStudyTime ?? 0, timerStudyTime: dailyReport?.timerStudyTime ?? 0, stopwatchStudyTime: dailyReport?.stopwatchStudyTime ?? 0, backgroundColor: backgroundColor)
                     }
@@ -102,15 +101,16 @@ struct ReportView: View {
     }
     
     private func loadData() {
-        self.userTimeData.downloadData()
+        self.userDataManager.readStudyData()
+        self.userDataManager.readRankData()
         self.makeWeeklyChartReport()
     }
     
     private func makeWeeklyChartReport(){
-        let data = self.userTimeData.studyDataes
+        let data = self.userDataManager.recordUserStudy.studyDataes
         let todayDate = Date().getCurrentDateAsString()
         let threeWeeksAgoDate = Date().getWeeksAgoSunday(week: 4)
-        for (key, value) in self.userTimeData.divideDataByWeeks(startDate: threeWeeksAgoDate?[0].getCurrentDateAsString() ?? Date().getCurrentDateAsString(), endDate: todayDate, data: data){
+        for (key, value) in self.userDataManager.divideDataByWeeks(startDate: threeWeeksAgoDate?[0].getCurrentDateAsString() ?? Date().getCurrentDateAsString(), endDate: todayDate, data: data){
             var listDailyChartReport: [dailyChartReport] = []
             for (dKey, dValue) in value {
                 listDailyChartReport.append(dailyChartReport(date: dKey, totalStudyTime: dValue.totalStudyTime))
@@ -123,9 +123,9 @@ struct ReportView: View {
     }
     
     private func setBackgroundColor(totalStudyTime: Int) -> Color{
-        if totalStudyTime >= self.userData.goalStudyTime{
+        if totalStudyTime >= self.userDataManager.userInfo.goalStudyTime{
             return Color.lightBlueCBD9FE
-        } else if totalStudyTime >= self.userTimeData.averageTime {
+        } else if totalStudyTime >= self.userDataManager.rankRecord.averageTime {
             return Color.pinkECB9C2
         } else {
             return Color.lightGrayA5ABBD

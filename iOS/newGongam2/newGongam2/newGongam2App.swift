@@ -41,14 +41,14 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 @main
 struct newGongam2App: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
-    @StateObject var userData = UserData()
-    @StateObject var userTimeData = UserTimeData()
+    @StateObject var userDataManager = UserDataManager()
     @State private var coordinator = NavigationCoordinator()
     
     init() {
         // Kakao SDK 초기화
         let KAKAO_APP_KEY: String = Bundle.main.infoDictionary?["KAKAO_APP_KEY"] as? String ?? "KAKAO_APP_KEY is nil"
         KakaoSDK.initSDK(appKey: KAKAO_APP_KEY, loggingEnable: true)
+        AppAppearance.setupAppearance()
     }
     
     var body: some Scene {
@@ -71,8 +71,7 @@ struct newGongam2App: App {
 //                            // Check if `user` exists; otherwise, do something with `error`
 //                        }
 //                    }
-            }.environmentObject(userData)
-                .environmentObject(userTimeData)
+            }.environmentObject(userDataManager)
                 .environment(coordinator)
         }
     }

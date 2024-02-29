@@ -68,18 +68,18 @@ class TimeViewModel: ObservableObject {
         self.timeRemaining = self.hours + self.minutes + self.seconds
     }
     
-    func updateFirebase(userData: UserData, userTimeData: UserTimeData, isTimerFinished: Bool){
+    func updateFirebase(userDataManager: UserDataManager, isTimerFinished: Bool){
         if isTimerFinished {
-            userData.todayStudyTime += self.timerTime
-            userData.timerStudyTime += self.timerTime
-            userTimeData.totalStudyTime += self.timerTime
-            userData.lastUpdateDate = Date().getCurrentDateAsString()
-            userTimeData.updateTimeData(stopwatch: userData.stopwatchStudyTime, timer: userData.timerStudyTime)
-            userData.setUserDataPartly(type: .timerStudyTime, data: userData.timerStudyTime)
-            userData.setUserDataPartly(type: .todayStudyTime, data: userData.todayStudyTime)
-            userData.setUserDataPartly(type: .lastUpdateDate, data: userData.lastUpdateDate)
-            userTimeData.uploadTimeData(stopwatch: userData.stopwatchStudyTime, timer: userData.timerStudyTime)
-            userTimeData.uploadRankData()
+            userDataManager.userInfo.todayStudyTime += self.timerTime
+            userDataManager.userInfo.timerStudyTime += self.timerTime
+            userDataManager.rankRecord.totalStudyTime += self.timerTime
+            userDataManager.userInfo.lastUpdateDate = Date().getCurrentDateAsString()
+            
+            userDataManager.updateTimeData(stopwatch: userDataManager.userInfo.stopwatchStudyTime, timer: userDataManager.userInfo.timerStudyTime)
+            
+            userDataManager.writeUserInfo()
+            userDataManager.writeStudyData()
+            userDataManager.writeRankData()
             self.isStarted = true
         }
     }
@@ -93,7 +93,7 @@ class TimeViewModel: ObservableObject {
         }
     }
     
-    func startTimer(userData: UserData, userTimeData: UserTimeData){
+    func startTimer(userDataManager: UserDataManager){
         guard timer == nil else {return}
         
         timer = Timer.scheduledTimer(
@@ -112,7 +112,7 @@ class TimeViewModel: ObservableObject {
             } else {
                 self.stopTimer()
                 self.notificationService.sendNotification()
-                self.updateFirebase(userData: userData, userTimeData: userTimeData, isTimerFinished: self.timerFinished)
+                self.updateFirebase(userDataManager: userDataManager, isTimerFinished: self.timerFinished)
             }
         }
     }
@@ -126,8 +126,7 @@ class TimeViewModel: ObservableObject {
 
 //MARK: View
 struct TimerView: View {
-    @EnvironmentObject var userData: UserData
-    @EnvironmentObject var userTimeData: UserTimeData
+    @EnvironmentObject var userDataManager: UserDataManager
     @Environment(NavigationCoordinator.self) var coordinator: NavigationCoordinator
     @State private var previousTranslation: CGFloat = 0
     @ObservedObject private var viewModel: TimeViewModel = TimeViewModel()
@@ -159,6 +158,7 @@ struct TimerView: View {
                 Spacer()
             }
             HStack {
+                Spacer()
                 VStack{
                     Text("\(String(format: "%02d", self.viewModel.hours/3600))")
                         .font(.largeTitle)
@@ -237,6 +237,7 @@ struct TimerView: View {
                         .font(Font.system(size: 15).bold())
                         .foregroundColor(.whiteFFFFFF)
                 }
+                Spacer()
             }
             HStack{
                 Text("오늘 목표")
@@ -244,7 +245,7 @@ struct TimerView: View {
                     .underline()
                     .foregroundColor(.white)
                 Spacer()
-                Text("\(self.userData.goalStudyTime.timeToText())")
+                Text("\(self.userDataManager.userInfo.goalStudyTime.timeToText())")
                     .font(Font.system(size: 18))
                     .multilineTextAlignment(.trailing)
                     .foregroundColor(.white)
@@ -258,7 +259,7 @@ struct TimerView: View {
                         .font(Font.system(size: 12).bold())
                         .multilineTextAlignment(.trailing)
                         .foregroundColor(.lightGrayA5ABBD)
-                    let remainTime = viewModel.calculateReMainTime(goalTime: self.userData.goalStudyTime, todayStudyTime: self.userData.todayStudyTime)
+                    let remainTime = viewModel.calculateReMainTime(goalTime: self.userDataManager.userInfo.goalStudyTime, todayStudyTime: self.userDataManager.userInfo.todayStudyTime)
                     if remainTime > 0{
                         Text("\(remainTime.timeToText())")
                             .font(Font.system(size: 12).bold())
@@ -281,7 +282,7 @@ struct TimerView: View {
             ZStack {
                 if self.viewModel.isStarted {
                     Button {
-                        self.viewModel.startTimer(userData: self.userData, userTimeData: self.userTimeData)
+                        self.viewModel.startTimer(userDataManager: self.userDataManager)
                         self.viewModel.isStarted = false
                     } label: {
                         Text("START")
@@ -296,7 +297,7 @@ struct TimerView: View {
                 } else {
                     Button {
                         self.viewModel.stopTimer()
-                        self.viewModel.updateFirebase(userData: self.userData, userTimeData: self.userTimeData, isTimerFinished: self.viewModel.timerFinished)
+                        self.viewModel.updateFirebase(userDataManager: self.userDataManager, isTimerFinished: self.viewModel.timerFinished)
                         self.viewModel.isStarted = true
                     } label: {
                         Text("STOP")
