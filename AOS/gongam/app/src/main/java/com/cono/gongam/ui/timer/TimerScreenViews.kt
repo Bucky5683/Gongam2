@@ -38,6 +38,7 @@ import com.cono.gongam.data.User
 import com.cono.gongam.data.UserViewModel
 import com.cono.gongam.ui.SpacedEdgeTextsWithCenterVertically
 import com.cono.gongam.ui.TopTitle
+import com.cono.gongam.utils.StringUtil
 import com.cono.gongam.utils.TimeUtils
 
 @RequiresApi(Build.VERSION_CODES.Q)
@@ -282,21 +283,21 @@ fun TimerTickingText(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center
     ) {
-        TickingHMS(time = remainingTime.first, timeText = "시간")
+        TickingHMS(time = StringUtil.convertToTwoDigitString(remainingTime.first), timeText = "시간")
         TimeColonText()
-        TickingHMS(time = remainingTime.second, timeText = "분")
+        TickingHMS(time = StringUtil.convertToTwoDigitString(remainingTime.second), timeText = "분")
         TimeColonText()
-        TickingHMS(time = remainingTime.third, timeText = "초")
+        TickingHMS(time = StringUtil.convertToTwoDigitString(remainingTime.third), timeText = "초")
     }
 }
 
 @Composable
-fun TickingHMS(time: Int, timeText: String) {
+fun TickingHMS(time: String, timeText: String) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "$time",
+            text = time,
             color = Color.White,
             fontSize = 48.sp,
             fontWeight = FontWeight(700),

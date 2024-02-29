@@ -13,7 +13,7 @@ android {
 
     defaultConfig {
         applicationId = "com.cono.gongam"
-        minSdk = 26
+        minSdk = 28
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -51,6 +51,16 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+    sourceSets {
+        getByName("main") {
+            assets {
+                srcDirs("src\\main\\assets", "src\\main\\assets")
+            }
+        }
+    }
+    buildFeatures {
+        viewBinding = true
+    }
 }
 
 dependencies {
@@ -75,7 +85,7 @@ dependencies {
     implementation(libs.coil.compose)
     implementation(platform("androidx.compose:compose-bom:2023.08.00"))
     implementation(libs.firebase.storage.ktx)
-    implementation(project(":openCV"))
+    implementation(libs.vision.common)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
@@ -123,6 +133,15 @@ dependencies {
 
     // Image loading library
     implementation(libs.coil)
+
+    // ML Kit
+    implementation("com.google.mlkit:face-detection:16.1.6")
+
+    // CameraX
+    implementation("androidx.camera:camera-camera2:1.3.1")
+    implementation("androidx.camera:camera-lifecycle:1.3.1")
+    implementation("androidx.camera:camera-core:1.3.1")
+    implementation("androidx.camera:camera-view:1.3.1")
 }
 
 kapt {
