@@ -2,6 +2,7 @@ package com.cono.gongam.ui.main
 
 import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -57,6 +58,8 @@ import com.cono.gongam.utils.SharedPreferencesUtil
 
 class MainActivity : ComponentActivity() {
     private lateinit var sharedPreferencesUtil : SharedPreferencesUtil
+    val REQUEST_CODE_AI_STOPWATCH = 123
+
     @RequiresApi(Build.VERSION_CODES.Q)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -72,17 +75,28 @@ class MainActivity : ComponentActivity() {
                         .fillMaxSize(),
                     color = Color.White
                 ) {
-                    MyApp(sharedPreferencesUtil)
+                    MyApp(sharedPreferencesUtil, activity = this)
                 }
             }
         }
 
     }
+
+    @Deprecated("Deprecated in Java")
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == REQUEST_CODE_AI_STOPWATCH) {
+            if (resultCode == Activity.RESULT_OK) {
+                val studyTimes = data?.getIntExtra("studyTimes", 0)
+                Log.d("AIActivity", "From AIStopWatchActivity :: $studyTimes")
+            }
+        }
+    }
 }
 
 @RequiresApi(Build.VERSION_CODES.Q)
 @Composable
-fun MyApp(sharedPreferencesUtil: SharedPreferencesUtil) {
+fun MyApp(sharedPreferencesUtil: SharedPreferencesUtil, activity: Activity) {
     val navController = rememberNavController()
 
     val userViewModel: UserViewModel = viewModel()
@@ -99,7 +113,7 @@ fun MyApp(sharedPreferencesUtil: SharedPreferencesUtil) {
             LoginScreen(navController, userViewModel, rankingViewModel, studyDatesViewModel)
         }
         composable(TodoScreen.Main.name) {
-            MainScreen(navController, userViewModel, rankingViewModel, studyDatesViewModel, uid)
+            MainScreen(navController, userViewModel, rankingViewModel, studyDatesViewModel, uid, activity)
         }
         composable(TodoScreen.Ranking.name) {
             RankingScreen(userViewModel, rankingViewModel)
@@ -130,7 +144,8 @@ fun MainScreen(
     userViewModel: UserViewModel,
     rankingViewModel: RankingViewModel,
     studyDatesViewModel: StudyDatesViewModel,
-    uid: String
+    uid: String,
+    activity: Activity
 ) {
     val context: Context = LocalContext.current
     val sharedPreferences = SharedPreferencesUtil(context)
@@ -164,7 +179,7 @@ fun MainScreen(
             TopView(userViewModel = userViewModel, uid)
         }
         Spacer(modifier = Modifier.height(15.dp))
-        TimerView(navController = navController)
+        TimerView(navController = navController, activity = activity)
         Spacer(modifier = Modifier.height(42.5.dp))
         if (rankUserList.isNotEmpty()) {
             Log.d("MainScreen", "rankUserList is not empty")

@@ -1,14 +1,12 @@
 package com.cono.gongam.ui.timer
 
-import android.animation.ValueAnimator
+import android.app.Activity
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.view.animation.AlphaAnimation
-import android.view.animation.Animation
-import android.view.animation.AnimationSet
-import android.widget.TextView
+import androidx.activity.viewModels
 import androidx.annotation.OptIn
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ExperimentalGetImage
@@ -17,10 +15,10 @@ import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.cono.gongam.R
 import com.cono.gongam.data.AIStopWatchViewModel
+import com.cono.gongam.data.UserViewModel
 import com.cono.gongam.databinding.ActivityAistopWatchBinding
 import com.cono.gongam.utils.TimeUtils
 import com.google.common.util.concurrent.ListenableFuture
@@ -32,14 +30,21 @@ class AIStopWatchActivity : AppCompatActivity() {
     private var isStarted: Boolean = false
 
     private lateinit var binding: ActivityAistopWatchBinding
-    private lateinit var viewModel: AIStopWatchViewModel
+    private lateinit var aiStopWatchViewModel: AIStopWatchViewModel
+//    private val userViewModel: UserViewModel by viewModels()
     private lateinit var cameraProviderFuture: ListenableFuture<ProcessCameraProvider>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+//        Log.d(TAG, "email : ${userViewModel.getCurrentUser()?.email}")
+//        Log.d(TAG, "name : ${userViewModel.getCurrentUser()?.name}")
+//        Log.d(TAG, "timerStudyTime : ${userViewModel.getCurrentUser()?.timerStudyTime}")
+//        Log.d(TAG, "stopwatchStudyTime : ${userViewModel.getCurrentUser()?.stopwatchStudyTime}")
+
         binding = ActivityAistopWatchBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        viewModel = ViewModelProvider(this).get(AIStopWatchViewModel::class.java)
+        aiStopWatchViewModel = ViewModelProvider(this).get(AIStopWatchViewModel::class.java)
 
         observeViewModel()
 
@@ -65,8 +70,8 @@ class AIStopWatchActivity : AppCompatActivity() {
     }
 
     private fun observeViewModel() {
-        viewModel.startCounting()
-        viewModel.seconds.observe(this) { seconds ->
+        aiStopWatchViewModel.startCounting()
+        aiStopWatchViewModel.seconds.observe(this) { seconds ->
             val times = TimeUtils.convertSecondsToTimeInTriple(seconds)
             binding.tvHoursCount.text = times.first
             binding.tvMinutesCount.text = times.second
@@ -112,14 +117,14 @@ class AIStopWatchActivity : AppCompatActivity() {
                                     binding.tvIsFaceDetected.text = "얼굴 인식중"
                                     binding.tvNoFaceDetected.visibility = View.GONE
                                     if (isStarted) {
-                                        viewModel.setFaceDetected(true)
+                                        aiStopWatchViewModel.setFaceDetected(true)
                                     }
                                 } else {
                                     if (isStarted) {
                                         binding.tvIsFaceDetected.text = "인식된 얼굴 없음"
                                         binding.tvNoFaceDetected.visibility = View.VISIBLE
                                     }
-                                    viewModel.setFaceDetected(false)
+                                    aiStopWatchViewModel.setFaceDetected(false)
                                 }
                             }
                             .addOnFailureListener { e ->
@@ -133,6 +138,17 @@ class AIStopWatchActivity : AppCompatActivity() {
             }
 
         cameraProvider.bindToLifecycle(this, cameraSelector, preview, imageAnalysis)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+//        val uid =
+
+        Log.d(TAG, "AIStopWAtchActivity 종료. 값 전달 시작")
+        val studyTimes = 10
+        val resultIntent = Intent()
+        resultIntent.putExtra("studyTimes", studyTimes)
+        setResult(Activity.RESULT_OK, resultIntent)
     }
 
 }

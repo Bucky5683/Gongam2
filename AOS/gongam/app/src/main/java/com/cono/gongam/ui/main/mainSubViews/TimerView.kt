@@ -1,5 +1,6 @@
 package com.cono.gongam.ui.main.mainSubViews
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import androidx.compose.foundation.Image
@@ -33,17 +34,18 @@ import com.cono.gongam.data.TodoScreen
 import com.cono.gongam.ui.timer.AIStopWatchActivity
 
 @Composable
-fun TimerView(navController: NavController) {
+fun TimerView(navController: NavController, activity: Activity) {
     ContentsTitleView("타이머", false)
     Spacer(modifier = Modifier.height(13.5.dp))
-    TimerButton(icon = "⏰", title = "타이머", navController = navController)
-    TimerButton(icon = "⏱️", title = "스톱워치", navController = navController)
-    TimerButton(icon = "⏱️", title = "AI 스톱워치", navController = navController)
+    TimerButton(icon = "⏰", title = "타이머", navController = navController, activity = activity)
+    TimerButton(icon = "⏱️", title = "스톱워치", navController = navController, activity = activity)
+    TimerButton(icon = "⏱️", title = "AI 스톱워치", navController = navController, activity = activity)
 }
 
 @Composable
-fun TimerButton(icon: String, title: String, navController: NavController) {
+fun TimerButton(icon: String, title: String, navController: NavController, activity: Activity) {
     val context = LocalContext.current
+    val REQUEST_CODE_AI_STOPWATCH = 123
 
     Row(
         modifier = Modifier.padding(top = 7.5.dp, bottom = 7.5.dp, start = 40.dp, end = 40.dp)
@@ -65,7 +67,11 @@ fun TimerButton(icon: String, title: String, navController: NavController) {
                     } else if (title == "스톱워치") {
                         navController.navigate(TodoScreen.StopWatch.name)
                     } else {
-                        context.startActivity(Intent(context, AIStopWatchActivity::class.java))
+//                        context.startActivity(Intent(context, AIStopWatchActivity::class.java))
+//                        val intent = Intent(context, AIStopWatchActivity::class.java)
+//                        (context as Activity).startActivityForResult(intent, REQUEST_CODE_AI_STOPWATCH)
+                        val intent = Intent(activity, AIStopWatchActivity::class.java)
+                        activity.startActivityForResult(intent, REQUEST_CODE_AI_STOPWATCH)
                     }
                 }
         ) {

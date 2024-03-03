@@ -3,7 +3,12 @@ package com.cono.gongam.data
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.google.common.base.Stopwatch
+import com.cono.gongam.utils.DateUtils
+import com.google.firebase.Firebase
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.database
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -38,6 +43,37 @@ class AIStopWatchViewModel : ViewModel() {
 
     fun setFaceDetected(isDetected: Boolean) {
         isFaceDetected = isDetected
+    }
+
+    private fun updateSecondsInDatabase(uid: String) {
+        val aiStudyTime = _seconds.value?: 0
+        val todayDate = DateUtils.getCurrentDate()
+
+        val studyDataRef = Firebase.database.getReference("StudyDataes").child(uid)
+        val todayRef = studyDataRef.child(todayDate)
+
+        todayRef.addListenerForSingleValueEvent(object: ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val timerStudyTimeRef = todayRef.child("timerStudyTime")
+                val totalStudyTimeRef = todayRef.child("totalStudyTime")
+                val stopwatchStudyTimeRef = todayRef.child("stopwatchStudyTime")
+
+                val currentTimerStudyTime = snapshot.child("timerStudyTime").getValue(Int::class.java) ?: 0
+                val currentTotalStudyTime = snapshot.child("totalStudyTime").getValue(Int::class.java) ?: 0
+
+                timerStudyTimeRef.setValue(currentTimerStudyTime + aiStudyTime)
+                totalStudyTimeRef.setValue(currentTotalStudyTime + aiStudyTime)
+
+                if (!snapshot.exists()) { // 오늘 공부 기록 없음
+                    stopwatchStudyTimeRef.setValue(0)
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+        })
     }
 
     override fun onCleared() {
