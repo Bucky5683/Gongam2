@@ -50,6 +50,7 @@ import androidx.lifecycle.viewModelScope
 import coil.ImageLoader
 import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
+import coil.compose.rememberImagePainter
 import coil.request.ImageRequest
 import com.cono.gongam.R
 import com.cono.gongam.data.UserViewModel
@@ -165,16 +166,18 @@ fun GoalText(studiedThanGoal: Boolean, diffTime: Int) {
 @Composable
 fun ProfileImage(userViewModel: UserViewModel, uid: String) {
     var showPopup by remember { mutableStateOf(false) }
-    val userProfileURLState = remember { mutableStateOf("") }
+//    val userProfileURLState = remember { mutableStateOf("") }
     val userProfileURL by userViewModel.userProfileURL.observeAsState(initial = "")
-    userProfileURLState.value = userProfileURL
+//    userProfileURLState.value = userProfileURL
+
+    Log.d("프로필이미지", "User profile URL: $userProfileURL")
 
     val getContent = rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri: Uri? ->
         uri?.let { selectedImageUri ->
             userViewModel.viewModelScope.launch {
                 userViewModel.uploadImageToFirebase(selectedImageUri)
                 Log.d("ImageUrlTest", "currentProfileImageUrl : $userProfileURL")
-                userProfileURLState.value = userViewModel.getProfileImageURL() ?: ""
+//                userProfileURLState.value = userViewModel.getProfileImageURL() ?: ""
                 userViewModel.setProfileImageURLToFirebase(uid = uid, selectedImageUrl = selectedImageUri.toString())
             }
         }
@@ -194,15 +197,54 @@ fun ProfileImage(userViewModel: UserViewModel, uid: String) {
 //                    showPopup = true
 //                }
 //        )
-        CoilImage(
-            model = userProfileURLState.value,
+
+        val painter = rememberAsyncImagePainter(
+            userProfileURL,
+            onError = {
+                Log.d("프로필이미지", "Failed to load image")
+            }
+        )
+
+        Image(
+            painter = painter,
+            contentDescription = null,
             modifier = Modifier
                 .clip(CircleShape)
-                .width(30.dp).height(30.dp)
+                .width(30.dp)
+                .height(30.dp)
                 .clickable {
                     showPopup = true
                 }
         )
+
+//        if (userProfileURL.isNotEmpty()) {
+//            Image(
+////            model = userProfileURLState.value,
+////            model = userProfileURL,
+//                painter = rememberAsyncImagePainter(userProfileURL),
+//                contentDescription = null,
+//                modifier = Modifier
+//                    .clip(CircleShape)
+//                    .width(30.dp)
+//                    .height(30.dp)
+//                    .clickable {
+//                        showPopup = true
+//                    }
+//            )
+//        } else {
+//            Image(
+//                painter = painterResource(id = R.drawable.img_test_profile),
+//                contentDescription = null,
+//                modifier = Modifier
+//                    .clip(CircleShape)
+//                    .width(30.dp)
+//                    .height(30.dp)
+//                    .clickable {
+//                        showPopup = true
+//                    }
+//            )
+//        }
+
         if (showPopup) {
             Popup(
                 onDismissRequest = { showPopup = false },
@@ -266,10 +308,12 @@ fun ProfileImage(userViewModel: UserViewModel, uid: String) {
 //                                    }
 //                            )
                             CoilImage(
-                                model = userProfileURLState.value,
+//                                model = userProfileURLState.value,
+                                model = userProfileURL,
                                 modifier = Modifier
                                     .clip(CircleShape)
-                                    .width(80.dp).height(80.dp)
+                                    .width(80.dp)
+                                    .height(80.dp)
                                     .clickable {
                                         getContent.launch("image/*")
                                     }

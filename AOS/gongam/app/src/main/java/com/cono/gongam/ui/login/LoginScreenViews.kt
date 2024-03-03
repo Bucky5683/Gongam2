@@ -166,13 +166,21 @@ fun GoogleLoginButton(
                         } else { // 이미 존재하는 유저
                             val dataSnapshot = Firebase.database.getReference("Users").child(uid).get().await()
                             val userData = dataSnapshot.getValue(User::class.java)
-                            user.timerStudyTime = userData?.timerStudyTime
-                            user.stopwatchStudyTime = userData?.stopwatchStudyTime
-                            user.todayStudyTime = userData?.timerStudyTime!! + userData.stopwatchStudyTime!!
-                            user.goalStudyTime = userData.goalStudyTime
+
+                            if (userData?.lastUpdateDate == todayDate) { // 오늘 공부한 기록이 있는 경우
+                                user.timerStudyTime = userData.timerStudyTime
+                                user.stopwatchStudyTime = userData.stopwatchStudyTime
+                                user.todayStudyTime = userData.timerStudyTime!! + userData.stopwatchStudyTime!!
+                            } else {
+                                user.timerStudyTime = 0
+                                user.stopwatchStudyTime = 0
+                                user.todayStudyTime = 0
+                                user.lastUpdateDate = todayDate
+                            }
+                            user.goalStudyTime = userData?.goalStudyTime
 //                            user.profileImageURL = userData.profileImageURL
                             userViewModel.setCurrentUser(user)
-                            userViewModel.setProfileImageURL(userData.profileImageURL ?: "")
+                            userViewModel.setProfileImageURL(userData?.profileImageURL ?: "")
                             onLoginSuccess(user, uid)
                         }
                     }

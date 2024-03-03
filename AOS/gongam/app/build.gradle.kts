@@ -86,6 +86,7 @@ dependencies {
     implementation(platform("androidx.compose:compose-bom:2023.08.00"))
     implementation(libs.firebase.storage.ktx)
     implementation(libs.vision.common)
+    implementation(libs.play.services.mlkit.face.detection)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)

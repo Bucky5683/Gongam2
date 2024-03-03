@@ -20,6 +20,7 @@ vico = "1.13.1"
 firebase-storage-ktx = "20.3.0"
 kotlin = "1.8.10"
 vision-common = "17.3.0"
+play-services-mlkit-face-detection = "17.1.0"
 
 [libraries]
 # For Jetpack Compose.
@@ -56,6 +57,7 @@ vico-core = { group = "com.patrykandpatrick.vico", name = "core", version.ref = 
 vico-views = { group = "com.patrykandpatrick.vico", name = "views", version.ref = "vico" }
 firebase-storage-ktx = { group = "com.google.firebase", name = "firebase-storage-ktx", version.ref = "firebase-storage-ktx" }
 vision-common = { group = "com.google.mlkit", name = "vision-common", version.ref = "vision-common" }
+play-services-mlkit-face-detection = { group = "com.google.android.gms", name = "play-services-mlkit-face-detection", version.ref = "play-services-mlkit-face-detection" }
 
 [plugins]
 kotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
