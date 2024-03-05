@@ -30,9 +30,9 @@ class AIStopWatchActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityAistopWatchBinding
     private lateinit var aiStopWatchViewModel: AIStopWatchViewModel
-//    private val userViewModel: UserViewModel by viewModels()
-    private lateinit var cameraProviderFuture: ListenableFuture<ProcessCameraProvider>
+    private lateinit var sharedPreferencesUtil: SharedPreferencesUtil
 
+    private lateinit var cameraProviderFuture: ListenableFuture<ProcessCameraProvider>
     private lateinit var uid: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,7 +46,8 @@ class AIStopWatchActivity : AppCompatActivity() {
         binding = ActivityAistopWatchBinding.inflate(layoutInflater)
         setContentView(binding.root)
         aiStopWatchViewModel = ViewModelProvider(this).get(AIStopWatchViewModel::class.java)
-        uid = SharedPreferencesUtil(this).getUid()
+        sharedPreferencesUtil = SharedPreferencesUtil(this)
+        uid = sharedPreferencesUtil.getUid()
 
         observeViewModel()
 
@@ -63,6 +64,8 @@ class AIStopWatchActivity : AppCompatActivity() {
             }
             isStarted = !isStarted
         }
+
+        binding.tvTodayGoal.text = TimeUtils.convertSecondsToTimeInString(sharedPreferencesUtil.getGoalTime())
 
         cameraProviderFuture = ProcessCameraProvider.getInstance(this)
         cameraProviderFuture.addListener({

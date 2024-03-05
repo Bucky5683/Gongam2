@@ -39,7 +39,7 @@ fun TimerView(navController: NavController, activity: Activity) {
     Spacer(modifier = Modifier.height(13.5.dp))
     TimerButton(icon = "⏰", title = "타이머", navController = navController, activity = activity)
     TimerButton(icon = "⏱️", title = "스톱워치", navController = navController, activity = activity)
-    TimerButton(icon = "⏱️", title = "AI 스톱워치", navController = navController, activity = activity)
+    TimerButton(icon = "\uD83D\uDC64", title = "AI 스톱워치", navController = navController, activity = activity)
 }
 
 @Composable

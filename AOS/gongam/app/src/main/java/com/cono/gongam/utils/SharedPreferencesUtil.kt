@@ -39,6 +39,10 @@ class SharedPreferencesUtil(context: Context) {
         return sharedPreferences.getString("uid", "") ?: ""
     }
 
+    fun getGoalTime(): Int {
+        return sharedPreferences.getInt("goalStudyTime", 0)
+    }
+
     fun clearUser() {
         editor.clear().apply()
     }
