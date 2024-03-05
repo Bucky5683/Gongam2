@@ -123,6 +123,8 @@ class AIStopWatchActivity : AppCompatActivity() {
                                     binding.tvNoFaceDetected.visibility = View.GONE
                                     if (isStarted) {
                                         aiStopWatchViewModel.setFaceDetected(true)
+                                    } else {
+                                        aiStopWatchViewModel.setFaceDetected(false)
                                     }
                                 } else {
                                     binding.tvIsFaceDetected.text = "인식된 얼굴 없음"
