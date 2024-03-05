@@ -6,7 +6,6 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import androidx.activity.viewModels
 import androidx.annotation.OptIn
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ExperimentalGetImage
@@ -17,9 +16,9 @@ import androidx.camera.view.PreviewView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import com.cono.gongam.R
-import com.cono.gongam.data.AIStopWatchViewModel
-import com.cono.gongam.data.UserViewModel
+import com.cono.gongam.data.viewmodels.AIStopWatchViewModel
 import com.cono.gongam.databinding.ActivityAistopWatchBinding
+import com.cono.gongam.utils.SharedPreferencesUtil
 import com.cono.gongam.utils.TimeUtils
 import com.google.common.util.concurrent.ListenableFuture
 import com.google.mlkit.vision.common.InputImage
@@ -34,6 +33,8 @@ class AIStopWatchActivity : AppCompatActivity() {
 //    private val userViewModel: UserViewModel by viewModels()
     private lateinit var cameraProviderFuture: ListenableFuture<ProcessCameraProvider>
 
+    private lateinit var uid: String
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -45,6 +46,7 @@ class AIStopWatchActivity : AppCompatActivity() {
         binding = ActivityAistopWatchBinding.inflate(layoutInflater)
         setContentView(binding.root)
         aiStopWatchViewModel = ViewModelProvider(this).get(AIStopWatchViewModel::class.java)
+        uid = SharedPreferencesUtil(this).getUid()
 
         observeViewModel()
 
@@ -120,8 +122,8 @@ class AIStopWatchActivity : AppCompatActivity() {
                                         aiStopWatchViewModel.setFaceDetected(true)
                                     }
                                 } else {
+                                    binding.tvIsFaceDetected.text = "인식된 얼굴 없음"
                                     if (isStarted) {
-                                        binding.tvIsFaceDetected.text = "인식된 얼굴 없음"
                                         binding.tvNoFaceDetected.visibility = View.VISIBLE
                                     }
                                     aiStopWatchViewModel.setFaceDetected(false)
@@ -144,11 +146,13 @@ class AIStopWatchActivity : AppCompatActivity() {
         super.onDestroy()
 //        val uid =
 
-        Log.d(TAG, "AIStopWAtchActivity 종료. 값 전달 시작")
-        val studyTimes = 10
-        val resultIntent = Intent()
-        resultIntent.putExtra("studyTimes", studyTimes)
-        setResult(Activity.RESULT_OK, resultIntent)
+//        Log.d(TAG, "AIStopWAtchActivity 종료. 값 전달 시작")
+//        val studyTimes = 10
+//        val resultIntent = Intent()
+//        resultIntent.putExtra("studyTimes", studyTimes)
+//        setResult(Activity.RESULT_OK, resultIntent)
+
+        aiStopWatchViewModel.updateSecondsInDatabase(uid)
     }
 
 }

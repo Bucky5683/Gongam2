@@ -32,7 +32,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.cono.gongam.R
 import com.cono.gongam.data.StudyDates
-import com.cono.gongam.data.StudyDatesViewModel
+import com.cono.gongam.data.viewmodels.StudyDatesViewModel
 import com.cono.gongam.ui.TopTitle
 import com.cono.gongam.ui.main.setStatusBarColor
 import com.cono.gongam.utils.TimeUtils

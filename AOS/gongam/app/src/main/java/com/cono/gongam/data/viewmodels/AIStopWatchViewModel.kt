@@ -1,5 +1,6 @@
-package com.cono.gongam.data
+package com.cono.gongam.data.viewmodels
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -45,8 +46,9 @@ class AIStopWatchViewModel : ViewModel() {
         isFaceDetected = isDetected
     }
 
-    private fun updateSecondsInDatabase(uid: String) {
+    fun updateSecondsInDatabase(uid: String) {
         val aiStudyTime = _seconds.value?: 0
+        Log.d("AIActivity", "_seconds.value : ${_seconds.value}")
         val todayDate = DateUtils.getCurrentDate()
 
         val studyDataRef = Firebase.database.getReference("StudyDataes").child(uid)
@@ -58,15 +60,37 @@ class AIStopWatchViewModel : ViewModel() {
                 val totalStudyTimeRef = todayRef.child("totalStudyTime")
                 val stopwatchStudyTimeRef = todayRef.child("stopwatchStudyTime")
 
-                val currentTimerStudyTime = snapshot.child("timerStudyTime").getValue(Int::class.java) ?: 0
+                val currentStopWatchStudyTime = snapshot.child("stopwatchStudyTime").getValue(Int::class.java) ?: 0
                 val currentTotalStudyTime = snapshot.child("totalStudyTime").getValue(Int::class.java) ?: 0
 
-                timerStudyTimeRef.setValue(currentTimerStudyTime + aiStudyTime)
+                stopwatchStudyTimeRef.setValue(currentStopWatchStudyTime + aiStudyTime)
                 totalStudyTimeRef.setValue(currentTotalStudyTime + aiStudyTime)
 
                 if (!snapshot.exists()) { // 오늘 공부 기록 없음
-                    stopwatchStudyTimeRef.setValue(0)
+                    timerStudyTimeRef.setValue(0)
                 }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.d("AIActivity", "Database Error : $error")
+            }
+
+        })
+
+        val userRef = Firebase.database.getReference("Users").child(uid)
+
+        userRef.addListenerForSingleValueEvent(object: ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+//                val timerStudyTimeRef = userRef.child("timerStudyTime")
+                val stopwatchStudyTimeRef = userRef.child("stopwatchStudyTime")
+                val todayStudyTimeRef = userRef.child("todayStudyTime")
+
+//                val currentTimerStudyTime = snapshot.child("timerStudyTime").getValue(Int::class.java) ?: 0
+                val currentStopWatchTime = snapshot.child("stopwatchStudyTime").getValue(Int::class.java) ?: 0
+                val currentTodayStudyTime = snapshot.child("todayStudyTime").getValue(Int::class.java) ?: 0
+
+                stopwatchStudyTimeRef.setValue(currentStopWatchTime + aiStudyTime)
+                todayStudyTimeRef.setValue(currentTodayStudyTime + aiStudyTime)
             }
 
             override fun onCancelled(error: DatabaseError) {

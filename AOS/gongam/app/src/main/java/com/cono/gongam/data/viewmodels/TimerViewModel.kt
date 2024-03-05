@@ -1,4 +1,4 @@
-package com.cono.gongam.data
+package com.cono.gongam.data.viewmodels
 
 import android.os.Looper
 import androidx.compose.runtime.getValue

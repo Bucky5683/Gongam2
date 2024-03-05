@@ -31,7 +31,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.cono.gongam.R
 import com.cono.gongam.data.RankUser
-import com.cono.gongam.data.RankingViewModel
+import com.cono.gongam.data.viewmodels.RankingViewModel
 import com.cono.gongam.data.TodoScreen
 import com.cono.gongam.data.User
 import com.cono.gongam.utils.TimeUtils
@@ -272,9 +272,9 @@ private fun DrawUserStudyTimes(isBelowAverage: Boolean, user: User, userRank: St
 
 @Composable
 private fun SetCompareAverageText(user: User, studyTimeAverage: Int) {
-    val diffFromAverage = (user.timerStudyTime!! + user.stopwatchStudyTime!!) - studyTimeAverage
-    val less: Boolean = diffFromAverage < 0
-    if (diffFromAverage < 0) diffFromAverage * (-1)
+    var diffFromAverage = (user.timerStudyTime!! + user.stopwatchStudyTime!!) - studyTimeAverage
+    val lessThanAverage: Boolean = diffFromAverage < 0
+    if (lessThanAverage) diffFromAverage *= (-1)
 
     Row(
         verticalAlignment = Alignment.CenterVertically
@@ -288,11 +288,11 @@ private fun SetCompareAverageText(user: User, studyTimeAverage: Int) {
         Text(
             text = TimeUtils.convertSecondsToTimeInString(diffFromAverage),
             fontSize = 15.sp,
-            color = if (less) colorResource(id = R.color.blue_scale2) else colorResource(id = R.color.red_scale2),
+            color = if (lessThanAverage) colorResource(id = R.color.blue_scale2) else colorResource(id = R.color.red_scale2),
             fontWeight = FontWeight(700)
         )
         Text(
-            text = if (less) " 만큼 덜 공부했어요!" else " 만큼 더 공부했어요!",
+            text = if (lessThanAverage) " 만큼 덜 공부했어요!" else " 만큼 더 공부했어요!",
             fontSize = 12.sp,
             color = colorResource(id = R.color.main_gray),
             fontWeight = FontWeight(500)

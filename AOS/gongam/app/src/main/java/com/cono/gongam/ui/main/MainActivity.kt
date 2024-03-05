@@ -28,18 +28,18 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.view.WindowCompat
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.cono.gongam.R
-import com.cono.gongam.data.RankingViewModel
-import com.cono.gongam.data.StudyDatesViewModel
+import com.cono.gongam.data.viewmodels.RankingViewModel
+import com.cono.gongam.data.viewmodels.StudyDatesViewModel
 import com.cono.gongam.data.TodoScreen
-import com.cono.gongam.data.User
-import com.cono.gongam.data.UserViewModel
+import com.cono.gongam.data.viewmodels.UserViewModel
+import com.cono.gongam.data.viewmodels.UserViewModelFactory
 import com.cono.gongam.ui.login.LoginScreen
 import com.cono.gongam.ui.main.mainSubViews.ContentsTitleView
 import com.cono.gongam.ui.main.mainSubViews.MyReportView
@@ -65,6 +65,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         sharedPreferencesUtil = SharedPreferencesUtil(this)
+        val userViewModel = ViewModelProvider(this, UserViewModelFactory(sharedPreferencesUtil.getUid())).get(UserViewModel::class.java)
 
 //        WindowCompat.setDecorFitsSystemWindows(window, false)
         setContent {
@@ -75,7 +76,7 @@ class MainActivity : ComponentActivity() {
                         .fillMaxSize(),
                     color = Color.White
                 ) {
-                    MyApp(sharedPreferencesUtil, activity = this)
+                    MyApp(sharedPreferencesUtil, activity = this, userViewModel = userViewModel)
                 }
             }
         }
@@ -96,14 +97,14 @@ class MainActivity : ComponentActivity() {
 
 @RequiresApi(Build.VERSION_CODES.Q)
 @Composable
-fun MyApp(sharedPreferencesUtil: SharedPreferencesUtil, activity: Activity) {
+fun MyApp(sharedPreferencesUtil: SharedPreferencesUtil, activity: Activity, userViewModel: UserViewModel) {
     val navController = rememberNavController()
+    val uid = sharedPreferencesUtil.getUid()
 
-    val userViewModel: UserViewModel = viewModel()
+//    val userViewModel: UserViewModel = viewModel()
+//    val userViewModel = ViewModelProvider(activity, UserViewModelFactory(uid))
     val rankingViewModel: RankingViewModel = viewModel()
     val studyDatesViewModel: StudyDatesViewModel = viewModel()
-
-    val uid = sharedPreferencesUtil.getUid()
 
     NavHost(navController, startDestination = TodoScreen.Splash.name) {
         composable(route = TodoScreen.Splash.name) {
@@ -176,7 +177,7 @@ fun MainScreen(
             .verticalScroll(rememberScrollState())
     ) {
         currentUser?.let {
-            TopView(userViewModel = userViewModel, uid)
+            TopView(uid, userViewModel)
         }
         Spacer(modifier = Modifier.height(15.dp))
         TimerView(navController = navController, activity = activity)

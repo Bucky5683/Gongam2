@@ -33,9 +33,9 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.cono.gongam.R
 import com.cono.gongam.data.RankUser
-import com.cono.gongam.data.RankingViewModel
+import com.cono.gongam.data.viewmodels.RankingViewModel
 import com.cono.gongam.data.User
-import com.cono.gongam.data.UserViewModel
+import com.cono.gongam.data.viewmodels.UserViewModel
 import com.cono.gongam.ui.SpacedEdgeTextsWithCenterVertically
 import com.cono.gongam.ui.TopTitle
 import com.cono.gongam.ui.main.setStatusBarColor

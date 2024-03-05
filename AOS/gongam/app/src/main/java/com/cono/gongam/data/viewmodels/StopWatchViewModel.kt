@@ -1,4 +1,4 @@
-package com.cono.gongam.data
+package com.cono.gongam.data.viewmodels
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

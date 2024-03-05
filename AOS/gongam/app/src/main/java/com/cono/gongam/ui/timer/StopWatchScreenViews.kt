@@ -21,15 +21,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.cono.gongam.R
-import com.cono.gongam.data.StopWatchViewModel
+import com.cono.gongam.data.viewmodels.StopWatchViewModel
 import com.cono.gongam.data.User
-import com.cono.gongam.data.UserViewModel
+import com.cono.gongam.data.viewmodels.UserViewModel
 import com.cono.gongam.ui.SpacedEdgeTextsWithCenterVertically
 import com.cono.gongam.ui.TopTitle
 import com.cono.gongam.utils.TimeUtils

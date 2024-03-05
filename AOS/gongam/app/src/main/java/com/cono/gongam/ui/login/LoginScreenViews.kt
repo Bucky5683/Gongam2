@@ -24,8 +24,6 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -37,20 +35,17 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.cono.gongam.R
 import com.cono.gongam.data.RankUser
-import com.cono.gongam.data.RankingViewModel
-import com.cono.gongam.data.StudyDatesViewModel
+import com.cono.gongam.data.viewmodels.RankingViewModel
+import com.cono.gongam.data.viewmodels.StudyDatesViewModel
 import com.cono.gongam.data.User
-import com.cono.gongam.data.UserViewModel
+import com.cono.gongam.data.viewmodels.UserViewModel
 import com.cono.gongam.ui.splash.SplashImage
 import com.cono.gongam.utils.DateUtils
 import com.cono.gongam.utils.SharedPreferencesUtil
 import com.firebase.ui.auth.AuthUI
-import com.firebase.ui.auth.IdpResponse
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.database
@@ -118,7 +113,8 @@ fun saveSharedPreferences(context: Context, user: User, uid: String) {
 @Composable
 fun GoogleLoginButton(
     onLoginSuccess: (lUser: User, uid: String) -> Unit, onRegisterSuccess: (newUser: User, uid: String) -> Unit,
-    userViewModel: UserViewModel, rankingViewModel: RankingViewModel, studyDatesViewModel: StudyDatesViewModel)
+    userViewModel: UserViewModel, rankingViewModel: RankingViewModel, studyDatesViewModel: StudyDatesViewModel
+)
 {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
@@ -171,13 +167,15 @@ fun GoogleLoginButton(
                                 user.timerStudyTime = userData.timerStudyTime
                                 user.stopwatchStudyTime = userData.stopwatchStudyTime
                                 user.todayStudyTime = userData.timerStudyTime!! + userData.stopwatchStudyTime!!
-                            } else {
+                            } else { // 오늘 공부한 기록 없음
                                 user.timerStudyTime = 0
                                 user.stopwatchStudyTime = 0
                                 user.todayStudyTime = 0
                                 user.lastUpdateDate = todayDate
+
+                                Firebase.database.getReference("Users").child(uid).setValue(user)
                             }
-                            user.goalStudyTime = userData?.goalStudyTime
+                            user.goalStudyTime = userData?.goalStudyTime ?: 0
 //                            user.profileImageURL = userData.profileImageURL
                             userViewModel.setCurrentUser(user)
                             userViewModel.setProfileImageURL(userData?.profileImageURL ?: "")

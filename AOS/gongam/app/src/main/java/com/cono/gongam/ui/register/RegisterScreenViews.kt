@@ -46,7 +46,7 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.cono.gongam.R
 import com.cono.gongam.data.TodoScreen
-import com.cono.gongam.data.UserViewModel
+import com.cono.gongam.data.viewmodels.UserViewModel
 import com.cono.gongam.ui.CircleTextButton
 import kotlinx.coroutines.launch
 

@@ -50,18 +50,18 @@ import androidx.lifecycle.viewModelScope
 import coil.ImageLoader
 import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
-import coil.compose.rememberImagePainter
 import coil.request.ImageRequest
 import com.cono.gongam.R
-import com.cono.gongam.data.UserViewModel
+import com.cono.gongam.data.User
+import com.cono.gongam.data.viewmodels.UserViewModel
 import com.cono.gongam.ui.ButtonWithQuestionMark
 import com.cono.gongam.ui.register.debugPlaceHolder
 import com.cono.gongam.utils.TimeUtils
 import kotlinx.coroutines.launch
 
 @Composable
-fun TopView(userViewModel: UserViewModel, uid: String) {
-    val user = userViewModel.getCurrentUser()
+fun TopView(uid: String, userViewModel: UserViewModel) {
+    val user by userViewModel.currentUser.observeAsState()
     val studyTime = user?.todayStudyTime ?: 0
     val goalTime = user?.goalStudyTime ?: 0
     val diffTime = goalTime - studyTime
@@ -494,7 +494,7 @@ fun CoilImage(
 @Preview
 @Composable
 fun PreviewPopup() {
-    ProfileEditPopup(userViewModel = UserViewModel())
+    ProfileEditPopup(userViewModel = UserViewModel(""))
 }
 
 //@Preview
