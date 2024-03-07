@@ -18,61 +18,12 @@ import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import java.io.IOException
 
-class UserViewModel(uid: String) : ViewModel() {
+class UserViewModel : ViewModel() {
     private val _currentUser = MutableLiveData<User>()
 //    private var currentUser: User? = null
     private val _userProfileURL = MutableLiveData<String>()
     val currentUser: LiveData<User> get() = _currentUser
     val userProfileURL: LiveData<String> get() = _userProfileURL
-
-    init {
-        val userRef = Firebase.database.getReference("Users").child(uid)
-
-        userRef.child("stopwatchStudyTime").addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                updateUserValue(snapshot) { user, value ->
-                    user.stopwatchStudyTime = value
-                }
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-                Log.d("UserViewModel", "Error fetching stopwatchStudyTime")
-            }
-        })
-
-        userRef.child("timerStudyTime").addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                updateUserValue(snapshot) { user, value ->
-                    user.timerStudyTime = value
-                }
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-                Log.d("UserViewModel", "Error fetching stopwatchStudyTime")
-            }
-        })
-
-        userRef.child("todayStudyTime").addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                updateUserValue(snapshot) { user, value ->
-                    user.todayStudyTime = value
-                }
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-                Log.d("UserViewModel", "Error fetching stopwatchStudyTime")
-            }
-        })
-    }
-
-    private fun updateUserValue(snapshot: DataSnapshot, updateFunction: (User, Int) -> Unit) {
-        val user = _currentUser.value ?: User()
-        val value = snapshot.getValue(Int::class.java) ?: 0
-        updateFunction(user, value)
-        _currentUser.value = user
-
-        Log.d("UserViewModel", "currentUser :: 스톱워치 : ${_currentUser.value!!.stopwatchStudyTime}, 타이머 : ${_currentUser.value!!.timerStudyTime},  오늘공부시간: ${_currentUser.value!!.todayStudyTime}")
-    }
 
 
     fun setCurrentUser(user: User) {

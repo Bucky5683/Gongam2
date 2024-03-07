@@ -60,7 +60,7 @@ import com.cono.gongam.utils.TimeUtils
 import kotlinx.coroutines.launch
 
 @Composable
-fun TopView(uid: String, userViewModel: UserViewModel) {
+fun TopView(uid: String, userViewModel: UserViewModel, currentUser: User) {
     val user by userViewModel.currentUser.observeAsState()
     val studyTime = user?.todayStudyTime ?: 0
     val goalTime = user?.goalStudyTime ?: 0
@@ -96,7 +96,7 @@ fun TopView(uid: String, userViewModel: UserViewModel) {
                 textDecoration = TextDecoration.Underline,
             )
             Text(
-                text = TimeUtils.convertSecondsToTimeInString(studyTime),
+                text = TimeUtils.convertSecondsToTimeInString(currentUser.todayStudyTime ?:0),
                 color = Color.White,
                 fontSize = 30.sp,
                 modifier = Modifier.padding(top = 15.dp, bottom = 15.dp),
@@ -494,7 +494,7 @@ fun CoilImage(
 @Preview
 @Composable
 fun PreviewPopup() {
-    ProfileEditPopup(userViewModel = UserViewModel(""))
+    ProfileEditPopup(userViewModel = UserViewModel())
 }
 
 //@Preview

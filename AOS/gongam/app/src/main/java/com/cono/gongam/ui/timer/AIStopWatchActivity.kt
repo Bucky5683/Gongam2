@@ -93,7 +93,7 @@ class AIStopWatchActivity : AppCompatActivity() {
             .requireLensFacing(CameraSelector.LENS_FACING_FRONT)
             .build()
 
-        preview.setSurfaceProvider(findViewById<PreviewView>(R.id.preview_view).surfaceProvider)
+        preview.setSurfaceProvider(binding.previewView.surfaceProvider)
 
         /**
          * ImageAnalysis : 카메라 스트림에서 이미지를 가져와 사용자가 지정한 분석 작업을 수행할 수 있도록 해 줌

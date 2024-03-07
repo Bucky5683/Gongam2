@@ -45,7 +45,6 @@ fun TimerView(navController: NavController, activity: Activity) {
 @Composable
 fun TimerButton(icon: String, title: String, navController: NavController, activity: Activity) {
     val context = LocalContext.current
-    val REQUEST_CODE_AI_STOPWATCH = 123
 
     Row(
         modifier = Modifier.padding(top = 7.5.dp, bottom = 7.5.dp, start = 40.dp, end = 40.dp)
@@ -71,7 +70,7 @@ fun TimerButton(icon: String, title: String, navController: NavController, activ
 //                        val intent = Intent(context, AIStopWatchActivity::class.java)
 //                        (context as Activity).startActivityForResult(intent, REQUEST_CODE_AI_STOPWATCH)
                         val intent = Intent(activity, AIStopWatchActivity::class.java)
-                        activity.startActivityForResult(intent, REQUEST_CODE_AI_STOPWATCH)
+                        activity.startActivity(intent)
                     }
                 }
         ) {

@@ -2,7 +2,6 @@ package com.cono.gongam.ui.main
 
 import android.app.Activity
 import android.content.Context
-import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -39,7 +38,7 @@ import com.cono.gongam.data.viewmodels.RankingViewModel
 import com.cono.gongam.data.viewmodels.StudyDatesViewModel
 import com.cono.gongam.data.TodoScreen
 import com.cono.gongam.data.viewmodels.UserViewModel
-import com.cono.gongam.data.viewmodels.UserViewModelFactory
+//import com.cono.gongam.data.viewmodels.UserViewModelFactory
 import com.cono.gongam.ui.login.LoginScreen
 import com.cono.gongam.ui.main.mainSubViews.ContentsTitleView
 import com.cono.gongam.ui.main.mainSubViews.MyReportView
@@ -54,18 +53,24 @@ import com.cono.gongam.ui.theme.GongamTheme
 import com.cono.gongam.ui.timer.StopWatchScreen
 import com.cono.gongam.ui.timer.TimerScreen
 import com.cono.gongam.utils.SharedPreferencesUtil
+import com.google.firebase.Firebase
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.database
 
 
 class MainActivity : ComponentActivity() {
     private lateinit var sharedPreferencesUtil : SharedPreferencesUtil
-    val REQUEST_CODE_AI_STOPWATCH = 123
+    private lateinit var userViewModel: UserViewModel
 
     @RequiresApi(Build.VERSION_CODES.Q)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         sharedPreferencesUtil = SharedPreferencesUtil(this)
-        val userViewModel = ViewModelProvider(this, UserViewModelFactory(sharedPreferencesUtil.getUid())).get(UserViewModel::class.java)
+//        userViewModel = ViewModelProvider(this, UserViewModelFactory(sharedPreferencesUtil.getUid())).get(UserViewModel::class.java)
+        userViewModel = UserViewModel()
 
 //        WindowCompat.setDecorFitsSystemWindows(window, false)
         setContent {
@@ -81,17 +86,37 @@ class MainActivity : ComponentActivity() {
             }
         }
 
+        observeDatabaseChanges()
     }
 
-    @Deprecated("Deprecated in Java")
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == REQUEST_CODE_AI_STOPWATCH) {
-            if (resultCode == Activity.RESULT_OK) {
-                val studyTimes = data?.getIntExtra("studyTimes", 0)
-                Log.d("AIActivity", "From AIStopWatchActivity :: $studyTimes")
+    private fun observeDatabaseChanges() {
+        val userRef = Firebase.database.getReference("Users").child(sharedPreferencesUtil.getUid())
+
+        userRef.child("stopwatchStudyTime").addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                userViewModel.currentUser.value?.stopwatchStudyTime = snapshot.getValue(Int::class.java) ?: 0
             }
-        }
+
+            override fun onCancelled(error: DatabaseError) {}
+        })
+
+        userRef.child("timerStudyTime").addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                userViewModel.currentUser.value?.timerStudyTime = snapshot.getValue(Int::class.java) ?: 0
+            }
+
+            override fun onCancelled(error: DatabaseError) {}
+
+        })
+
+        userRef.child("todayStudyTime").addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                userViewModel.currentUser.value?.todayStudyTime = snapshot.getValue(Int::class.java) ?: 0
+            }
+
+            override fun onCancelled(error: DatabaseError) {}
+
+        })
     }
 }
 
@@ -100,7 +125,6 @@ class MainActivity : ComponentActivity() {
 fun MyApp(sharedPreferencesUtil: SharedPreferencesUtil, activity: Activity, userViewModel: UserViewModel) {
     val navController = rememberNavController()
     val uid = sharedPreferencesUtil.getUid()
-
 //    val userViewModel: UserViewModel = viewModel()
 //    val userViewModel = ViewModelProvider(activity, UserViewModelFactory(uid))
     val rankingViewModel: RankingViewModel = viewModel()
@@ -150,7 +174,8 @@ fun MainScreen(
 ) {
     val context: Context = LocalContext.current
     val sharedPreferences = SharedPreferencesUtil(context)
-    val currentUser by userViewModel.currentUser.observeAsState()
+//    val currentUser by userViewModel.currentUser.observeAsState()
+    val currentUser = userViewModel.currentUser.observeAsState()
     val thisWeekData by studyDatesViewModel.thisWeekStudyDate.observeAsState()
     val averageThisWeek by studyDatesViewModel.averageThisWeek.observeAsState()
     val rankUserList by rankingViewModel.rankUserList.observeAsState(initial = emptyList())
@@ -163,8 +188,8 @@ fun MainScreen(
     }
 
     rankingViewModel.updateRankUserList()
-    if (rankUserList.isNotEmpty() && currentUser != null) {
-        rankingViewModel.setUserRank(email = currentUser?.email ?: "")
+    if (rankUserList.isNotEmpty() && currentUser.value != null) {
+        rankingViewModel.setUserRank(email = currentUser.value!!.email ?: "")
         rankingViewModel.setStudyTimeAverage()
     }
     studyDatesViewModel.updateStudyDates(sharedPreferences.getUid())
@@ -176,18 +201,18 @@ fun MainScreen(
             )
             .verticalScroll(rememberScrollState())
     ) {
-        currentUser?.let {
-            TopView(uid, userViewModel)
+        currentUser.value?.let {
+            TopView(uid, userViewModel, currentUser.value!!)
         }
         Spacer(modifier = Modifier.height(15.dp))
         TimerView(navController = navController, activity = activity)
         Spacer(modifier = Modifier.height(42.5.dp))
         if (rankUserList.isNotEmpty()) {
             Log.d("MainScreen", "rankUserList is not empty")
-            currentUser?.let { RankingView(navController = navController, context = context, user = it, rankUserList = rankUserList, rankingViewModel = rankingViewModel, userRank = userRank, studyTimeAverage = studyTimeAverage) }
+            currentUser.value?.let { RankingView(navController = navController, context = context, user = it, rankUserList = rankUserList, rankingViewModel = rankingViewModel, userRank = userRank, studyTimeAverage = studyTimeAverage) }
         }
         Spacer(modifier = Modifier.height(15.dp))
-        currentUser?.let {
+        currentUser.value?.let {
             MyReportView(navController = navController, user = it, thisWeekData = thisWeekData, averageThisWeek = averageThisWeek, context = context)
         }
         Spacer(modifier = Modifier.height(23.dp))
