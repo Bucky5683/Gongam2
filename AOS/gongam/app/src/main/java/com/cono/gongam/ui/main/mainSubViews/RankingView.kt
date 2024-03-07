@@ -57,7 +57,7 @@ fun RankingView(
         Spacer(modifier = Modifier.height(37.dp))
         VerticalGraph(user, rankUserList, userRank, studyTimeAverage, navController = navController)
         Spacer(modifier = Modifier.height(12.dp))
-        SetCompareAverageText(user, rankingViewModel.getStudyTimeAverage())
+        SetCompareAverageText(user, rankingViewModel.getStudyTimeAverage(), rankingViewModel.userTotalTimeSum.value ?: 0)
         Spacer(modifier = Modifier.height(31.dp))
     }
 }
@@ -271,8 +271,9 @@ private fun DrawUserStudyTimes(isBelowAverage: Boolean, user: User, userRank: St
 }
 
 @Composable
-private fun SetCompareAverageText(user: User, studyTimeAverage: Int) {
-    var diffFromAverage = (user.timerStudyTime!! + user.stopwatchStudyTime!!) - studyTimeAverage
+private fun SetCompareAverageText(user: User, studyTimeAverage: Int, userTotalTime: Int) {
+//    var diffFromAverage = (user.timerStudyTime!! + user.stopwatchStudyTime!!) - studyTimeAverage
+    var diffFromAverage = userTotalTime - studyTimeAverage
     val lessThanAverage: Boolean = diffFromAverage < 0
     if (lessThanAverage) diffFromAverage *= (-1)
 

@@ -22,10 +22,12 @@ class StudyDatesViewModel : ViewModel() {
     private val _studyDatesList = MutableLiveData<List<Pair<String, StudyDates>>>()
     private val _thisWeekStudyDate = MutableLiveData<List<Pair<String, StudyDates>>?>()
     private val _averageThisWeek = MutableLiveData<Int>()
+    private val _totalStudyTimeThisWeek = MutableLiveData(0)
 
     val studyDatesList: LiveData<List<Pair<String, StudyDates>>> get() = _studyDatesList
     val thisWeekStudyDate: LiveData<List<Pair<String, StudyDates>>?> get() = _thisWeekStudyDate
     val averageThisWeek: LiveData<Int> get() = _averageThisWeek
+    val totalStudyTimeThisWeek: LiveData<Int> get() = _totalStudyTimeThisWeek
 
 //    fun getThisWeekStudyData(): List<Pair<String, StudyDates>>? {
 //        return thisWeekStudyData
@@ -53,16 +55,17 @@ class StudyDatesViewModel : ViewModel() {
     }
 
     private fun calculateThisWeekStudyTimesAverage() {
-        var totalStudyTimeThisWeek = 0
+        var sum = 0
 
         _thisWeekStudyDate.value?.let { data ->
             for ((_, studyTimes) in data) {
-                totalStudyTimeThisWeek += studyTimes.totalStudyTime
+                sum += studyTimes.totalStudyTime
             }
         }
+        _totalStudyTimeThisWeek.value = sum
 
         _averageThisWeek.value = if (_thisWeekStudyDate.value?.isNotEmpty() == true) {
-            totalStudyTimeThisWeek / _thisWeekStudyDate.value!!.size
+            sum / _thisWeekStudyDate.value!!.size
         } else 0
     }
 

@@ -19,12 +19,17 @@ import kotlin.coroutines.suspendCoroutine
 class RankingViewModel : ViewModel() {
     private val _rankUserList = MutableLiveData<List<RankUser>>()
 //    private var userRank: String = ""
-    private val _userRank = MutableLiveData<String>()
+    private val _userRank = MutableLiveData<String>() // 본인 등수
 //    private var studyTimeAverage: Int = 0
-    private val _studyTimeAverage = MutableLiveData<Int>()
+    private val _studyTimeAverage = MutableLiveData<Int>() // 모든 유저들의 공부 시간의 평균
     val rankUserList: LiveData<List<RankUser>> get() = _rankUserList
     val userRank: LiveData<String> get() = _userRank
     val studyTimeAverage: LiveData<Int> get() = _studyTimeAverage
+
+    private val _userTotalTimeSum = MutableLiveData(0) // 본인 공부 총합 시간
+    private val _userTotalAverage = MutableLiveData(0) // 본인 공부 총합 시간의 평균
+    val userTotalTimeSum: LiveData<Int> get() = _userTotalTimeSum
+    val userTotalAverage: LiveData<Int> get() = _userTotalAverage
 
     fun updateRankUserList() {
         viewModelScope.launch {
@@ -94,5 +99,34 @@ class RankingViewModel : ViewModel() {
 
     private fun sortRankUserListByTotalStudyTime(list: List<RankUser>): List<RankUser> {
         return list.sortedByDescending { it.totalStudyTime ?: 0 }
+    }
+
+    fun setUserRankTotalStudyTime(uid: String) {
+        val studyDataRes = Firebase.database.getReference("StudyDataes").child(uid)
+        val rankRef = Firebase.database.getReference("Rank").child(uid).child("totalStudyTime")
+
+        studyDataRes.addListenerForSingleValueEvent(object: ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                var totalStudyTimeSum = 0
+                var count = 0
+
+                for (dataSnapshot in snapshot.children) {
+                    val totalStudyTime = dataSnapshot.child("totalStudyTime").getValue(Int::class.java)
+                    totalStudyTime?.let {
+                        totalStudyTimeSum += it
+                        count++
+                    }
+                }
+                _userTotalTimeSum.value = totalStudyTimeSum
+                _userTotalAverage.value = if (count > 0) totalStudyTimeSum / count else 0
+
+                rankRef.setValue(totalStudyTimeSum)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+        })
     }
 }

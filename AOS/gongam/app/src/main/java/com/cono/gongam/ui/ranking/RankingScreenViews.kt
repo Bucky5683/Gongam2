@@ -30,11 +30,13 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.cono.gongam.R
 import com.cono.gongam.data.RankUser
 import com.cono.gongam.data.viewmodels.RankingViewModel
 import com.cono.gongam.data.User
+import com.cono.gongam.data.viewmodels.StudyDatesViewModel
 import com.cono.gongam.data.viewmodels.UserViewModel
 import com.cono.gongam.ui.SpacedEdgeTextsWithCenterVertically
 import com.cono.gongam.ui.TopTitle
@@ -46,6 +48,7 @@ import com.cono.gongam.utils.TimeUtils
 fun RankingScreen(
     userViewModel: UserViewModel,
     rankingViewModel: RankingViewModel,
+    studyDatesViewModel: StudyDatesViewModel
 ) {
     val rankUserList by rankingViewModel.rankUserList.observeAsState(initial = emptyList())
     val context: Context = LocalContext.current
@@ -63,7 +66,7 @@ fun RankingScreen(
         TopTitle(backgroundColor = colorResource(id = R.color.white), textColor = colorResource(id = R.color.black), centerText = "랭킹", dividerLineColor = colorResource(
             id = R.color.gray_line2), backPress = true)
         if (userViewModel.getCurrentUser() != null && rankUserList.isNotEmpty()) {
-            MyGradeView(user = userViewModel.getCurrentUser()!!, userRank = rankingViewModel.getUserRank())
+            MyGradeView(userRank = rankingViewModel.getUserRank(), studyDatesViewModel = studyDatesViewModel)
         }
         TitleThisWeekTop5()
         if (rankUserList.isNotEmpty()) {
@@ -73,8 +76,8 @@ fun RankingScreen(
 }
 
 @Composable
-fun MyGradeView(user: User, userRank: String) {
-    val totalStudyTime = (user.timerStudyTime!! + user.stopwatchStudyTime!!).toString()
+fun MyGradeView(userRank: String, studyDatesViewModel: StudyDatesViewModel) {
+    val totalStudyTime = studyDatesViewModel.totalStudyTimeThisWeek.value ?: 0
 
     Box(
         modifier = Modifier
@@ -104,7 +107,7 @@ fun MyGradeView(user: User, userRank: String) {
                 Spacer(modifier = Modifier.height(9.dp))
                 SpacedEdgeTextsWithCenterVertically(
                     leftText = "이번 주 공부 시간", leftTextSize = 14.sp, leftTextColor = colorResource(id = R.color.white), leftTextWeight = FontWeight(400),
-                    rightText = TimeUtils.convertSecondsToTimeInString(totalStudyTime.toInt()), rightTextSize = 14.sp, rightTextColor = colorResource(id = R.color.white), rightTextWeight = FontWeight(400)
+                    rightText = TimeUtils.convertSecondsToTimeInString(totalStudyTime), rightTextSize = 14.sp, rightTextColor = colorResource(id = R.color.white), rightTextWeight = FontWeight(400)
                 )
             }
         }

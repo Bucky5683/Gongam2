@@ -135,6 +135,8 @@ fun MyApp(sharedPreferencesUtil: SharedPreferencesUtil, activity: Activity, user
     val timerViewModel: TimerViewModel = viewModel()
     val stopWatchViewModel: StopWatchViewModel = viewModel()
 
+    rankingViewModel.setUserRankTotalStudyTime(uid)
+
     NavHost(navController, startDestination = TodoScreen.Splash.name) {
         composable(route = TodoScreen.Splash.name) {
             SplashScreen(navController)
@@ -143,7 +145,7 @@ fun MyApp(sharedPreferencesUtil: SharedPreferencesUtil, activity: Activity, user
             LoginScreen(navController, userViewModel, rankingViewModel, studyDatesViewModel)
         }
         composable(TodoScreen.Ranking.name) {
-            RankingScreen(userViewModel, rankingViewModel)
+            RankingScreen(userViewModel, rankingViewModel, studyDatesViewModel)
         }
         composable(TodoScreen.MyReport.name) {
             MyReportScreen(studyDatesViewModel)
