@@ -162,6 +162,7 @@ fun MyApp(sharedPreferencesUtil: SharedPreferencesUtil, activity: Activity, user
         composable(TodoScreen.Main.name) {
 //            timerViewModel.updateSecondsInDatabase(uid)
 //            stopWatchViewModel.updateSecondsInDatabase(uid)
+            rankingViewModel.setUserRankTotalStudyTime(uid)
             MainScreen(navController, userViewModel, rankingViewModel, studyDatesViewModel, uid, activity)
         }
     }

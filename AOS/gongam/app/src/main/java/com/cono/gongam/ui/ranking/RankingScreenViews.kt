@@ -57,6 +57,7 @@ fun RankingScreen(
         setStatusBarColor(context, statusBarColor)
     }
 
+//    rankingViewModel.updateRankUserList()
     Column(
         modifier = Modifier
             .fillMaxWidth()
