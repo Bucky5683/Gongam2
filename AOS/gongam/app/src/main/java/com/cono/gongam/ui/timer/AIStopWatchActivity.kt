@@ -128,9 +128,7 @@ class AIStopWatchActivity : AppCompatActivity() {
                                     }
                                 } else {
                                     binding.tvIsFaceDetected.text = "인식된 얼굴 없음"
-                                    if (isStarted) {
-                                        binding.tvNoFaceDetected.visibility = View.VISIBLE
-                                    }
+                                    binding.tvNoFaceDetected.visibility = if (isStarted) View.VISIBLE else View.GONE
                                     aiStopWatchViewModel.setFaceDetected(false)
                                 }
                             }
@@ -149,14 +147,6 @@ class AIStopWatchActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-//        val uid =
-
-//        Log.d(TAG, "AIStopWAtchActivity 종료. 값 전달 시작")
-//        val studyTimes = 10
-//        val resultIntent = Intent()
-//        resultIntent.putExtra("studyTimes", studyTimes)
-//        setResult(Activity.RESULT_OK, resultIntent)
-
         aiStopWatchViewModel.updateSecondsInDatabase(uid)
     }
 

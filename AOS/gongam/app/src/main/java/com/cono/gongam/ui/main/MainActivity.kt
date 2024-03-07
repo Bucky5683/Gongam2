@@ -37,6 +37,9 @@ import com.cono.gongam.R
 import com.cono.gongam.data.viewmodels.RankingViewModel
 import com.cono.gongam.data.viewmodels.StudyDatesViewModel
 import com.cono.gongam.data.TodoScreen
+import com.cono.gongam.data.viewmodels.AIStopWatchViewModel
+import com.cono.gongam.data.viewmodels.StopWatchViewModel
+import com.cono.gongam.data.viewmodels.TimerViewModel
 import com.cono.gongam.data.viewmodels.UserViewModel
 //import com.cono.gongam.data.viewmodels.UserViewModelFactory
 import com.cono.gongam.ui.login.LoginScreen
@@ -129,6 +132,8 @@ fun MyApp(sharedPreferencesUtil: SharedPreferencesUtil, activity: Activity, user
 //    val userViewModel = ViewModelProvider(activity, UserViewModelFactory(uid))
     val rankingViewModel: RankingViewModel = viewModel()
     val studyDatesViewModel: StudyDatesViewModel = viewModel()
+    val timerViewModel: TimerViewModel = viewModel()
+    val stopWatchViewModel: StopWatchViewModel = viewModel()
 
     NavHost(navController, startDestination = TodoScreen.Splash.name) {
         composable(route = TodoScreen.Splash.name) {
@@ -137,9 +142,6 @@ fun MyApp(sharedPreferencesUtil: SharedPreferencesUtil, activity: Activity, user
         composable(route = TodoScreen.Login.name) {
             LoginScreen(navController, userViewModel, rankingViewModel, studyDatesViewModel)
         }
-        composable(TodoScreen.Main.name) {
-            MainScreen(navController, userViewModel, rankingViewModel, studyDatesViewModel, uid, activity)
-        }
         composable(TodoScreen.Ranking.name) {
             RankingScreen(userViewModel, rankingViewModel)
         }
@@ -147,13 +149,18 @@ fun MyApp(sharedPreferencesUtil: SharedPreferencesUtil, activity: Activity, user
             MyReportScreen(studyDatesViewModel)
         }
         composable(TodoScreen.Timer.name) {
-            TimerScreen(userViewModel)
+            TimerScreen(userViewModel, timerViewModel, uid)
         }
         composable(TodoScreen.StopWatch.name) {
-            StopWatchScreen(userViewModel)
+            StopWatchScreen(userViewModel, stopWatchViewModel, uid)
         }
         composable("Register") {
             RegisterScreen(navController, userViewModel, uid)
+        }
+        composable(TodoScreen.Main.name) {
+//            timerViewModel.updateSecondsInDatabase(uid)
+//            stopWatchViewModel.updateSecondsInDatabase(uid)
+            MainScreen(navController, userViewModel, rankingViewModel, studyDatesViewModel, uid, activity)
         }
     }
 }

@@ -14,6 +14,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
@@ -28,6 +29,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.cono.gongam.R
 import com.cono.gongam.data.viewmodels.StopWatchViewModel
 import com.cono.gongam.data.User
+import com.cono.gongam.data.viewmodels.TimerViewModel
 import com.cono.gongam.data.viewmodels.UserViewModel
 import com.cono.gongam.ui.SpacedEdgeTextsWithCenterVertically
 import com.cono.gongam.ui.TopTitle
@@ -36,9 +38,18 @@ import com.cono.gongam.utils.TimeUtils
 
 @Composable
 fun StopWatchScreen(
-    userViewModel: UserViewModel
+    userViewModel: UserViewModel,
+    stopWatchViewModel: StopWatchViewModel,
+    uid: String
 ) {
-    val stopWatchViewModel: StopWatchViewModel = viewModel()
+//    val stopWatchViewModel: StopWatchViewModel = viewModel()
+    DisposableEffect(Unit) {
+        onDispose {
+            stopWatchViewModel.updateSecondsInDatabase(uid)
+            stopWatchViewModel.setSumSeconds(0)
+        }
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()

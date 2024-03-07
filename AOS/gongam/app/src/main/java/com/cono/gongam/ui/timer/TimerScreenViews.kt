@@ -18,6 +18,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
@@ -44,9 +45,16 @@ import com.cono.gongam.utils.TimeUtils
 @RequiresApi(Build.VERSION_CODES.Q)
 @Composable
 fun TimerScreen(
-    userViewModel: UserViewModel
+    userViewModel: UserViewModel, timerViewModel: TimerViewModel, uid: String
 ) {
-    val timerViewModel: TimerViewModel = viewModel()
+//    val timerViewModel: TimerViewModel = viewModel()
+    DisposableEffect(Unit) {
+        onDispose {
+            timerViewModel.updateSecondsInDatabase(uid)
+            timerViewModel.setSumSeconds(0)
+        }
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
