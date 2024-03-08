@@ -27,6 +27,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
@@ -37,6 +38,7 @@ import com.cono.gongam.R
 import com.cono.gongam.data.viewmodels.RankingViewModel
 import com.cono.gongam.data.viewmodels.StudyDatesViewModel
 import com.cono.gongam.data.TodoScreen
+import com.cono.gongam.data.User
 import com.cono.gongam.data.viewmodels.AIStopWatchViewModel
 import com.cono.gongam.data.viewmodels.StopWatchViewModel
 import com.cono.gongam.data.viewmodels.TimerViewModel
@@ -97,29 +99,17 @@ class MainActivity : ComponentActivity() {
     private fun observeDatabaseChanges() {
         val userRef = Firebase.database.getReference("Users").child(sharedPreferencesUtil.getUid())
 
-        userRef.child("stopwatchStudyTime").addValueEventListener(object : ValueEventListener {
+        userRef.addValueEventListener(object: ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                userViewModel.currentUser.value?.stopwatchStudyTime = snapshot.getValue(Int::class.java) ?: 0
+                val user = snapshot.getValue(User::class.java)
+                if (user != null) {
+                    userViewModel.setCurrentUser(user)
+                }
             }
 
-            override fun onCancelled(error: DatabaseError) {}
-        })
-
-        userRef.child("timerStudyTime").addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                userViewModel.currentUser.value?.timerStudyTime = snapshot.getValue(Int::class.java) ?: 0
+            override fun onCancelled(error: DatabaseError) {
+                Log.d("MainActivity", "Failed to read value. eroror : $error")
             }
-
-            override fun onCancelled(error: DatabaseError) {}
-
-        })
-
-        userRef.child("todayStudyTime").addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                userViewModel.currentUser.value?.todayStudyTime = snapshot.getValue(Int::class.java) ?: 0
-            }
-
-            override fun onCancelled(error: DatabaseError) {}
 
         })
     }
@@ -130,8 +120,6 @@ class MainActivity : ComponentActivity() {
 fun MyApp(sharedPreferencesUtil: SharedPreferencesUtil, activity: Activity, userViewModel: UserViewModel) {
     val navController = rememberNavController()
     val uid = sharedPreferencesUtil.getUid()
-//    val userViewModel: UserViewModel = viewModel()
-//    val userViewModel = ViewModelProvider(activity, UserViewModelFactory(uid))
     val rankingViewModel: RankingViewModel = viewModel()
     val studyDatesViewModel: StudyDatesViewModel = viewModel()
     val timerViewModel: TimerViewModel = viewModel()
@@ -191,8 +179,7 @@ fun MainScreen(
 ) {
     val context: Context = LocalContext.current
     val sharedPreferences = SharedPreferencesUtil(context)
-//    val currentUser by userViewModel.currentUser.observeAsState()
-    val currentUser = userViewModel.currentUser.observeAsState()
+    val currentUser by userViewModel.currentUser.observeAsState()
     val thisWeekData by studyDatesViewModel.thisWeekStudyDate.observeAsState()
     val averageThisWeek by studyDatesViewModel.averageThisWeek.observeAsState()
     val rankUserList by rankingViewModel.rankUserList.observeAsState(initial = emptyList())
@@ -205,8 +192,8 @@ fun MainScreen(
     }
 
     rankingViewModel.updateRankUserList()
-    if (rankUserList.isNotEmpty() && currentUser.value != null) {
-        rankingViewModel.setUserRank(email = currentUser.value!!.email ?: "")
+    if (rankUserList.isNotEmpty() && currentUser != null) {
+        rankingViewModel.setUserRank(email = currentUser!!.email ?: "")
         rankingViewModel.setStudyTimeAverage()
     }
     studyDatesViewModel.updateStudyDates(sharedPreferences.getUid())
@@ -218,18 +205,18 @@ fun MainScreen(
             )
             .verticalScroll(rememberScrollState())
     ) {
-        currentUser.value?.let {
-            TopView(navController, uid, userViewModel, currentUser.value!!)
+        currentUser.let {
+            TopView(navController, uid, userViewModel, currentUser!!)
         }
         Spacer(modifier = Modifier.height(15.dp))
         TimerView(navController = navController, activity = activity)
         Spacer(modifier = Modifier.height(42.5.dp))
         if (rankUserList.isNotEmpty()) {
             Log.d("MainScreen", "rankUserList is not empty")
-            currentUser.value?.let { RankingView(navController = navController, context = context, user = it, rankUserList = rankUserList, rankingViewModel = rankingViewModel, userRank = userRank, studyTimeAverage = studyTimeAverage) }
+            currentUser?.let { RankingView(navController = navController, context = context, user = it, rankUserList = rankUserList, rankingViewModel = rankingViewModel, userRank = userRank, studyTimeAverage = studyTimeAverage) }
         }
         Spacer(modifier = Modifier.height(15.dp))
-        currentUser.value?.let {
+        currentUser?.let {
             MyReportView(navController = navController, user = it, thisWeekData = thisWeekData, averageThisWeek = averageThisWeek, context = context)
         }
         Spacer(modifier = Modifier.height(23.dp))
