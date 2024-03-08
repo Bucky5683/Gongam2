@@ -50,7 +50,8 @@ fun RankingView(
 ) {
     Column(
         modifier = Modifier
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .background(Color.White),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         ContentsTitleView("랭킹", true, context = context, navController = navController)

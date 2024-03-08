@@ -12,6 +12,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -201,7 +202,7 @@ fun MainScreen(
     Column(
         modifier = Modifier
             .background(
-                color = Color.White
+                color = colorResource(id = R.color.main_gray)
             )
             .verticalScroll(rememberScrollState())
     ) {
@@ -210,16 +211,16 @@ fun MainScreen(
         }
         Spacer(modifier = Modifier.height(15.dp))
         TimerView(navController = navController, activity = activity)
-        Spacer(modifier = Modifier.height(42.5.dp))
+        Column(modifier = Modifier.fillMaxWidth().height(29.5.dp).background(Color.White)) {}
         if (rankUserList.isNotEmpty()) {
             Log.d("MainScreen", "rankUserList is not empty")
             currentUser?.let { RankingView(navController = navController, context = context, user = it, rankUserList = rankUserList, rankingViewModel = rankingViewModel, userRank = userRank, studyTimeAverage = studyTimeAverage) }
         }
-        Spacer(modifier = Modifier.height(15.dp))
+        Column(modifier = Modifier.fillMaxWidth().height(15.dp).background(Color.White)) {}
         currentUser?.let {
             MyReportView(navController = navController, user = it, thisWeekData = thisWeekData, averageThisWeek = averageThisWeek, context = context)
         }
-        Spacer(modifier = Modifier.height(23.dp))
+        Column(modifier = Modifier.fillMaxWidth().height(23.dp).background(Color.White)) {}
     }
 }
 

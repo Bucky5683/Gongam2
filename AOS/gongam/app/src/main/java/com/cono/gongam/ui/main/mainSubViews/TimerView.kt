@@ -35,11 +35,16 @@ import com.cono.gongam.ui.timer.AIStopWatchActivity
 
 @Composable
 fun TimerView(navController: NavController, activity: Activity) {
-    ContentsTitleView("타이머", false)
-    Spacer(modifier = Modifier.height(13.5.dp))
-    TimerButton(icon = "⏰", title = "타이머", navController = navController, activity = activity)
-    TimerButton(icon = "⏱️", title = "스톱워치", navController = navController, activity = activity)
-    TimerButton(icon = "\uD83D\uDC64", title = "AI 스톱워치", navController = navController, activity = activity)
+    Column(
+       modifier = Modifier.background(color = Color.White)
+    ) {
+        ContentsTitleView("타이머", false)
+        Spacer(modifier = Modifier.height(13.5.dp))
+        TimerButton(icon = "⏰", title = "타이머", navController = navController, activity = activity)
+        TimerButton(icon = "⏱️", title = "스톱워치", navController = navController, activity = activity)
+        TimerButton(icon = "\uD83D\uDC64", title = "AI 스톱워치", navController = navController, activity = activity)
+        Spacer(modifier = Modifier.height(13.5.dp))
+    }
 }
 
 @Composable
