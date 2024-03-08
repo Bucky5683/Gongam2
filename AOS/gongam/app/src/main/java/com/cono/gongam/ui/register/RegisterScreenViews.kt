@@ -53,6 +53,9 @@ import kotlinx.coroutines.launch
 @Composable
 fun RegisterScreen(navController: NavController, userViewModel: UserViewModel, uid: String) {
 
+    var name by remember { mutableStateOf(userViewModel.getCurrentUser()?.name ?: "") }
+    var email by remember { mutableStateOf(userViewModel.getCurrentUser()?.email ?: "") }
+
     Column(
         modifier = Modifier.fillMaxSize(),
     ) {
@@ -65,9 +68,13 @@ fun RegisterScreen(navController: NavController, userViewModel: UserViewModel, u
             EditableProfileImage(userViewModel, uid)
             Spacer(modifier = Modifier.height(12.dp))
             InputTextTitle("닉네임")
-            CustomTextField(onValueChange = {}, defaultText = userViewModel.getCurrentUser()?.name ?: "")
+            CustomTextField(value = name,
+                onValueChange = { name = it }
+            )
             InputTextTitle("이메일")
-            CustomTextField(onValueChange = {}, defaultText = userViewModel.getCurrentUser()?.email ?: "")
+            CustomTextField(value = email,
+                onValueChange = { email = it }
+            )
         }
         Column(
             modifier = Modifier
@@ -171,9 +178,10 @@ fun InputTextTitle(title: String) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CustomTextField(
-    onValueChange: (String) -> Unit, defaultText: String
+    value: String,
+    onValueChange: (String) -> Unit
 ) {
-    var text by remember { mutableStateOf(defaultText) }
+    var text by remember { mutableStateOf(value) }
 
     Column(
         modifier = Modifier.padding(vertical = 9.dp)
@@ -182,6 +190,7 @@ fun CustomTextField(
             value = text,
             onValueChange = {
                 text = it
+                onValueChange(it)
             },
             maxLines = 1,
             modifier = Modifier
@@ -190,6 +199,8 @@ fun CustomTextField(
                 .padding(horizontal = 38.dp),
             shape = RoundedCornerShape(10.dp),
             colors = TextFieldDefaults.textFieldColors(
+                focusedTextColor = colorResource(id = R.color.main_gray),
+                unfocusedTextColor = colorResource(id = R.color.main_gray),
                 containerColor = colorResource(id = R.color.gray_scale1),
                 focusedIndicatorColor = Color.Transparent,
                 unfocusedIndicatorColor = Color.Transparent

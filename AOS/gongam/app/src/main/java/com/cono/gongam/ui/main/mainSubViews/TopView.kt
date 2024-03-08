@@ -47,11 +47,13 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavController
 import coil.ImageLoader
 import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.cono.gongam.R
+import com.cono.gongam.data.TodoScreen
 import com.cono.gongam.data.User
 import com.cono.gongam.data.viewmodels.UserViewModel
 import com.cono.gongam.ui.ButtonWithQuestionMark
@@ -60,7 +62,7 @@ import com.cono.gongam.utils.TimeUtils
 import kotlinx.coroutines.launch
 
 @Composable
-fun TopView(uid: String, userViewModel: UserViewModel, currentUser: User) {
+fun TopView(navController: NavController, uid: String, userViewModel: UserViewModel, currentUser: User) {
     val user by userViewModel.currentUser.observeAsState()
     val studyTime = user?.todayStudyTime ?: 0
     val goalTime = user?.goalStudyTime ?: 0
@@ -84,7 +86,7 @@ fun TopView(uid: String, userViewModel: UserViewModel, currentUser: User) {
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.End
             ) {
-                ProfileImage(userViewModel = userViewModel, uid)
+                ProfileImage(navController = navController, userViewModel = userViewModel, uid)
                 Spacer(modifier = Modifier.width(15.dp))
             }
             Text(
@@ -164,7 +166,7 @@ fun GoalText(studiedThanGoal: Boolean, diffTime: Int) {
 }
 
 @Composable
-fun ProfileImage(userViewModel: UserViewModel, uid: String) {
+fun ProfileImage(navController: NavController, userViewModel: UserViewModel, uid: String) {
     var showPopup by remember { mutableStateOf(false) }
 //    val userProfileURLState = remember { mutableStateOf("") }
     val userProfileURL by userViewModel.userProfileURL.observeAsState(initial = "")
@@ -245,6 +247,7 @@ fun ProfileImage(userViewModel: UserViewModel, uid: String) {
 //            )
 //        }
 
+        // 팝업 화면
         if (showPopup) {
             Popup(
                 onDismissRequest = { showPopup = false },
@@ -257,7 +260,13 @@ fun ProfileImage(userViewModel: UserViewModel, uid: String) {
                         .background(Color.White)
                         .padding(top = 12.dp, start = 22.dp, end = 17.dp, bottom = 23.dp)
                 ) {
-                    Row{
+                    Row (
+                        modifier = Modifier
+                            .clickable {
+                                showPopup = false
+                                navController.navigate(TodoScreen.Edit.name)
+                            }
+                    ){
                         Column(
                             modifier = Modifier.height(80.dp),
                             verticalArrangement = Arrangement.Bottom
@@ -282,7 +291,7 @@ fun ProfileImage(userViewModel: UserViewModel, uid: String) {
                                 verticalAlignment = Alignment.Bottom
                             ) {
                                 Text(text = "목표 공부시간", fontSize = 12.sp, fontWeight = FontWeight(400), color = Color.Black, textDecoration = TextDecoration.Underline)
-                                Text(text = "99:99:99", fontSize = 12.sp, fontWeight = FontWeight(400), color = Color.Black,
+                                Text(text = TimeUtils.convertSecondsToTimeInString(userViewModel.getCurrentUser()?.goalStudyTime ?: 0), fontSize = 12.sp, fontWeight = FontWeight(400), color = Color.Black,
                                     modifier = Modifier.padding(start = 6.dp)
                                 )
                             }

@@ -41,6 +41,7 @@ import com.cono.gongam.data.viewmodels.AIStopWatchViewModel
 import com.cono.gongam.data.viewmodels.StopWatchViewModel
 import com.cono.gongam.data.viewmodels.TimerViewModel
 import com.cono.gongam.data.viewmodels.UserViewModel
+import com.cono.gongam.ui.editinfo.EditInfoScreen
 //import com.cono.gongam.data.viewmodels.UserViewModelFactory
 import com.cono.gongam.ui.login.LoginScreen
 import com.cono.gongam.ui.main.mainSubViews.ContentsTitleView
@@ -57,6 +58,7 @@ import com.cono.gongam.ui.timer.StopWatchScreen
 import com.cono.gongam.ui.timer.TimerScreen
 import com.cono.gongam.utils.SharedPreferencesUtil
 import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
@@ -139,6 +141,7 @@ fun MyApp(sharedPreferencesUtil: SharedPreferencesUtil, activity: Activity, user
 
     NavHost(navController, startDestination = TodoScreen.Splash.name) {
         composable(route = TodoScreen.Splash.name) {
+//            FirebaseAuth.getInstance().signOut()
             SplashScreen(navController)
         }
         composable(route = TodoScreen.Login.name) {
@@ -156,12 +159,16 @@ fun MyApp(sharedPreferencesUtil: SharedPreferencesUtil, activity: Activity, user
         composable(TodoScreen.StopWatch.name) {
             StopWatchScreen(userViewModel, stopWatchViewModel, uid)
         }
-        composable("Register") {
+        composable(TodoScreen.Register.name) {
             RegisterScreen(navController, userViewModel, uid)
+        }
+        composable(TodoScreen.Edit.name) {
+            EditInfoScreen(navController = navController, userViewModel = userViewModel, uid = uid)
         }
         composable(TodoScreen.Main.name) {
 //            timerViewModel.updateSecondsInDatabase(uid)
 //            stopWatchViewModel.updateSecondsInDatabase(uid)
+            rankingViewModel.updateRankUserList()
             rankingViewModel.setUserRankTotalStudyTime(uid)
             MainScreen(navController, userViewModel, rankingViewModel, studyDatesViewModel, uid, activity)
         }
@@ -212,7 +219,7 @@ fun MainScreen(
             .verticalScroll(rememberScrollState())
     ) {
         currentUser.value?.let {
-            TopView(uid, userViewModel, currentUser.value!!)
+            TopView(navController, uid, userViewModel, currentUser.value!!)
         }
         Spacer(modifier = Modifier.height(15.dp))
         TimerView(navController = navController, activity = activity)

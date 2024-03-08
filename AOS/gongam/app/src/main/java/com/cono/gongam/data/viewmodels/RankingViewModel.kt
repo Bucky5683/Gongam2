@@ -124,7 +124,7 @@ class RankingViewModel : ViewModel() {
             }
 
             override fun onCancelled(error: DatabaseError) {
-                TODO("Not yet implemented")
+                Log.d("setUserRankTotalStudyTime", "error : $error")
             }
 
         })

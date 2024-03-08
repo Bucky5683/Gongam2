@@ -202,8 +202,7 @@ fun GoogleLoginButton(
                         .build()
                 )
 
-                val signInIntent = AuthUI
-                    .getInstance()
+                val signInIntent = AuthUI.getInstance()
                     .createSignInIntentBuilder()
                     .setAvailableProviders(providers)
                     .build()

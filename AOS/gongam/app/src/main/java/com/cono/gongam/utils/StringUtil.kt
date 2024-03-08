@@ -8,4 +8,12 @@ object StringUtil {
             number.toString()
         }
     }
+
+    fun convertToTwoDigitString(number: String): String {
+        return when {
+            number.isEmpty() -> "00"
+            number.length == 1 -> "0$number"
+            else -> number
+        }
+    }
 }

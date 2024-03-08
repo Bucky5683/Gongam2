@@ -8,5 +8,6 @@ enum class TodoScreen {
     Ranking,
     MyReport,
     Timer,
-    StopWatch
+    StopWatch,
+    Edit,
 }
