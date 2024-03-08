@@ -257,7 +257,7 @@ fun ProfileImage(navController: NavController, userViewModel: UserViewModel, uid
                     modifier = Modifier
                         .width(270.dp)
                         .height(234.dp)
-                        .background(Color.White)
+                        .background(Color.White, shape = RoundedCornerShape(size = 15.dp))
                         .padding(top = 12.dp, start = 22.dp, end = 17.dp, bottom = 23.dp)
                 ) {
                     Row (
