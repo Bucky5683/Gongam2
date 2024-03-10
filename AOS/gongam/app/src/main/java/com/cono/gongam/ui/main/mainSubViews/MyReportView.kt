@@ -4,6 +4,8 @@ import android.content.Context
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -13,6 +15,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -27,6 +30,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.cono.gongam.R
 import com.cono.gongam.data.StudyDates
+import com.cono.gongam.data.TodoScreen
 import com.cono.gongam.data.User
 import java.time.DayOfWeek
 import java.time.LocalDate
@@ -79,7 +83,7 @@ fun MyReportView(
     ) {
         ContentsTitleView(title = "마이 리포트", showMoreButton = true, context = context, navController = navController)
         Spacer(modifier = Modifier.height(29.dp))
-        WeekStudyHours(sunH, monH, tueH, wedH, thuH, friH, satH)
+        WeekStudyHours(navController, sunH, monH, tueH, wedH, thuH, friH, satH)
         Spacer(modifier = Modifier.height(20.dp))
         if (averageThisWeek != null) {
             SetMyReportAverageText(averageThisWeek)
@@ -117,10 +121,16 @@ private fun SetMyReportAverageText(averageThisWeek: Int?) {
 }
 
 @Composable
-private fun WeekStudyHours(sunH: Float, monH: Float, tueH: Float, wedH: Float, thuH: Float, friH: Float, satH: Float) {
+private fun WeekStudyHours(navController: NavController, sunH: Float, monH: Float, tueH: Float, wedH: Float, thuH: Float, friH: Float, satH: Float) {
     Column (
         modifier = Modifier
             .fillMaxWidth()
+            .clickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = null
+            ) {
+                navController.navigate(TodoScreen.MyReport.name)
+            }
     ) {
         Row {
             Spacer(modifier = Modifier.weight(1f))
