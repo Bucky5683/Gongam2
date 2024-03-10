@@ -62,7 +62,7 @@ fun TimerScreen(
     ) {
         TopTitle(backgroundColor = colorResource(id = R.color.main_gray), textColor = colorResource(id = R.color.white), centerText = "타이머", dividerLineColor = colorResource(id = R.color.gray_line), backPress = true)
         userViewModel.getCurrentUser()?.let {
-            Timer(it, timerViewModel)
+            Timer(it, userViewModel, timerViewModel)
         }
     }
 }
@@ -71,8 +71,10 @@ fun TimerScreen(
 @Composable
 fun Timer(
     user: User,
+    userViewModel: UserViewModel,
     timerViewModel: TimerViewModel
 ) {
+    val todayStudyTime = user.todayStudyTime ?: 0
     val goalStudyTime = user.goalStudyTime ?: 0
     val sumSeconds by timerViewModel.sumSeconds.observeAsState(initial = 0)
     val isStopped by timerViewModel.isStopped.observeAsState(initial = false)
@@ -81,7 +83,7 @@ fun Timer(
         timerViewModel.setIsStopped(true)
     }
 
-    val remainGoalTime = if (goalStudyTime == 0 || goalStudyTime - sumSeconds < 0) 0 else goalStudyTime - sumSeconds
+    val remainGoalTime = if (goalStudyTime == 0 || goalStudyTime - sumSeconds - todayStudyTime < 0) 0 else goalStudyTime - sumSeconds - todayStudyTime
 
     Column(
         modifier = Modifier

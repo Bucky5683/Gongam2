@@ -66,11 +66,12 @@ fun StopWatch(
     user: User,
     stopWatchViewModel: StopWatchViewModel
 ) {
+    val todayStudyTime = user.todayStudyTime ?: 0
     val goalStudyTime = user.goalStudyTime ?: 0
     val sumSeconds by stopWatchViewModel.sumSeconds.observeAsState(initial = 0)
     val isStopped by stopWatchViewModel.isStopped.observeAsState(initial = false)
 
-    val remainGoalTime = if (goalStudyTime == 0 || goalStudyTime - sumSeconds < 0) 0 else goalStudyTime - sumSeconds
+    val remainGoalTime = if (goalStudyTime == 0 || goalStudyTime - sumSeconds - todayStudyTime < 0) 0 else goalStudyTime - sumSeconds - todayStudyTime
 
     Column(
         modifier = Modifier
