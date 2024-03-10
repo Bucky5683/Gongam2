@@ -1,5 +1,7 @@
 package com.cono.gongam.ui
 
+import android.content.Intent
+import android.net.Uri
 import androidx.activity.OnBackPressedDispatcherOwner
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -155,11 +157,24 @@ fun CircleTextButton(buttonText: String, btnOnClick: () -> Unit, buttonColor: Co
 
 @Composable
 fun ButtonWithQuestionMark(text: String = "null") {
+    val context = LocalContext.current
+    val helpUrl = "https://generated-ambert-9f2.notion.site/6bf6e5145c344a8d96d99c635864bd1d?v=73a86a97a8014e309003edbd67ebc7fa&pvs=4"
+    val termsUrl = "https://generated-ambert-9f2.notion.site/71588b8f9f32421fae736fcae9937a16?v=cccf1449f72f4f069d737d5daea1a672&pvs=4"
+
     Card(
         modifier = Modifier
             .height(44.dp)
             .fillMaxWidth()
-            .background(color = Color.White),
+            .background(color = Color.White)
+            .clickable {
+                if (text == "도움말") {
+                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(helpUrl))
+                    context.startActivity(intent)
+                } else if (text == "이용약관") {
+                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(termsUrl))
+                    context.startActivity(intent)
+                }
+            },
         shape = RoundedCornerShape(16.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 10.dp)
     ) {
