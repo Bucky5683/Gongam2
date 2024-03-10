@@ -9,6 +9,7 @@ import com.cono.gongam.data.RankUser
 import com.google.firebase.Firebase
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseException
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.database
 import kotlinx.coroutines.launch
@@ -79,10 +80,13 @@ class RankingViewModel : ViewModel() {
             rankRef.addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     for (child in snapshot.children) {
-                        val childData = child.getValue(RankUser::class.java)
-//                        Log.d("RankDBData", "$childData")
-                        if (childData != null) {
-                            rankUserList.add(childData)
+                        try {
+                            val childData = child.getValue(RankUser::class.java)
+                            if (childData != null) {
+                                rankUserList.add(childData)
+                            }
+                        } catch (e: DatabaseException) {
+                            Log.e("RankDBData", "Error occurred while parsing child: ${e.message}")
                         }
                     }
 
@@ -103,7 +107,7 @@ class RankingViewModel : ViewModel() {
 
     fun setUserRankTotalStudyTime(uid: String) {
         val studyDataRes = Firebase.database.getReference("StudyDataes").child(uid)
-        val rankRef = Firebase.database.getReference("Rank").child(uid).child("totalStudyTime")
+        val rankTotalStudyTimeRef = Firebase.database.getReference("Rank").child(uid).child("totalStudyTime")
 
         studyDataRes.addListenerForSingleValueEvent(object: ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -120,7 +124,7 @@ class RankingViewModel : ViewModel() {
                 _userTotalTimeSum.value = totalStudyTimeSum
                 _userTotalAverage.value = if (count > 0) totalStudyTimeSum / count else 0
 
-                rankRef.setValue(totalStudyTimeSum)
+                rankTotalStudyTimeRef.setValue(totalStudyTimeSum)
             }
 
             override fun onCancelled(error: DatabaseError) {

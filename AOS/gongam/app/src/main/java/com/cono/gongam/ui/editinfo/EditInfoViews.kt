@@ -1,6 +1,8 @@
 package com.cono.gongam.ui.editinfo
 
 import android.util.Log
+import android.widget.Toast
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -33,6 +35,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -47,6 +50,7 @@ import com.cono.gongam.ui.register.InputTextTitle
 import com.cono.gongam.utils.StringUtil
 import com.cono.gongam.utils.TimeUtils
 import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.database
 
 @Composable
@@ -59,6 +63,8 @@ fun EditInfoScreen(navController: NavController, userViewModel: UserViewModel, u
     var hours by remember { mutableStateOf(userGoalTime.first) }
     var minutes by remember { mutableStateOf(userGoalTime.second) }
     var seconds by remember { mutableStateOf(userGoalTime.third) }
+
+    val context = LocalContext.current
 
 //    val goalStudyTime by remember { mutableIntStateOf(hours.toInt() * 3600 + minutes.toInt() * 60 + seconds.toInt()) }
 
@@ -126,7 +132,64 @@ fun EditInfoScreen(navController: NavController, userViewModel: UserViewModel, u
                     navController.navigate(TodoScreen.Main.name)
                 },
                 buttonColor = colorResource(id = R.color.main_gray))
-            Spacer(modifier = Modifier.weight(1f))
+        }
+        Column(
+            modifier = Modifier
+                .weight(1f).fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Text(text = "회원 탈퇴",
+                fontSize = 15.sp,
+                fontWeight = FontWeight(900),
+                color = Color.Red,
+                textDecoration = TextDecoration.Underline,
+                modifier = Modifier.clickable {
+                    val user = FirebaseAuth.getInstance().currentUser
+                    val uid = user?.uid
+
+                    if (uid != null) {
+                        val rankRef = Firebase.database.getReference("Rank").child(uid)
+                        val studyDataesRef = Firebase.database.getReference("StudyDataes").child(uid)
+                        val usersRef = Firebase.database.getReference("Users").child(uid)
+
+                        rankRef.removeValue()
+                            .addOnSuccessListener {
+                                Log.d("DeleteAccount", "Rank 데이터 삭제 성공")
+                            }
+                            .addOnFailureListener { e ->
+                                Log.d("DeleteAccount", "Rank 데이터 삭제 중 오류 발생: ${e.message}")
+                            }
+
+                        studyDataesRef.removeValue()
+                            .addOnSuccessListener {
+                                Log.d("DeleteAccount", "StudyDataes 데이터 삭제 성공")
+                            }
+                            .addOnFailureListener { e ->
+                                Log.d("DeleteAccount", "StudyDataes 데이터 삭제 중 오류 발생: ${e.message}")
+                            }
+
+                        usersRef.removeValue()
+                            .addOnSuccessListener {
+                                Log.d("DeleteAccount", "Users 데이터 삭제 성공")
+                            }
+                            .addOnFailureListener { e ->
+                                Log.d("DeleteAccount", "Users 데이터 삭제 중 오류 발생: ${e.message}")
+                            }
+                    }
+
+                    user?.delete()
+                        ?.addOnSuccessListener {
+                            Log.d("DeleteAccount", "계정 삭제 성공")
+                            Toast.makeText(context, "탈퇴되었습니다.", Toast.LENGTH_SHORT).show()
+                            navController.navigate(TodoScreen.Login.name)
+                        }
+                        ?.addOnFailureListener { e ->
+                            Toast.makeText(context, "회원 탈퇴 중 오류가 발생했습니다.", Toast.LENGTH_SHORT).show()
+                            Log.d("DeleteAccount", "계정 삭제 중 오류 발생: ${e.message}")
+                        }
+                }
+            )
         }
     }
 }
@@ -139,7 +202,7 @@ fun CustomNumberInput(defaultVal: String, onNumberEntered: (String) -> Unit) {
 
     TextField(
         modifier = Modifier
-            .padding(horizontal = 6.dp)
+            .padding(horizontal = 0.dp)
             .width(85.dp),
         value = text,
         onValueChange = {

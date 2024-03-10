@@ -1,5 +1,6 @@
 package com.cono.gongam.ui.main.mainSubViews
 
+import android.app.Activity
 import android.net.Uri
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult

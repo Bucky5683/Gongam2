@@ -128,7 +128,10 @@ fun GoogleLoginButton(
 
             currentUser?.let {
                 scope.launch {
-                    currentUser.let { it ->
+                    currentUser.reload().await()
+                    val updatedCurrentUser = FirebaseAuth.getInstance().currentUser
+
+                    updatedCurrentUser?.let { it ->
                         val uid = it.uid // used as a key
                         val email = it.email
                         val name = it.displayName
@@ -148,7 +151,7 @@ fun GoogleLoginButton(
                                     Toast.makeText(context, "오류가 발생했습니다. 다시 시도해 주세요.", Toast.LENGTH_SHORT).show()
                                 }
 
-                            val userInRank = RankUser(email = email, name = name, profileImageURL = profileImageUrl.toString())
+                            val userInRank = RankUser(email = email, name = name, profileImageURL = profileImageUrl.toString(), totalStudyTime = 0)
                             Firebase.database.getReference("Rank").child(uid).setValue(userInRank)
                                 .addOnSuccessListener {
                                     Log.d("[LoginScreen]", "RealtimeDB : Rank 사용자 추가 완료")
