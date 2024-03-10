@@ -126,8 +126,6 @@ fun MyApp(sharedPreferencesUtil: SharedPreferencesUtil, activity: Activity, user
     val timerViewModel: TimerViewModel = viewModel()
     val stopWatchViewModel: StopWatchViewModel = viewModel()
 
-    rankingViewModel.setUserRankTotalStudyTime(uid)
-
     NavHost(navController, startDestination = TodoScreen.Splash.name) {
         composable(route = TodoScreen.Splash.name) {
 //            FirebaseAuth.getInstance().signOut()
@@ -186,6 +184,7 @@ fun MainScreen(
     val rankUserList by rankingViewModel.rankUserList.observeAsState(initial = emptyList())
     val userRank by rankingViewModel.userRank.observeAsState(initial = "")
     val studyTimeAverage by rankingViewModel.studyTimeAverage.observeAsState(initial = 0)
+    val userTotalTimeSum by rankingViewModel.userTotalTimeSum.observeAsState(initial = 0)
 
     val statusBarColor = colorResource(id = R.color.main_gray)
     SideEffect {
@@ -211,16 +210,25 @@ fun MainScreen(
         }
         Spacer(modifier = Modifier.height(15.dp))
         TimerView(navController = navController, activity = activity)
-        Column(modifier = Modifier.fillMaxWidth().height(29.5.dp).background(Color.White)) {}
+        Column(modifier = Modifier
+            .fillMaxWidth()
+            .height(29.5.dp)
+            .background(Color.White)) {}
         if (rankUserList.isNotEmpty()) {
             Log.d("MainScreen", "rankUserList is not empty")
-            currentUser?.let { RankingView(navController = navController, context = context, user = it, rankUserList = rankUserList, rankingViewModel = rankingViewModel, userRank = userRank, studyTimeAverage = studyTimeAverage) }
+            currentUser?.let { RankingView(navController = navController, context = context, user = it, rankUserList = rankUserList, rankingViewModel = rankingViewModel, userRank = userRank, studyTimeAverage = studyTimeAverage, userTotalTimeSum = userTotalTimeSum) }
         }
-        Column(modifier = Modifier.fillMaxWidth().height(15.dp).background(Color.White)) {}
+        Column(modifier = Modifier
+            .fillMaxWidth()
+            .height(15.dp)
+            .background(Color.White)) {}
         currentUser?.let {
             MyReportView(navController = navController, user = it, thisWeekData = thisWeekData, averageThisWeek = averageThisWeek, context = context)
         }
-        Column(modifier = Modifier.fillMaxWidth().height(23.dp).background(Color.White)) {}
+        Column(modifier = Modifier
+            .fillMaxWidth()
+            .height(23.dp)
+            .background(Color.White)) {}
     }
 }
 

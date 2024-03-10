@@ -46,7 +46,8 @@ fun RankingView(
     rankUserList: List<RankUser>,
     rankingViewModel: RankingViewModel,
     userRank: String,
-    studyTimeAverage: Int
+    studyTimeAverage: Int,
+    userTotalTimeSum: Int
 ) {
     Column(
         modifier = Modifier
@@ -56,7 +57,7 @@ fun RankingView(
     ) {
         ContentsTitleView("랭킹", true, context = context, navController = navController)
         Spacer(modifier = Modifier.height(37.dp))
-        VerticalGraph(user, rankUserList, userRank, studyTimeAverage, navController = navController)
+        VerticalGraph(user, rankUserList, userRank, studyTimeAverage, navController = navController, userTotalTime = userTotalTimeSum)
         Spacer(modifier = Modifier.height(12.dp))
         SetCompareAverageText(user, rankingViewModel.getStudyTimeAverage(), rankingViewModel.userTotalTimeSum.value ?: 0)
         Spacer(modifier = Modifier.height(31.dp))
@@ -70,8 +71,9 @@ private fun VerticalGraph(
     userRank: String,
     studyTimeAverage: Int,
     navController: NavController,
+    userTotalTime: Int
 ) {
-    val isBelowAverage = user.timerStudyTime!! + user.stopwatchStudyTime!! < studyTimeAverage
+    val isBelowAverage = userTotalTime < studyTimeAverage
 
     Box(
         modifier = Modifier
@@ -96,7 +98,7 @@ private fun VerticalGraph(
                     ) {
                         Spacer(modifier = Modifier.weight(1f))
                         DrawUserStudyTimes(isBelowAverage = true, user = user, userRank = userRank)
-                        Spacer(modifier = Modifier.weight(5f))
+                        Spacer(modifier = Modifier.weight(1f))
                     }
                 }
                 else {
@@ -105,7 +107,7 @@ private fun VerticalGraph(
                     ) {
                         Spacer(modifier = Modifier.weight(1f))
                         DrawUserStudyTimes(isBelowAverage = false, user = user, userRank = userRank)
-                        Spacer(modifier = Modifier.weight(5f))
+                        Spacer(modifier = Modifier.weight(1f))
                     }
                     DrawAverageStudyTimes(studyTimeAverage)
                     Spacer(modifier = Modifier.weight(1f))
