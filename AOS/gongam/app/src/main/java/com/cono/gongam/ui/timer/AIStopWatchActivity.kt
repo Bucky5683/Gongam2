@@ -1,9 +1,13 @@
 package com.cono.gongam.ui.timer
 
+import android.Manifest
 import android.app.Activity
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.Settings
 import android.util.Log
 import android.view.View
 import androidx.annotation.OptIn
@@ -13,6 +17,7 @@ import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import com.cono.gongam.R
@@ -25,6 +30,8 @@ import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.face.FaceDetection
 
 class AIStopWatchActivity : AppCompatActivity() {
+    private val CAMERA_PERMISSION_REQUEST_CODE = 1001
+
     private val TAG = "AIActivity"
     private var isStarted: Boolean = false
 
@@ -42,6 +49,10 @@ class AIStopWatchActivity : AppCompatActivity() {
 //        Log.d(TAG, "name : ${userViewModel.getCurrentUser()?.name}")
 //        Log.d(TAG, "timerStudyTime : ${userViewModel.getCurrentUser()?.timerStudyTime}")
 //        Log.d(TAG, "stopwatchStudyTime : ${userViewModel.getCurrentUser()?.stopwatchStudyTime}")
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.CAMERA), CAMERA_PERMISSION_REQUEST_CODE)
+        }
 
         binding = ActivityAistopWatchBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -119,7 +130,6 @@ class AIStopWatchActivity : AppCompatActivity() {
                         detector.process(inputImage)
                             .addOnSuccessListener { faces ->
                                 if (faces.isNotEmpty()) {
-                                    binding.tvIsFaceDetected.text = "얼굴 인식중"
                                     binding.tvNoFaceDetected.visibility = View.GONE
                                     if (isStarted) {
                                         aiStopWatchViewModel.setFaceDetected(true)
@@ -127,7 +137,6 @@ class AIStopWatchActivity : AppCompatActivity() {
                                         aiStopWatchViewModel.setFaceDetected(false)
                                     }
                                 } else {
-                                    binding.tvIsFaceDetected.text = "인식된 얼굴 없음"
                                     binding.tvNoFaceDetected.visibility = if (isStarted) View.VISIBLE else View.GONE
                                     aiStopWatchViewModel.setFaceDetected(false)
                                 }
@@ -143,6 +152,23 @@ class AIStopWatchActivity : AppCompatActivity() {
             }
 
         cameraProvider.bindToLifecycle(this, cameraSelector, preview, imageAnalysis)
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        when (requestCode) {
+            CAMERA_PERMISSION_REQUEST_CODE -> {
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // Permission granted, continue camera related work
+                } else {
+                    // Permission denied, inform the user or handle it accordingly
+                }
+            }
+        }
     }
 
     override fun onDestroy() {
