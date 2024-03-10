@@ -48,6 +48,8 @@ import com.cono.gongam.R
 import com.cono.gongam.data.TodoScreen
 import com.cono.gongam.data.viewmodels.UserViewModel
 import com.cono.gongam.ui.CircleTextButton
+import com.google.firebase.Firebase
+import com.google.firebase.database.database
 import kotlinx.coroutines.launch
 
 @Composable
@@ -86,6 +88,14 @@ fun RegisterScreen(navController: NavController, userViewModel: UserViewModel, u
             Spacer(modifier = Modifier.weight(1f))
             CircleTextButton(buttonText = "Next",
                 btnOnClick = {
+                    val rankRef = Firebase.database.getReference("Rank").child(uid)
+                    rankRef.child("email").setValue(email)
+                    rankRef.child("name").setValue(name)
+
+                    val userRef = Firebase.database.getReference("Users").child(uid)
+                    userRef.child("email").setValue(email)
+                    userRef.child("name").setValue(name)
+
                     navController.navigate(TodoScreen.Main.name)
                 },
                 buttonColor = colorResource(id = R.color.main_gray))
