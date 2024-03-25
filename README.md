@@ -1,6 +1,12 @@
 # Gongam2
 공감 season2
-## 기능
+
+
+## Environment
+### iOS
+
+
+## Function
 <table>
   <tr>
     <th>⏰ 타이머 / 스톱워치</th>
