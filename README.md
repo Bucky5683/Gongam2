@@ -19,8 +19,10 @@
       <td>안드로이드</td>
       <td>Google</td>
     </tr>
-    <td>iOS</td>
-    <td>Google, Apple</td>
+    <tr>
+      <td>iOS</td>
+      <td>Google, Apple</td>
+    </tr>
   </tr>
 </table>
 
