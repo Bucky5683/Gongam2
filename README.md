@@ -14,10 +14,12 @@
     <td>2. 리포트</td>
   </tr>
   <tr>
-    <th>🔑 소셜로그인</th>
+    <th rowspan="2">🔑 소셜로그인</th>
     <td>안드로이드</td>
-    <td>Google</td>
     <td>iOS</td>
+  </tr>
+  <tr>
+    <td>Google</td>
     <td>Google, Apple</td>
   </tr>
 </table>
