@@ -17,8 +17,8 @@
     <th colspan="3">🔑 소셜로그인</th>
     <td rowspan="2">안드로이드</td>
     <td rowspan="2">Google</td>
-    <td>iOS</td>
-    <td>Google, Apple</td>
+    <td rowspan="1">iOS</td>
+    <td rowspan="1">Google, Apple</td>
   </tr>
 </table>
 
