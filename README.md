@@ -20,5 +20,8 @@
     <td rowspan="1">iOS</td>
     <td rowspan="1">Google, Apple</td>
   </tr>
+  <tr>
+    <td colspan="3"></td>
+  </tr>
 </table>
 
