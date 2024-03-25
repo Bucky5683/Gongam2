@@ -7,7 +7,7 @@
 <br/>
 
 ### Common
-
+![Figma](https://img.shields.io/badge/Figma-A259FF?style=for-the-badge&logo=figma&logoColor=white)
 ![Firebase](https://img.shields.io/badge/Firebase-FFA611?style=for-the-badge&logo=Firebase&logoColor=white)
 
 <br/>
