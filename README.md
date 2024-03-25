@@ -22,5 +22,11 @@
     <td>iOS</td>
     <td>Google, Apple</td>
   </tr>
+  <tr>
+    <th>😀프로필 수정</th>
+    <td>프로필 이미지 변경</td>
+    <td>이름/이메일 변경</td>
+    <td>목표시간 변경</td>
+  </tr>
 </table>
 
