@@ -60,4 +60,4 @@
 
 ## Release
 ### AppStore
-![앱스토어 링크](https://apps.apple.com/kr/app/%EA%B3%B5%EA%B0%90-%EA%B3%B5%EB%B6%80%EA%B0%90%EC%8B%9C%EC%9E%902/id6478134499)
+[앱스토어 링크](https://apps.apple.com/kr/app/%EA%B3%B5%EA%B0%90-%EA%B3%B5%EB%B6%80%EA%B0%90%EC%8B%9C%EC%9E%902/id6478134499)
