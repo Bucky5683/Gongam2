@@ -9,8 +9,6 @@
   </tr>
   <tr>
     <td>1. 타이머</td>
-    <td></td>
-    <td></td>
     <td>1. 랭크</td>
     <td></td>
     <td></td>
