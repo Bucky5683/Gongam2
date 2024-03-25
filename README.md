@@ -14,10 +14,10 @@
 
 ### iOS
 
-![Xcode Version](https://img.shields.io/badge/Xcode&2015.1-007ACC?style=for-the-badge&logo=Xcode&logoColor=white)
-![Google Auth](https://img.shields.io/badge/GoogleSignIn&207.0.0-4285F4?logo=google&logoColor=fff&style=for-the-badge)
-![Apple Auth](https://img.shields.io/badge/AppAuth&201.6.2-000000?logo=apple&logoColor=fff&style=for-the-badge)
-![Firebase](https://img.shields.io/badge/Firebase&2010.20.0-039BE5?style=for-the-badge&logo=Firebase&logoColor=white)
+![Xcode Version](https://img.shields.io/badge/15.1-007ACC?style=for-the-badge&logo=Xcode&logoColor=white)
+![Google Auth](https://img.shields.io/badge/7.0.0-4285F4?logo=google&logoColor=fff&style=for-the-badge)
+![AppAuth](https://img.shields.io/badge/1.6.2-000000?logo=apple&logoColor=fff&style=for-the-badge)
+![Firebase](https://img.shields.io/badge/Firebase&10.20.0-039BE5?style=for-the-badge&logo=Firebase&logoColor=white)
 
 <br/>
 
