@@ -1,7 +1,7 @@
 # Gongam2
 공감 season2
-![Figma](https://img.shields.io/badge/Figma-A259FF?style=for-the-badge&logo=figma&logoColor=white)
-![디자인 링크](https://www.figma.com/file/f0Hsip6EofnRwlwMZy7UAx/%EA%B3%B5%EA%B0%90?type=design&node-id=1502%3A2282&mode=design&t=UOSwqD5B1xkjFG5C-1)
+
+- ![Figma](https://img.shields.io/badge/Figma-A259FF?style=for-the-badge&logo=figma&logoColor=white) [디자인 링크](https://www.figma.com/file/f0Hsip6EofnRwlwMZy7UAx/%EA%B3%B5%EA%B0%90?type=design&node-id=1502%3A2282&mode=design&t=UOSwqD5B1xkjFG5C-1)
 
 ## Environment
 
