@@ -20,7 +20,7 @@
 ![PopupView](https://img.shields.io/badge/PopupView_2.8.3-000000?logo=apple&logoColor=fff&style=for-the-badge)
 ![Firebase](https://img.shields.io/badge/Firebase_10.20.0-FFA611?style=for-the-badge&logo=Firebase&logoColor=white)
 
-- PopupView : [exyte/PopupView](https://github.com/exyte/PopupView)
+- PopupView Github 링크 : [exyte/PopupView](https://github.com/exyte/PopupView)
 
 <br/>
 
