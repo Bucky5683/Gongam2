@@ -17,7 +17,7 @@
 ![Xcode Version](https://img.shields.io/badge/Xcode_15.1-007ACC?style=for-the-badge&logo=Xcode&logoColor=white)
 ![Google Auth](https://img.shields.io/badge/GoogleSignIn_7.0.0-4285F4?logo=google&logoColor=fff&style=for-the-badge)
 ![AppAuth](https://img.shields.io/badge/AppAuth_1.6.2-000000?logo=apple&logoColor=fff&style=for-the-badge)
-![Firebase](https://img.shields.io/badge/Firebase_10.20.0-039BE5?style=for-the-badge&logo=Firebase&logoColor=white)
+![Firebase](https://img.shields.io/badge/Firebase_10.20.0-FFA611?style=for-the-badge&logo=Firebase&logoColor=black)
 
 <br/>
 
