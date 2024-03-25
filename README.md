@@ -14,11 +14,9 @@
     <td>2. 리포트</td>
   </tr>
   <tr>
-    <th colspan="3">🔑 소셜로그인</th>
-    <td>
-      <td>안드로이드</td>
-      <td>Google</td>
-    </td>
+    <th colspan="3" rowspan="2">🔑 소셜로그인</th>
+    <td rowspan="2">안드로이드</td>
+    <td>Google</td>
     <td>
       <td>iOS</td>
       <td>Google, Apple</td>
