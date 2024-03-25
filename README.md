@@ -16,10 +16,10 @@
   <tr>
     <th rowspan="2">🔑 소셜로그인</th>
     <td>안드로이드</td>
-    <td>iOS</td>
+    <td>Google</td>
   </tr>
   <tr>
-    <td>Google</td>
+    <td>iOS</td>
     <td>Google, Apple</td>
   </tr>
 </table>
